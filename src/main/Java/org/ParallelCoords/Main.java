@@ -4,12 +4,14 @@ package org.ParallelCoords;
 import java.awt.*;
 import javax.swing.*;
 import java.util.*;
+import org.ParallelCoords.GUI.MenuBar.MenuBar;
 
 public class Main extends JFrame {
-
+    private MenuBar menuBar;
     public Main() {
         super("Ivan Chan (ICU) Data Visualisation");
-
+        this.menuBar = new MenuBar(this);
+        this.setJMenuBar(this.menuBar);
         SetWindow();
     }
 
