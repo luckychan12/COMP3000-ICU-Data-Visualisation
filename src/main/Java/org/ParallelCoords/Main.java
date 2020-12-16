@@ -3,19 +3,38 @@ package org.ParallelCoords;
 
 import java.awt.*;
 import javax.swing.*;
-import java.util.*;
 import org.ParallelCoords.GUI.MenuBar.MenuBar;
 
+import java.io.*;
+import java.util.Properties;
+
 public class Main extends JFrame {
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4008647681872120469L;
+
     private MenuBar menuBar;
     public Main() {
         super("Ivan Chan (ICU) Data Visualisation");
+        loadSettings();
         this.menuBar = new MenuBar(this);
         this.setJMenuBar(this.menuBar);
-        SetWindow();
+        setWindow();
     }
 
-    private void SetWindow()
+
+    private void loadSettings()
+    {
+        try (InputStream input = new FileInputStream("config.properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    private void setWindow()
     {
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Dimension screenSize;
