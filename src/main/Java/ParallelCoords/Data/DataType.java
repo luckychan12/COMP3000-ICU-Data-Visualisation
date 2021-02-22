@@ -1,4 +1,4 @@
-package org.ParallelCoords.Data;
+package ParallelCoords.Data;
 
 public enum DataType {
     STRING,

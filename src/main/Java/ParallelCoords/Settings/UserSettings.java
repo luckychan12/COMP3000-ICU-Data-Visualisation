@@ -1,4 +1,4 @@
-package org.ParallelCoords.Settings;
+package ParallelCoords.Settings;
 
 public class UserSettings {
     private static final UserSettings instance = new UserSettings();

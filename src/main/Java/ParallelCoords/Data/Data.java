@@ -1,7 +1,7 @@
-package org.ParallelCoords.Data;
+package ParallelCoords.Data;
 
-import org.ParallelCoords.Main;
-import org.ParallelCoords.Settings.UserSettings;
+import ParallelCoords.Main;
+import ParallelCoords.Settings.UserSettings;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -24,7 +24,7 @@ public class Data {
         DataTable newData = new DataTable();
         BufferedReader reader = new BufferedReader(new FileReader(pathToInputData));
         String[] headers;
-        String[] tokens = ((reader.readLine()).trim()).split(delimiter);
+        String[] tokens = ((reader.readLine()).trim()).split(delimiter, -1);
 
         int i = 0;
         if (hasHeaders){
@@ -36,7 +36,16 @@ public class Data {
         else {
             for (String token : tokens){
                 DataColumn column = new DataColumn(i);
-                column.addValue(Double.parseDouble(token));
+                DataEntity newEntity = new DataEntity();
+                if (token.equals("")){
+                    newEntity.setConfirmedValue(false);
+                }
+                else{
+                    newEntity.setValue(Double.parseDouble(token));
+                    newEntity.setConfirmedValue(true);
+                }
+
+                column.addEntity(newEntity);
                 newData.addColumn(column);
                 i++;
             }
@@ -44,11 +53,14 @@ public class Data {
         dataStore.add(newData);
         dataID++;
         try {
+
             loadData(dataID -1, reader);
+
         }
         catch (IOException | NumberFormatException err){
             dataStore.remove(dataID -1);
             dataID--;
+
             throw err;
         }
     }
@@ -59,14 +71,26 @@ public class Data {
         String[] tokens;
         while ((line = reader.readLine()) != null)
         {
-            tokens = (line.trim()).split(delimiter);
+            tokens = (line.trim()).split(delimiter, -1);
             int i = 0;
             if (tokens.length > 0) {
                 for (String token : tokens){
-                    dataStore.get(tableID).getColumn(i).addValue(Double.parseDouble(token));
+                    DataEntity newEntity = new DataEntity();
+                    if (token.equals("")){
+                        newEntity.setConfirmedValue(false);
+                    }
+                    else{
+                        newEntity.setValue(Double.parseDouble(token));
+                        newEntity.setConfirmedValue(true);
+                    }
+                    dataStore.get(tableID).getColumn(i).addEntity(newEntity);
                     i++;
                 }
             }
         }
+    }
+
+    public ArrayList<DataTable> getDataStore() {
+        return dataStore;
     }
 }

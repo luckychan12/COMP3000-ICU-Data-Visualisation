@@ -1,4 +1,4 @@
-package org.ParallelCoords.Settings;
+package ParallelCoords.Settings;
 
 public class SettingSingleton {
     private static final SettingSingleton instance = new SettingSingleton();

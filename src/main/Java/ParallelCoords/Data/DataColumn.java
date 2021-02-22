@@ -1,4 +1,4 @@
-package org.ParallelCoords.Data;
+package ParallelCoords.Data;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -7,9 +7,9 @@ public class DataColumn {
     private boolean reversed = false;
     private int columnID;
     private String columnName;
-    private ArrayList<Double> dataColumn = new ArrayList<Double>();
+    private ArrayList<DataEntity> dataColumn = new ArrayList<DataEntity>();
 
-    public DataColumn(ArrayList<Double> dataColumn, int index){
+    public DataColumn(ArrayList<DataEntity> dataColumn, int index){
         this.dataColumn = dataColumn;
         this.columnID = index;
     }
@@ -31,7 +31,7 @@ public class DataColumn {
         this.columnName = columnName;
     }
 
-    public ArrayList<Double> getColumn() {
+    public ArrayList<DataEntity> getColumnData() {
         return dataColumn;
     }
 
@@ -47,7 +47,7 @@ public class DataColumn {
         return index <= getColumnIndex() && index >= 0;
     }
 
-    public boolean setValue(int index, double value) {
+    public boolean setValue(int index, DataEntity value) {
         if (checkIndex(index)){
             dataColumn.set(index, value);
             return true;
@@ -55,11 +55,13 @@ public class DataColumn {
         return false;
     }
 
-    public void addValue(double value){
-        dataColumn.add(value);
+    public void addEntity(DataEntity entity){
+        entity.setColumnID((columnID));
+        entity.setIndex(dataColumn.size());
+        dataColumn.add(entity);
     }
 
-    public boolean removeValue(int index){
+    public boolean addEntity(int index){
         if (checkIndex(index)){
             dataColumn.remove(index);
             return true;
@@ -67,7 +69,16 @@ public class DataColumn {
         return false;
     }
 
-    public ArrayList<Double> reverseColumn() {
+    public DataEntity findEntity(int index){
+        for (DataEntity dataEntity : dataColumn) {
+            if (dataEntity.getIndex() == index){
+                return dataEntity;
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<DataEntity> reverseColumn() {
         Collections.reverse(dataColumn);
         reversed = !reversed;
         return dataColumn;

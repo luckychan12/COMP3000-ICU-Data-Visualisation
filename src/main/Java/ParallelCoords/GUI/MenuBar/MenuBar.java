@@ -1,6 +1,6 @@
-package org.ParallelCoords.GUI.MenuBar;
+package ParallelCoords.GUI.MenuBar;
 
-import org.ParallelCoords.Main;
+import ParallelCoords.Main;
 
 import javax.swing.JMenuBar;
 

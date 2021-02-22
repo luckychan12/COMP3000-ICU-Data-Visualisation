@@ -1,4 +1,4 @@
-package org.ParallelCoords.Settings;
+package ParallelCoords.Settings;
 
 public abstract class Setting<Type> {
     private final Type defaultValue;

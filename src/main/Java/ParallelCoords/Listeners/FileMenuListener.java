@@ -1,6 +1,6 @@
-package org.ParallelCoords.Listeners;
+package ParallelCoords.Listeners;
 
-import org.ParallelCoords.Main;
+import ParallelCoords.Main;
 
 import java.awt.event.ActionEvent;
 

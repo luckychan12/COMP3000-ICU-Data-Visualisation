@@ -1,8 +1,8 @@
-package org.ParallelCoords.Listeners;
+package ParallelCoords.Listeners;
 
-import org.ParallelCoords.Data.Data;
-import org.ParallelCoords.Main;
-import org.ParallelCoords.Settings.UserSettings;
+import ParallelCoords.Data.Data;
+import ParallelCoords.Main;
+import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -20,11 +20,13 @@ public class DataMenuListener {
             UserSettings.getInstance().getUserImportSettings().setLastOpenedFile(chooser.getSelectedFile().getAbsolutePath());
             Data data = Data.getInstance();
             try {
-                data.createData(main, filepath, false);
+                data.createData(main, filepath, true);
+                System.out.println(data.getDataStore().get(0).getColumn(0).getColumnData().get(3).isConfirmedValue());
+
 
             }
             catch (Exception err){
-                System.out.println("err");
+                System.out.println(err.toString());
             }
 
         }

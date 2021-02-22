@@ -1,4 +1,4 @@
-package org.ParallelCoords.Data;
+package ParallelCoords.Data;
 
 import java.util.ArrayList;
 
@@ -26,6 +26,14 @@ public class DataTable {
 
     private boolean checkIndex(int index){
         return index <= (columns.size() -1) && index >= 0;
+    }
+
+    public ArrayList<DataEntity> getRecord(int index){
+        ArrayList<DataEntity> record = new ArrayList<DataEntity>();
+        for (DataColumn column : columns) {
+            record.add(column.findEntity(index));
+        }
+        return record;
     }
 
     public boolean removeColumn(int index) {

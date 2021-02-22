@@ -1,7 +1,7 @@
-package org.ParallelCoords.GUI.MenuBar;
+package ParallelCoords.GUI.MenuBar;
 
-import org.ParallelCoords.Listeners.FileMenuListener;
-import org.ParallelCoords.Main;
+import ParallelCoords.Listeners.FileMenuListener;
+import ParallelCoords.Main;
 
 import javax.swing.*;
 //import java.awt.event.KeyEvent;

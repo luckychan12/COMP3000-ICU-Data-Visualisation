@@ -1,9 +1,9 @@
-package org.ParallelCoords;
+package ParallelCoords;
 
 
 import java.awt.*;
 import javax.swing.*;
-import org.ParallelCoords.GUI.MenuBar.MenuBar;
+import ParallelCoords.GUI.MenuBar.MenuBar;
 
 import java.io.*;
 import java.util.Properties;
