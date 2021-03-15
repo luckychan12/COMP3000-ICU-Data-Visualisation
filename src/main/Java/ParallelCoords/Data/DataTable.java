@@ -1,10 +1,26 @@
 package ParallelCoords.Data;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.regex.Pattern;
 
 public class DataTable {
     private int index;
     private final ArrayList<DataColumn> columns = new ArrayList<DataColumn>();
+    private int numRows;
+    private boolean definedHeaders;
+
+    public void setIndex(int index) {
+        this.index = index;
+    }
+
+    public boolean hasDefinedHeaders() {
+        return definedHeaders;
+    }
+
+    public void setDefinedHeaders(boolean definedHeaders) {
+        this.definedHeaders = definedHeaders;
+    }
 
     public int getIndex() {
         return index;
@@ -23,6 +39,17 @@ public class DataTable {
         return columns.get(index);
     }
 
+    public ArrayList<DataColumn> getAllColumns(){
+        return columns;
+    }
+
+    public void setNumRows(int numRows) {
+        this.numRows = numRows;
+    }
+
+    public int getNumRows() {
+        return numRows;
+    }
 
     private boolean checkIndex(int index){
         return index <= (columns.size() -1) && index >= 0;
@@ -35,6 +62,65 @@ public class DataTable {
         }
         return record;
     }
+
+    private boolean isNumeric(String strNum) {
+        if (strNum == null) {
+            return false;
+        }
+        return Pattern.compile("-?\\d+(\\.\\d+)?").matcher(strNum).matches();
+    }
+
+    public int getNumberOfColumns(){
+        return columns.size();
+    }
+
+    public double getNumValueAt(int row, int column){
+        return columns.get(column).getColumnData().get(row).getValue();
+    }
+    public String getTextValueAt(int row, int column){
+        return columns.get(column).getColumnData().get(row).getTextData();
+    }
+
+
+    public void setValueAt(String value, int row, int col){
+        DataEntity val = columns.get(col).getColumnData().get(row);
+        if (value.equals("")){
+            val.setText(true);
+            val.setTextData("NULL");
+        }
+        else if(!(isNumeric(value))) {
+            val.setText(true);
+            val.setTextData(value);
+        }
+        else {
+            val.setText(false);
+            val.setValue(Double.parseDouble(value));
+        }
+    }
+
+    public void sortColumnsByPosition(){
+        int n = columns.size();
+        for (int i = 0; i < n-1; i++)
+            for (int j = 0; j < n-i-1; j++){
+                if (columns.get(j).getColumnPosition() > columns.get(j +1).getColumnPosition())
+                {
+                    Collections.swap(columns, j, j+1);
+                }
+            }
+    }
+
+
+    public void sortColumnsByIndex(){
+        int n = columns.size();
+        for (int i = 0; i < n-1; i++)
+            for (int j = 0; j < n-i-1; j++){
+                if (columns.get(j).getColumnIndex() > columns.get(j +1).getColumnIndex())
+                {
+                    Collections.swap(columns, j, j+1);
+                }
+            }
+    }
+
 
     public boolean removeColumn(int index) {
         if (checkIndex(index)){

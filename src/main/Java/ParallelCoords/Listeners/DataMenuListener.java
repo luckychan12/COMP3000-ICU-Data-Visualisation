@@ -1,17 +1,28 @@
 package ParallelCoords.Listeners;
 
 import ParallelCoords.Data.Data;
+import ParallelCoords.Data.DataColumn;
+import ParallelCoords.Data.DataEntity;
+import ParallelCoords.Data.DataTable;
 import ParallelCoords.Main;
 import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
 
 public class DataMenuListener {
     private Main main;
     public DataMenuListener(Main mainWindow) {this.main = mainWindow;}
 
-    public void importData(ActionEvent e){
+    public void importDataHeaders(ActionEvent e){
+        importData(true);
+    }
+    public void importDataNoHeaders(ActionEvent e){
+        importData(false);
+    }
+
+    public void importData(boolean hasHeaders){
         String filepath;
         JFileChooser chooser = new JFileChooser();
         int returnVal = chooser.showOpenDialog(main);
@@ -20,15 +31,36 @@ public class DataMenuListener {
             UserSettings.getInstance().getUserImportSettings().setLastOpenedFile(chooser.getSelectedFile().getAbsolutePath());
             Data data = Data.getInstance();
             try {
-                data.createData(main, filepath, true);
-                System.out.println(data.getDataStore().get(0).getColumn(0).getColumnData().get(3).isConfirmedValue());
+                data.createData(main, filepath, hasHeaders);
+                DataTable currData = data.getDataStore().get(data.getCurrID());
+                main.setData();
 
+                //TODO TESTING DATA READ HERE
+                ArrayList<DataColumn> cols = data.getDataStore().get(0).getAllColumns();
+                for (DataColumn col :cols) {
+                    System.out.print(col.getColumnName() + ", ");
+                }
+                System.out.println();
+                for (int i = 0; i < cols.get(0).getColumnData().size(); i++) {
+                    for (DataColumn col : cols) {
+                        DataEntity ent = col.getColumnData().get(i);
+                        if (ent.isConfirmedValue()) {
+                            System.out.print(ent.getValue());
+                        } else if (ent.isText()) {
+                            System.out.print(ent.getTextData());
+                        }
+                        else {
+                            System.out.print("NULL");
+                        }
 
+                        System.out.print(", ");
+                    }
+                    System.out.println();
+                }
             }
             catch (Exception err){
-                System.out.println(err.toString());
+                err.printStackTrace();
             }
-
         }
 
     }

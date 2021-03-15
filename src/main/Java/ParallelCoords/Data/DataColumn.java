@@ -6,21 +6,34 @@ import java.util.Collections;
 public class DataColumn {
     private boolean reversed = false;
     private int columnID;
+    private int columnPosition;
     private String columnName;
     private ArrayList<DataEntity> dataColumn = new ArrayList<DataEntity>();
 
     public DataColumn(ArrayList<DataEntity> dataColumn, int index){
         this.dataColumn = dataColumn;
         this.columnID = index;
+        this.columnPosition = index;
     }
 
     public DataColumn(int index){
         this.columnID = index;
+        this.columnName = "Column " + index;
+        this.columnPosition = index;
     }
 
     public DataColumn(int index, String name){
         this.columnID = index;
         this.columnName = name;
+        this.columnPosition = index;
+    }
+
+    public void setColumnPosition(int columnPosition) {
+        this.columnPosition = columnPosition;
+    }
+
+    public int getColumnPosition() {
+        return columnPosition;
     }
 
     public String getColumnName() {

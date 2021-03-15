@@ -3,9 +3,14 @@ package ParallelCoords;
 
 import java.awt.*;
 import javax.swing.*;
+
+import ParallelCoords.Data.Data;
+import ParallelCoords.GUI.DataView.DataDisplayTable;
 import ParallelCoords.GUI.MenuBar.MenuBar;
 
 import java.io.*;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Properties;
 
 public class Main extends JFrame {
@@ -13,7 +18,8 @@ public class Main extends JFrame {
      *
      */
     private static final long serialVersionUID = 4008647681872120469L;
-
+    private List<Canvas> chartFrames = new LinkedList<>();
+    private DataDisplayTable dataDisplayTable;
     private MenuBar menuBar;
     public Main() {
         super("Ivan Chan (ICU) Data Visualisation");
@@ -34,6 +40,33 @@ public class Main extends JFrame {
         }
     }
 
+    public void initDataPanel(){
+        SwingUtilities.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                if (dataDisplayTable == null) {
+                    dataDisplayTable = new DataDisplayTable(Main.this);
+                    setContentPane(dataDisplayTable);
+                    dataDisplayTable.revalidate();
+                } else if(!Data.getInstance().getDataStore().isEmpty()) {
+                    dataDisplayTable.setup();
+                    dataDisplayTable.revalidate();
+                }
+                else{
+                    setContentPane(new JPanel());
+                    repaint();
+                }
+            }
+        });
+    }
+
+    public void setData(){
+        this.initDataPanel();
+        this.repaint();
+        //this.rebuildAllChartFrames();
+    }
+
     private void setWindow()
     {
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -47,8 +80,9 @@ public class Main extends JFrame {
                 screenSize = new Dimension(1200, 800);
             }
         }
-        setLocation((int) (0.25 * screenSize.width), (int) (0.25 * screenSize.height));
-        setSize((int) (0.5 * screenSize.width), (int) (0.5 * screenSize.height));
+        setLocation(screenSize.width, screenSize.height);
+        setSize(screenSize.width, screenSize.height);
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
 

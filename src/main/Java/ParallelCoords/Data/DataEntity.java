@@ -4,7 +4,9 @@ public class DataEntity {
     private double value;
     private int index;
     private int columnID;
+    private String textData;
     private boolean confirmedValue;
+    private boolean isText;
 
     public int getIndex() {
         return index;
@@ -20,6 +22,22 @@ public class DataEntity {
 
     public void setValue(double value) {
         this.value = value;
+    }
+
+    public void setTextData(String textData) {
+        this.textData = textData;
+    }
+
+    public void setText(boolean text) {
+        isText = text;
+    }
+
+    public boolean isText() {
+        return isText;
+    }
+
+    public String getTextData() {
+        return textData;
     }
 
     public void setConfirmedValue(boolean confirmedValue) {
