@@ -1,4 +1,4 @@
-package ParallelCoords.DataListView;
+package ParallelCoords.GUI.DataListView;
 
 //From xDat
 

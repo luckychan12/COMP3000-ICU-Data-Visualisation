@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
 public class DataTable {
     private int index;
     private String tableName;
-    private final ArrayList<DataColumn> columns = new ArrayList<DataColumn>();
+    private final ArrayList<DataColumn> columns = new ArrayList<>();
     private int numRows;
     private double min;
     private double max;
@@ -70,7 +70,7 @@ public class DataTable {
     }
 
     public ArrayList<DataEntity> getRecord(int index){
-        ArrayList<DataEntity> record = new ArrayList<DataEntity>();
+        ArrayList<DataEntity> record = new ArrayList<>();
         for (DataColumn column : columns) {
             record.add(column.findEntity(index));
         }
@@ -98,16 +98,20 @@ public class DataTable {
 
     public void setValueAt(String value, int row, int col){
         DataEntity val = columns.get(col).getColumnData().get(row);
+        columns.get(col).setCalculated(false);
         if (value.equals("")){
             val.setText(true);
+            val.setConfirmedValue(false);
             val.setTextData("NULL");
         }
         else if(!(isNumeric(value))) {
             val.setText(true);
+            val.setConfirmedValue(false);
             val.setTextData(value);
         }
         else {
             val.setText(false);
+            val.setConfirmedValue(true);
             val.setValue(Double.parseDouble(value));
         }
     }

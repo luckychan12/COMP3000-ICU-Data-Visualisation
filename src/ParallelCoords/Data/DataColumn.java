@@ -13,7 +13,7 @@ public class DataColumn {
     private double minValue = 0;
 
 
-    private ArrayList<DataEntity> dataColumn = new ArrayList<DataEntity>();
+    private ArrayList<DataEntity> dataColumn = new ArrayList<>();
 
     public DataColumn(ArrayList<DataEntity> dataColumn, int index){
         this.dataColumn = dataColumn;
@@ -63,6 +63,10 @@ public class DataColumn {
         }
     }
 
+    public void setCalculated(boolean calculated) {
+        this.calculated = calculated;
+    }
+
     public double getValuePercentage(int index){
 
         if (!calculated){
@@ -73,12 +77,15 @@ public class DataColumn {
             return 0;
         }
         double range = maxValue ;//- minValue;
-        double adjusted =0;
+        double adjusted;
         if (dataColumn.get(index).isConfirmedValue()){
             adjusted = dataColumn.get(index).getValue();// - minValue;
+            return 1- adjusted / 5;
+        }
+        else{
+            return 1;
         }
 
-        return 1- adjusted / 5;
 
         //return 1 - adjusted/range;
     }

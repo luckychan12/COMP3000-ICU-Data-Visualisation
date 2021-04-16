@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class Data {
     private static final Data instance = new Data();
     private int dataID = 0;
-    private final ArrayList<DataTable> dataStore = new ArrayList<DataTable>();
+    private final ArrayList<DataTable> dataStore = new ArrayList<>();
     private String delimiter;
     private int currID = 0;
     private final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
@@ -87,6 +87,7 @@ public class Data {
         newEntity.setLineColor(color);
         if (token.equals("")){
             newEntity.setConfirmedValue(false);
+            newEntity.setText(false);
         }
         else if(!(isNumeric(token))) {
             newEntity.setConfirmedValue(false);
@@ -95,6 +96,7 @@ public class Data {
         }
         else{
             newEntity.setValue(Double.parseDouble(token));
+            newEntity.setText(false);
             newEntity.setConfirmedValue(true);
         }
         return newEntity;

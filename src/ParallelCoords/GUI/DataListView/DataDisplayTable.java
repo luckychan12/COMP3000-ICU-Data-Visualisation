@@ -1,4 +1,4 @@
-package ParallelCoords.DataListView;
+package ParallelCoords.GUI.DataListView;
 
 import ParallelCoords.Data.Data;
 import ParallelCoords.Data.DataTable;
@@ -49,7 +49,7 @@ public class DataDisplayTable extends JPanel {
         this.displayTable.setShowGrid(true);
         this.displayTable.setColumnSelectionAllowed(false);
         this.displayTable.setRowSelectionAllowed(true);
-        //this.displayTable.getSelectionModel().addListSelectionListener(new DataSelectionModel(mainWindow));
+        this.displayTable.getSelectionModel().addListSelectionListener(new DataSelectionModel(mainWindow));
 
         // Embed Table in ScrollPane
 

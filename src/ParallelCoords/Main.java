@@ -1,7 +1,7 @@
 package ParallelCoords;
 
 import ParallelCoords.Data.Data;
-import ParallelCoords.DataListView.DataDisplayTable;
+import ParallelCoords.GUI.DataListView.DataDisplayTable;
 import ParallelCoords.GUI.Chart.ChartFrame;
 import ParallelCoords.GUI.MenuBar.Buttons.MenuBar;
 import ParallelCoords.Settings.UserSettings;
@@ -39,6 +39,10 @@ public class Main extends JFrame {
         }
     }
 
+    public DataDisplayTable getDataDisplayTable() {
+        return dataDisplayTable;
+    }
+
     private void loadSettings()
         {
             try (InputStream input = new FileInputStream("config.properties")) {
@@ -51,21 +55,18 @@ public class Main extends JFrame {
         }
 
         public void initDataPanel(){
-            SwingUtilities.invokeLater(new Runnable() {
-                @Override
-                public void run() {
-                    if (dataDisplayTable == null) {
-                        dataDisplayTable = new DataDisplayTable(ParallelCoords.Main.this);
-                        setContentPane(dataDisplayTable);
-                        dataDisplayTable.revalidate();
-                    } else if(!Data.getInstance().getDataStore().isEmpty()) {
-                        dataDisplayTable.setup();
-                        dataDisplayTable.revalidate();
-                    }
-                    else{
-                        setContentPane(new JPanel());
-                        repaint();
-                    }
+            SwingUtilities.invokeLater(() -> {
+                if (dataDisplayTable == null) {
+                    dataDisplayTable = new DataDisplayTable(Main.this);
+                    setContentPane(dataDisplayTable);
+                    dataDisplayTable.revalidate();
+                } else if(!Data.getInstance().getDataStore().isEmpty()) {
+                    dataDisplayTable.setup();
+                    dataDisplayTable.revalidate();
+                }
+                else{
+                    setContentPane(new JPanel());
+                    repaint();
                 }
             });
         }
@@ -85,18 +86,24 @@ public class Main extends JFrame {
     {
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Dimension screenSize;
+        /*
         try {
-            screenSize = new Dimension(gEnv.getScreenDevices()[0].getDisplayMode().getWidth(), gEnv.getScreenDevices()[0].getDisplayMode().getHeight());
+            screenSize = new Dimension(1200, 800);
+            //screenSize = new Dimension(gEnv.getScreenDevices()[0].getDisplayMode().getWidth(), gEnv.getScreenDevices()[0].getDisplayMode().getHeight());
         } catch (Exception e) {
             try {
-                screenSize = getToolkit().getScreenSize();
+                //screenSize = getToolkit().getScreenSize();
+                screenSize = new Dimension(1200, 800);
             } catch (HeadlessException e1) {
                 screenSize = new Dimension(1200, 800);
             }
         }
-        setLocation(screenSize.width, screenSize.height);
+        */
+
+        screenSize = new Dimension(1000, 500);
+        setLocation(screenSize.width/2, screenSize.height/2);
         setSize(screenSize.width, screenSize.height);
-        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        //setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
     public static void main(String[] args) {

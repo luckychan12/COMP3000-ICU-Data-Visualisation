@@ -16,8 +16,8 @@ public class ChartPanel extends JPanel {
     float percentageAxisLength = 1f;
     float taskbarPadding = 0.75f;
     BasicStroke lineStroke = new BasicStroke(1.5f);
-    BasicStroke thickStroke = new BasicStroke(2f);
-    BasicStroke dashedLine = new BasicStroke(2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
+    //BasicStroke thickStroke = new BasicStroke(2f);
+    BasicStroke dashedLine = new BasicStroke(2.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{9}, 0);
     DataTable dataTable;
 
     ChartPanel(ChartFrame frame, Dimension screenSize, DataTable dataTable){
@@ -56,7 +56,7 @@ public class ChartPanel extends JPanel {
         drawAxis(g2, startPoint, axisLength, segments, segmentSize);
         drawData(g2, startPoint, axisLength, segments, segmentSize);
         drawTicks(g2, startPoint, axisLength, segments, segmentSize);
-        drawHeaders(g2, startPoint, axisLength, segments, segmentSize);
+        drawHeaders(g2, startPoint, segments, segmentSize);
         g2.setStroke(dashedLine);
 
         setVisible(true);
@@ -75,12 +75,12 @@ public class ChartPanel extends JPanel {
         int min = 0;
         int numTicks = 5;
 
-        g2.setFont(new Font(Font.SANS_SERIF,3, 14));
+        g2.setFont(new Font(Font.SANS_SERIF,Font.BOLD, 14));
         g2.setColor(Color.BLACK);
         for (int j = 0; j < segments; j++) {
             double range = max - min;
             for (int k = 0; k <= numTicks; k++) {
-                float perc = 1f/numTicks *k;
+                float perc = 1f/numTicks * k;
                 String text = Double.toString(  range - ((range / (float) numTicks) * k + min));
                 g2.drawString(text,startPoint.x + segmentSize  * j - 25,  (int) (startPoint.y + axisLength * perc + 5));
                 g2.drawLine(startPoint.x + segmentSize  * j -2, (int) (startPoint.y + axisLength * perc), startPoint.x + segmentSize * j +2, (int) (startPoint.y + axisLength * perc));
@@ -88,8 +88,8 @@ public class ChartPanel extends JPanel {
         }
     }
 
-    private void drawHeaders(Graphics2D g2, Point startPoint, int axisLength, int segments, int segmentSize){
-        Font font = new Font(Font.SANS_SERIF,3, 14);
+    private void drawHeaders(Graphics2D g2, Point startPoint, int segments, int segmentSize){
+        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 14);
         g2.setFont(font);
         g2.setColor(Color.BLACK);
 
@@ -99,11 +99,11 @@ public class ChartPanel extends JPanel {
             int width = metrics.stringWidth(dataTable.getColumn(j).getColumnName());
 
             if (j%2 != 0){
-                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j - width/2,  (int) (startPoint.y  - 50));
+                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j - width/2, (startPoint.y  - 50));
             }
             else
             {
-                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j -width/2,  (int) (startPoint.y - 30));
+                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j -width/2, (startPoint.y - 30));
             }
         }
     }
@@ -114,34 +114,66 @@ public class ChartPanel extends JPanel {
 
     private void drawData(Graphics2D g2, Point startPoint, int axisLength, int segments, int segmentSize){
         g2.setStroke(lineStroke);
-        DataColumn lastConfirmedValue;
-        int columnsSinceLastConfirmed = 0;
 
         for (int i = 0; i < dataTable.getMaxSize(); i++) {
             for (int j = 0; j < segments - 1; j++) {
+                g2.setStroke(lineStroke);
                 g2.setColor(dataTable.getColumn(j).findEntity(i).getLineColor());
-                if(dataTable.getColumn(j).isConfirmed() && dataTable.getColumn(j+1).isConfirmed() ){
-                    columnsSinceLastConfirmed = 0;
-                    lastConfirmedValue = dataTable.getColumn(j+1);
-                    DataColumn firstColumn = dataTable.getColumn(j);
-                    DataColumn secondColumn = dataTable.getColumn(j+1);
-                    Double firstPercentage = firstColumn.getValuePercentage(i);
-                    double secondPercentage = secondColumn.getValuePercentage(i);
-                    //System.out.println(firstPercentage + ", " + secondPercentage);
-                    g2.drawLine(startPoint.x + segmentSize  * j, (int) (startPoint.y + axisLength * firstPercentage), startPoint.x + segmentSize * (j+1), (int) (startPoint.y + axisLength * secondPercentage));
+                if(dataTable.getColumn(j).findEntity(i).isConfirmedValue()){
+                    if(dataTable.getColumn(j+1).findEntity(i).isConfirmedValue()){
+                        DataColumn firstColumn = dataTable.getColumn(j);
+                        DataColumn secondColumn = dataTable.getColumn(j + 1);
+                        double firstPercentage = firstColumn.getValuePercentage(i);
+                        double secondPercentage = secondColumn.getValuePercentage(i);
+                        g2.drawLine(startPoint.x + segmentSize * j, (int) (startPoint.y + axisLength * firstPercentage),
+                                startPoint.x + segmentSize * (j + 1), (int) (startPoint.y + axisLength * secondPercentage));
+                    }
+                    else {
+                        g2.setStroke(dashedLine);
+                        DataColumn firstColumn = dataTable.getColumn(j);
+
+                        double firstPercentage = firstColumn.getValuePercentage(i);
+                        int nextConfirmed = findNextConfirmed(i,j,segments);
+                        if (nextConfirmed != -1){
+                            double secondPercentage = dataTable.getColumn(nextConfirmed).getValuePercentage(i);
+                            g2.drawLine(startPoint.x + segmentSize * j, (int) (startPoint.y + axisLength * firstPercentage),
+                                    startPoint.x + segmentSize * nextConfirmed, (int) (startPoint.y + axisLength * secondPercentage));
+                        }else
+                        {
+                            g2.drawLine(startPoint.x + segmentSize * j, (int) (startPoint.y + axisLength * firstPercentage),
+                                    startPoint.x + segmentSize* (segments-1) , startPoint.y + axisLength);
+                        }
+
+                    }
+                }
+
+                else if(!dataTable.getColumn(j).findEntity(i).isConfirmedValue()){
+                    if (j == 0 ){
+                        g2.setStroke(dashedLine);
+                        if (dataTable.getColumn(j+1).findEntity(i).isConfirmedValue()){
+                            double secondPercentage = dataTable.getColumn(j+1).getValuePercentage(i);
+                            g2.drawLine(startPoint.x, startPoint.y + axisLength,
+                                    startPoint.x + segmentSize * (j+1), (int) (startPoint.y + axisLength * secondPercentage));
+                        }
+                        else{
+                            int nextConfirmed = findNextConfirmed(i,j,segments);
+                            double secondPercentage = dataTable.getColumn(nextConfirmed).getValuePercentage(i);
+                            g2.drawLine(startPoint.x, startPoint.y + axisLength,
+                                    startPoint.x + segmentSize * (nextConfirmed), (int) (startPoint.y + axisLength * secondPercentage));
+
+                        }
+                    }
                 }
             }
         }
+    }
 
-
-/*
-        g2.drawLine(startPoint.x, (int) (startPoint.y + axisLength * 0.2), startPoint.x + segmentSize, (int) (startPoint.y + axisLength * 0.8));
-        g2.drawLine(startPoint.x + segmentSize, (int) (startPoint.y + axisLength * 0.8), startPoint.x +segmentSize  * 2 , (int) (startPoint.y + axisLength * 0.7));
-        g2.drawLine(startPoint.x +segmentSize * 2, (int) (startPoint.y + axisLength * 0.7), startPoint.x +segmentSize  * 3 , (int) (startPoint.y + axisLength * 0.3));
-        g2.drawLine(startPoint.x +segmentSize * 3, (int) (startPoint.y + axisLength * 0.3), startPoint.x +segmentSize  * 4 , (int) (startPoint.y + axisLength * 0.5));
-        g2.drawLine(startPoint.x +segmentSize * 4, (int) (startPoint.y + axisLength * 0.5), startPoint.x +segmentSize  * 5 , (int) (startPoint.y + axisLength * 0.99));
-        g2.drawLine(startPoint.x +segmentSize * 5, (int) (startPoint.y + axisLength * 0.99), startPoint.x +segmentSize  * 6 , (int) (startPoint.y + axisLength * 0.6));
-        g2.drawLine(startPoint.x +segmentSize * 6, (int) (startPoint.y + axisLength * 0.6), startPoint.x +segmentSize  * 7 , (int) (startPoint.y + axisLength * 0.1));
-    //*/
+    private int findNextConfirmed(int row, int col, int segments){
+        for (int i = col+1; i < segments ; i++) {
+            if (dataTable.getColumn(i).findEntity(row).isConfirmedValue()){
+                return i;
+            }
+        }
+        return -1;
     }
 }

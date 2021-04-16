@@ -1,4 +1,4 @@
-package ParallelCoords.DataListView;
+package ParallelCoords.GUI.DataListView;
 
 import ParallelCoords.Data.DataEntity;
 import ParallelCoords.Data.DataTable;
@@ -67,8 +67,9 @@ import javax.swing.table.AbstractTableModel;
 
     @Override
     public void setValueAt(Object arg0, int rowIndex, int columnIndex) {
-       dataTable.setValueAt((String) arg0, rowIndex, columnIndex );
-       fireTableCellUpdated(rowIndex, columnIndex);
+        System.out.println("Fired");
+        dataTable.setValueAt((String) arg0, rowIndex, columnIndex-1 );
+        fireTableCellUpdated(rowIndex, columnIndex);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package ParallelCoords.DataListView;
+package ParallelCoords.GUI.DataListView;
 
 import ParallelCoords.Data.Data;
 import ParallelCoords.Data.DataTable;
