@@ -80,10 +80,10 @@ public class ChartPanel extends JPanel {
         for (int j = 0; j < segments; j++) {
             double range = max - min;
             for (int k = 0; k <= numTicks; k++) {
-                float perc = 1f/numTicks * k;
+                float percentage = 1f/numTicks * k;
                 String text = Double.toString(  range - ((range / (float) numTicks) * k + min));
-                g2.drawString(text,startPoint.x + segmentSize  * j - 25,  (int) (startPoint.y + axisLength * perc + 5));
-                g2.drawLine(startPoint.x + segmentSize  * j -2, (int) (startPoint.y + axisLength * perc), startPoint.x + segmentSize * j +2, (int) (startPoint.y + axisLength * perc));
+                g2.drawString(text,startPoint.x + segmentSize  * j - 25,  (int) (startPoint.y + axisLength * percentage + 5));
+                g2.drawLine(startPoint.x + segmentSize  * j -2, (int) (startPoint.y + axisLength * percentage), startPoint.x + segmentSize * j +2, (int) (startPoint.y + axisLength * percentage));
             }
         }
     }
@@ -157,10 +157,23 @@ public class ChartPanel extends JPanel {
                         }
                         else{
                             int nextConfirmed = findNextConfirmed(i,j,segments);
-                            double secondPercentage = dataTable.getColumn(nextConfirmed).getValuePercentage(i);
-                            g2.drawLine(startPoint.x, startPoint.y + axisLength,
-                                    startPoint.x + segmentSize * (nextConfirmed), (int) (startPoint.y + axisLength * secondPercentage));
+                            if (nextConfirmed == -1) {
+                                g2.setStroke(new BasicStroke(
+                                        2.5f,
+                                        BasicStroke.CAP_ROUND,
+                                        BasicStroke.JOIN_ROUND,
+                                        1f,
+                                        new float[] {1f,10f},
+                                        0f));
+                                g2.drawLine(startPoint.x, startPoint.y + axisLength,
+                                        startPoint.x + segmentSize * (segments -1), startPoint.y + axisLength);
+                            }
+                            else {
+                                double secondPercentage = dataTable.getColumn(nextConfirmed).getValuePercentage(i);
+                                g2.drawLine(startPoint.x, startPoint.y + axisLength,
+                                        startPoint.x + segmentSize * (nextConfirmed), (int) (startPoint.y + axisLength * secondPercentage));
 
+                            }
                         }
                     }
                 }

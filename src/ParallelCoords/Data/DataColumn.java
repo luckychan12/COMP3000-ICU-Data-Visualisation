@@ -23,7 +23,7 @@ public class DataColumn {
 
     public DataColumn(int index){
         this.columnID = index;
-        this.columnName = "Column " + index;
+        this.columnName = "Column " + (index + 1);
         this.columnPosition = index;
     }
 
