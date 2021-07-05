@@ -10,6 +10,7 @@ public class DataTable {
     private int index;
     private String tableName;
     private final ArrayList<DataColumn> columns = new ArrayList<>();
+    private ArrayList<Boolean> showRecord;
     private int numRows;
     private double min;
     private double max;
@@ -69,6 +70,11 @@ public class DataTable {
         return index <= (columns.size() -1) && index >= 0;
     }
 
+    public void initShowRecordList(){
+        showRecord = new ArrayList<Boolean>(Collections.nCopies(getMaxSize(), true));
+    }
+
+
     public ArrayList<DataEntity> getRecord(int index){
         ArrayList<DataEntity> record = new ArrayList<>();
         for (DataColumn column : columns) {
@@ -95,6 +101,9 @@ public class DataTable {
         return columns.get(column).getColumnData().get(row).getTextData();
     }
 
+    public void setShowRecordValue( int i, Boolean bool){
+        showRecord.set(i, bool);
+    }
 
     public void setValueAt(String value, int row, int col){
         DataEntity val = columns.get(col).getColumnData().get(row);
@@ -154,6 +163,10 @@ public class DataTable {
             }
         }
         return max;
+    }
+
+    public ArrayList<Boolean> getShowRecord() {
+        return showRecord;
     }
 
     public boolean removeColumn(int index) {

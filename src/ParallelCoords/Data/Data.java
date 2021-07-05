@@ -78,6 +78,7 @@ public class Data {
             throw err;
         }
         newData.setIndex(dataID);
+        newData.initShowRecordList();
         currID = dataID;
         dataID++;
     }

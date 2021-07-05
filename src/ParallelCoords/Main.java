@@ -35,6 +35,7 @@ public class Main extends JFrame {
 
     public void repaintCharts(){
         for (ChartFrame chart: chartWindows) {
+            chart.reprepData();
             chart.repaint();
         }
     }
@@ -103,6 +104,7 @@ public class Main extends JFrame {
         screenSize = new Dimension(1000, 500);
         setLocation(screenSize.width/2, screenSize.height/2);
         setSize(screenSize.width, screenSize.height);
+        setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         //setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }

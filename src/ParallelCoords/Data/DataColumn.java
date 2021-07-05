@@ -9,7 +9,7 @@ public class DataColumn {
     private int columnPosition;
     private String columnName;
     private boolean calculated = false;
-    private double maxValue = 0;
+    private double maxValue = -100000;
     private double minValue = 0;
 
 
@@ -56,7 +56,7 @@ public class DataColumn {
         minValue = maxValue;
         for (DataEntity data:dataColumn) {
             if (data.isConfirmedValue()) {
-                if (data.getValue() < maxValue) {
+                if (data.getValue() < minValue) {
                     minValue = data.getValue();
                 }
             }
@@ -67,24 +67,39 @@ public class DataColumn {
         this.calculated = calculated;
     }
 
-    public double getValuePercentage(int index){
+    public double getValuePercentage(int index, boolean absolute){
 
         if (!calculated){
             calculateMaxValue();
             calculateMinValue();
         }
-        if (maxValue == minValue){
-            return 0;
-        }
-        double range = maxValue ;//- minValue;
-        double adjusted;
-        if (dataColumn.get(index).isConfirmedValue()){
-            adjusted = dataColumn.get(index).getValue();// - minValue;
-            return 1- adjusted / 5;
+
+        if (absolute){
+            double range = maxValue - minValue;
+            if (range == 0){
+                return 0.5;
+            }
+
+            if (dataColumn.get(index).isConfirmedValue()){
+                double adjusted = dataColumn.get(index).getValue() - minValue;
+                return 1- adjusted / range;
+            }
+            else{
+                return -1;
+            }
         }
         else{
-            return 1;
+            double range = maxValue;
+            if (dataColumn.get(index).isConfirmedValue()){
+                double adjusted = dataColumn.get(index).getValue();
+                return 1 - adjusted / 5;
+            }
+            else{
+                return -1;
+            }
+
         }
+
 
 
         //return 1 - adjusted/range;
