@@ -9,8 +9,8 @@ public class DataColumn {
     private int columnPosition;
     private String columnName;
     private boolean calculated = false;
-    private double maxValue = -100000;
-    private double minValue = 0;
+    private double maxValue;
+    private double minValue;
 
 
     private ArrayList<DataEntity> dataColumn = new ArrayList<>();
@@ -34,7 +34,13 @@ public class DataColumn {
     }
 
 
-    public void calculateMaxValue(){
+    public double calculateMaxValue(){
+        for (DataEntity data:dataColumn) {
+            if (data.isConfirmedValue()) {
+                maxValue = data.getValue();
+                break;
+            }
+        }
         for (DataEntity data:dataColumn) {
             if (data.isConfirmedValue()) {
                 if (data.getValue() > maxValue) {
@@ -42,6 +48,7 @@ public class DataColumn {
                 }
             }
         }
+        return maxValue;
     }
 
     public double getMinValue() {
@@ -52,8 +59,13 @@ public class DataColumn {
         return maxValue;
     }
 
-    public void calculateMinValue(){
-        minValue = maxValue;
+    public double calculateMinValue(){
+        for (DataEntity data:dataColumn) {
+            if (data.isConfirmedValue()) {
+                minValue = data.getValue();
+                break;
+            }
+        }
         for (DataEntity data:dataColumn) {
             if (data.isConfirmedValue()) {
                 if (data.getValue() < minValue) {
@@ -61,6 +73,7 @@ public class DataColumn {
                 }
             }
         }
+        return minValue;
     }
 
     public void setCalculated(boolean calculated) {

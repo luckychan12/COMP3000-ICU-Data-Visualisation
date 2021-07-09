@@ -23,6 +23,7 @@ public class ChartFrame extends JFrame {
                 screenSize = new Dimension(1200, 800);
             }
         }
+        getContentPane().setLayout(null);
 
         panel = new ChartPanel(this, screenSize, displayTable);
         panel.setLayout(null);
@@ -38,7 +39,7 @@ public class ChartFrame extends JFrame {
     }
 
     public void reprepData(){
-        panel.reprepData();
+        panel.rePrepData();
     }
 
 

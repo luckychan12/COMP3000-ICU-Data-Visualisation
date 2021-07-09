@@ -26,8 +26,8 @@ public class FilterSlider {
     public FilterSlider(int upperBound, int lowerBound, int xPos, ChartPanel panel, int segmentNumber){
         this.panel = panel;
         this.segmentNumber = segmentNumber;
-        upperSlider = new DragBox(xPos, upperBound-2, upperColour, thickness, this, true);
-        lowerSlider = new DragBox(xPos, lowerBound+2, lowerColour, thickness, this, false);
+        upperSlider = new DragBox(xPos, upperBound-5, upperColour, thickness, this, true);
+        lowerSlider = new DragBox(xPos, lowerBound+5, lowerColour, thickness, this, false);
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         panel.add(upperSlider);
@@ -52,19 +52,19 @@ public class FilterSlider {
     }
 
     public void setUpperY(int pos){
-        upperSlider.setyPos(pos);
+        upperSlider.setYPos(pos);
     }
 
     public void setLowerY(int pos){
-        lowerSlider.setyPos(pos);
+        lowerSlider.setYPos(pos);
     }
 
     public void setUpperX(int pos){
-        upperSlider.setxPos(pos);
+        upperSlider.setXPos(pos);
     }
 
     public void setLowerX(int pos){
-        lowerSlider.setxPos(pos);
+        lowerSlider.setXPos(pos);
     }
 
     public void setUpperBackgroundColour(Color color){
@@ -99,26 +99,22 @@ public class FilterSlider {
         int lowerSliderPos = lowerSlider.getRealYPos() - upperBound;
         double upperPercentage = 1 - (((float)lowerBound - upperBound) - upperSliderPos) / (lowerBound - upperBound);
         double lowerPercentage = 1 - (((float)lowerBound - upperBound) - lowerSliderPos) / (lowerBound - upperBound);
-        System.out.println(upperPercentage);
-        System.out.println(lowerPercentage);
         return !(value <= upperPercentage) && !(value >= lowerPercentage);
-        //return !(value <= upperSliderPos) && !(value >= lowerSliderPos);
-
     }
 
     public void updateValues(){
-        for (FullLineData data: panel.getFullLineData()) {
+        for (FullLineData data: panel.getDataDisplay().getFullLineData()) {
             for (PartialLineData line:data.getData()) {
                 if (line.getSegmentStart() == segmentNumber){
-                    if (!(Objects.isNull(line.getPercentage1()) || Objects.isNull(line.getPercentage2()))) {
-                        if (!checkValue(line.getPercentage1())) {
-                            data.setShowData(segmentNumber, false);
-                        } else {
-                            data.setShowData(segmentNumber, true);
-                        }
+                    if (!Objects.isNull(line.getPercentage1())) {
+                        data.setShowData(segmentNumber, checkValue(line.getPercentage1()));
                     }
                 }
-
+                if (line.getGetSegmentEnd() == segmentNumber){
+                    if (!Objects.isNull(line.getPercentage2())) {
+                        data.setShowData(segmentNumber, checkValue(line.getPercentage2()));
+                    }
+                }
             }
         }
         updatePanel();
@@ -126,8 +122,12 @@ public class FilterSlider {
 
 
     public void updatePanel(){
-        panel.repaint();
-        panel.updateUI();
+        panel.getDataDisplay().repaint();
+    }
+
+    public void resetPos(){
+        lowerSlider.resetPos();
+        upperSlider.resetPos();
     }
 
 }

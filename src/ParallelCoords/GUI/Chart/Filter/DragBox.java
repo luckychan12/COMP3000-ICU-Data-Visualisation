@@ -8,11 +8,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 class DragBox extends JComponent {
-
     private volatile int screenX = 0;
     private volatile int screenY = 0;
-    private volatile int xPos = 0;
-    private volatile int yPos = 0;
+    private volatile int xPos;
+    private volatile int yPos;
     private final int width = 50;
     private final int height = 40;
     private final boolean upperSlider;
@@ -73,7 +72,6 @@ class DragBox extends JComponent {
                         setLocation(xPos, yPos + deltaY);
                     }
                 }
-                filter.updateValues();
             }
 
 
@@ -112,9 +110,10 @@ class DragBox extends JComponent {
 
         g2.setColor(this.getBackground());
 
-        //g2.setColor(new Color(31, 21, 1));
-        //g2.fillRect(0, 0, width, height);
+    }
 
+    public void resetPos(){
+        setLocation(xPos, outerBound);
     }
 
     public int getXPos() {
@@ -129,11 +128,7 @@ class DragBox extends JComponent {
         return yPos + height/2 + 1;
     }
 
-    public int getRealXPos() {
-        return yPos + height/2 + 1;
-    }
-
-    public void setxPos(int xPos) {
+    public void setXPos(int xPos) {
         this.xPos = xPos;
         setLocation(xPos,yPos);
     }
@@ -154,23 +149,15 @@ class DragBox extends JComponent {
         return thickness;
     }
 
-    public void setyPos(int yPos) {
+    public void setYPos(int yPos) {
         this.yPos = yPos;
         setLocation(xPos,yPos);
     }
     public void setOuterBound(int bound){
         this.outerBound = bound;
-        if(upperSlider){
-            if (yPos > outerBound){
-                yPos = outerBound;
-                setLocation(xPos,yPos);
-            }
-        }
-        else{
-            if (yPos > outerBound){
-                yPos = outerBound;
-                setLocation(xPos,yPos);
-            }
+        if (yPos > outerBound){
+            yPos = outerBound;
+            setLocation(xPos,yPos);
         }
     }
     public void setColour(Color color){

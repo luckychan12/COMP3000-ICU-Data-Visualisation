@@ -2,24 +2,22 @@ package ParallelCoords.Settings;
 
 public class UserImportSettings {
 
-    private String defaultDelimiter = ",";
-    private String lastOpenedFile = null;
-
     public String getDelimiter(){
-        return UserSettings.getInstance().getPropValue("delimiter", defaultDelimiter);
+        String defaultDelimiter = ",";
+        return UserSettings.getInstance().getPropValue("Delimiter", defaultDelimiter);
     }
 
     public void setDelimiter(String delimiter) {
-        UserSettings.getInstance().updateProperties("delimiter", delimiter);
+        UserSettings.getInstance().updateProperties("Delimiter", delimiter);
     }
 
     public void setLastOpenedFile(String lastOpenedFile) {
-        UserSettings.getInstance().updateProperties("lastOpenedFile", lastOpenedFile);
+        UserSettings.getInstance().updateProperties("LastOpenedFile", lastOpenedFile);
     }
 
     public String getLastOpenedFile() {
         String defaultVal = System.getProperty("user.home");
-        System.out.println(UserSettings.getInstance().getPropValue("lastOpenedFile", "ree"));
-        return UserSettings.getInstance().getPropValue("lastOpenedFile", defaultVal);
+        System.out.println(UserSettings.getInstance().getPropValue("LastOpenedFile", "none"));
+        return UserSettings.getInstance().getPropValue("LastOpenedFile", defaultVal);
     }
 }

@@ -4,9 +4,11 @@ import ParallelCoords.Data.DataColumn;
 import ParallelCoords.Data.DataTable;
 import ParallelCoords.GUI.Chart.Filter.Axis;
 import ParallelCoords.GUI.Chart.Filter.FilterSlider;
+import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 public class ChartPanel extends JPanel {
     Dimension screenSize;
     ChartFrame frame;
+    boolean absolute = true;
     int height;
     int width;
     int nullPadding = 50;
@@ -33,9 +36,9 @@ public class ChartPanel extends JPanel {
     int segmentSize;
     Point startPoint = new Point();
     int axisLength;
-    boolean absolute = false;
+
     ArrayList<FilterSlider> filterSliders = new ArrayList<>();
-    ArrayList<FullLineData> fullLineData = new ArrayList<>();
+    DataDisplay dataDisplay;
 
 
 
@@ -46,15 +49,37 @@ public class ChartPanel extends JPanel {
         this.setPreferredSize(screenSize);
         this.setAutoscrolls(true);
         this.dataTable = dataTable;
+        dataDisplay = new DataDisplay(screenSize);
+        this.add(dataDisplay);
 
         for (int i = 0; i < dataTable.getMaxSize(); i++) {
-            fullLineData.add(new FullLineData());
+            dataDisplay.addLineData(new FullLineData());
         }
 
+        calculateInitialPositionValues();
 
 
+        for (int i=0 ; i < segments; i++)
+        {
+            filterSliders.add(new FilterSlider(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize,this, i));
+        }
+        rePrepData();
+    }
+
+    public void toggleAbsolute(){
+        absolute = !absolute;
+        this.rePrepData();
+    }
+
+    public void calculateInitialPositionValues() {
         height = (int) (screenSize.height * taskbarPadding);
         width = screenSize.width;
+        int increment = 0;
+        percentageHeight = 0.85f;
+        if (UserSettings.getInstance().getUserGraphSettings().getHeaderDisplayType().equals("Tilted")){
+            increment = 1;
+            percentageHeight = 0.8f;
+        }
 
         segments = dataTable.getNumberOfColumns();
         int tmp = segments;
@@ -67,29 +92,29 @@ public class ChartPanel extends JPanel {
         segments = tmp;
         //percentage height is squared to make percentage axis length relative to percentage height and not the screen height
         axisLength = (int)(percentageHeight * percentageHeight * percentageAxisLength * height);
-        Dimension dim = new Dimension((segmentSize * segments + startPoint.x -30), height);
-        this.setPreferredSize(dim);
+        this.setPreferredSize(new Dimension((segmentSize * (segments + increment)  + startPoint.x -20), height));
+    }
 
-        for (int i=0 ; i < segments; i++)
-        {
-            filterSliders.add(new FilterSlider(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize,this, i));
+    public void resetFilters(){
+        for (FilterSlider filter:filterSliders) {
+            filter.resetPos();
         }
-        reprepData();
     }
 
-    public ArrayList<FullLineData> getFullLineData() {
-        return fullLineData;
+    public DataDisplay getDataDisplay() {
+        return dataDisplay;
     }
 
-    public void reprepData(){
+    public void rePrepData(){
         resetData();
+        resetFilters();
         prepData(startPoint, axisLength, segments, segmentSize);
     }
 
     private void resetData(){
-        fullLineData.clear();
+        dataDisplay.clearData();
         for (int i = 0; i < dataTable.getMaxSize(); i++) {
-            fullLineData.add(new FullLineData());
+            dataDisplay.addLineData(new FullLineData());
         }
     }
 
@@ -98,8 +123,8 @@ public class ChartPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         this.setBackground(Color.white);
 
-        drawAxis(g2, startPoint, axisLength, segments, segmentSize);
-        drawData(g2);
+        drawAxis(startPoint, axisLength, segments, segmentSize);
+        dataDisplay.repaint();
         drawTicks(g2, startPoint, axisLength, segments, segmentSize);
         drawHeaders(g2, startPoint, segments, segmentSize);
         g2.setStroke(dashedLine);
@@ -107,8 +132,7 @@ public class ChartPanel extends JPanel {
         setVisible(true);
     }
 
-
-    private void drawAxis(Graphics2D g2, Point startPoint, int axisLength, int segments, int segmentSize){
+    private void drawAxis(Point startPoint, int axisLength, int segments, int segmentSize){
 
         for (int i=0 ; i < segments; i++) {
             if (i == 0 || i == segments - 1) {
@@ -132,24 +156,22 @@ public class ChartPanel extends JPanel {
         g2.setColor(Color.BLACK);
         for (int j = 0; j < segments; j++) {
             if (absolute){
-                max = dataTable.getColumn(j).getMaxValue();
-                min = dataTable.getColumn(j).getMinValue();
+                max = dataTable.getColumn(j).calculateMaxValue();
+                min = dataTable.getColumn(j).calculateMinValue();
 
                 if (max == min){
                     max++;
                     min--;
                 }
             }
-            Font font = new Font(Font.SANS_SERIF, Font.BOLD, 14);
-            g2.setFont(font);
-            g2.setColor(Color.BLACK);
 
-            FontMetrics metrics = g2.getFontMetrics(font);
+
+            FontMetrics metrics = generateFontMetrics(g2, new Font(Font.SANS_SERIF, Font.BOLD, 14));
             int height = metrics.getHeight() / 4;
             int nullWidth = metrics.stringWidth("Text/Null value");
             if (j == 0 || j == segments -1){
-                g2.drawString("Text/Null value",startPoint.x + segmentSize  * j - nullWidth/2,  (int) (startPoint.y + axisLength + nullPadding + height + 15));
-                g2.drawLine(startPoint.x + segmentSize  * j -4, (int) (startPoint.y + axisLength + nullPadding + height -2 ), startPoint.x + segmentSize * j +4, (int) (startPoint.y + axisLength + nullPadding + height -2));
+                g2.drawString("Text/Null value",startPoint.x + segmentSize  * j - nullWidth/2, startPoint.y + axisLength + nullPadding + height + 15);
+                g2.drawLine(startPoint.x + segmentSize  * j -4, startPoint.y + axisLength + nullPadding + height -2, startPoint.x + segmentSize * j +4, startPoint.y + axisLength + nullPadding + height -2);
             }
 
 
@@ -161,8 +183,17 @@ public class ChartPanel extends JPanel {
                 g2.drawString(text,startPoint.x + segmentSize  * j - 35,  (int) (startPoint.y + axisLength * percentage + height));
                 g2.drawLine(startPoint.x + segmentSize  * j -2, (int) (startPoint.y + axisLength * percentage), startPoint.x + segmentSize * j +2, (int) (startPoint.y + axisLength * percentage));
             }
+
         }
     }
+
+    private FontMetrics generateFontMetrics(Graphics2D g2, Font font) {
+        g2.setFont(font);
+        g2.setColor(Color.BLACK);
+
+        return g2.getFontMetrics(font);
+    }
+
     private String round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
         BigDecimal bd = BigDecimal.valueOf(value).setScale(places, RoundingMode.HALF_UP);
@@ -170,23 +201,40 @@ public class ChartPanel extends JPanel {
     }
 
     private void drawHeaders(Graphics2D g2, Point startPoint, int segments, int segmentSize){
-        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 14);
-        g2.setFont(font);
-        g2.setColor(Color.BLACK);
+        String displayType = UserSettings.getInstance().getUserGraphSettings().getHeaderDisplayType();
 
-        FontMetrics metrics = g2.getFontMetrics(font);
+        FontMetrics metrics = generateFontMetrics(g2, new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        AffineTransform affineTransform = new AffineTransform();
+        AffineTransform orig = g2.getTransform();
+        affineTransform.rotate(Math.toRadians(0), 0, 0);
 
+        if (displayType.equals("Tilted")){
+            affineTransform.rotate(Math.toRadians(-UserSettings.getInstance().getUserGraphSettings().getTiltedAngle()), 0, 0);
+        }
+
+
+        Font rotatedFont = metrics.getFont().deriveFont(affineTransform);
+        g2.setFont(rotatedFont);
         for (int j = 0; j < segments; j++) {
             int width = metrics.stringWidth(dataTable.getColumn(j).getColumnName());
+            int height1 = 15 + metrics.getHeight() + 10 + metrics.getHeight();
+            int height2 = 15 + metrics.getHeight();
+            if (displayType.equals("Tilted")){
+                width = 0;
+                height1 = 30;
+                height2 = 30;
+            }
+
 
             if (j%2 != 0){
-                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j - width/2, (startPoint.y  - 55));
+                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j - width/2, (startPoint.y  - height1));
             }
             else
             {
-                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j -width/2, (startPoint.y - 35));
+                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j -width/2, (startPoint.y - height2));
             }
         }
+        g2.setTransform(orig);
     }
 
 
@@ -197,9 +245,9 @@ public class ChartPanel extends JPanel {
                 continue;
             }
             for (int j = 0; j < segments - 1; j++) {
+                boolean nextIsConfirmed = dataTable.getColumn(j+1).findEntity(i).isConfirmedValue();
                 // Normal value start
                 if(dataTable.getColumn(j).findEntity(i).isConfirmedValue()){
-                    boolean nextIsConfirmed = dataTable.getColumn(j+1).findEntity(i).isConfirmedValue();
 
                     // Normal value to normal value
                     if(nextIsConfirmed){
@@ -215,7 +263,7 @@ public class ChartPanel extends JPanel {
                         Point point1 = new Point(x1,y1);
                         Point point2 = new Point(x2,y2);
 
-                        fullLineData.get(i).addData(new PartialLineData(point1,point2,
+                        dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
                                 dataTable.getColumn(j).findEntity(i).getLineColor(), lineStroke, j, j+1,
                                 firstPercentage, secondPercentage));
                     }
@@ -235,12 +283,12 @@ public class ChartPanel extends JPanel {
                             Point point1 = new Point(x1,y1);
                             Point point2 = new Point(x2,y2);
 
-                            fullLineData.get(i).addData(new PartialLineData(point1,point2,
+                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
                                     dataTable.getColumn(j).findEntity(i).getLineColor(), dotDashStroke, j, segments-1,
                                     firstPercentage, null));
                         }
 
-                        //normal value to edge missing value
+                        //normal value to non edge missing value
                         if (nextConfirmedValue != -1){
                             double secondPercentage = dataTable.getColumn(nextConfirmedValue).getValuePercentage(i, absolute);
                             x1 = startPoint.x + segmentSize * j;
@@ -250,7 +298,7 @@ public class ChartPanel extends JPanel {
                             Point point1 = new Point(x1,y1);
                             Point point2 = new Point(x2,y2);
 
-                            fullLineData.get(i).addData(new PartialLineData(point1,point2,
+                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
                                     dataTable.getColumn(j).findEntity(i).getLineColor(), dashedLine,j,nextConfirmedValue,
                                     firstPercentage, secondPercentage));
                         }
@@ -267,7 +315,7 @@ public class ChartPanel extends JPanel {
                     }
 
                     // edge to normal
-                    if (dataTable.getColumn(j+1).findEntity(i).isConfirmedValue()){
+                    if (nextIsConfirmed){
                         double secondPercentage = dataTable.getColumn(j+1).getValuePercentage(i, absolute);
                         x1 = startPoint.x;
                         y1 = startPoint.y + axisLength + nullPadding;
@@ -276,26 +324,48 @@ public class ChartPanel extends JPanel {
                         Point point1 = new Point(x1,y1);
                         Point point2 = new Point(x2,y2);
 
-                        fullLineData.get(i).addData(new PartialLineData(point1,point2,
+                        dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
                                 dataTable.getColumn(j).findEntity(i).getLineColor(), dotDashStroke, 0, j+1,
                                 null, secondPercentage));
                     }
+
+                    if (!nextIsConfirmed){
+                        int nextConfirmedValue = findNextConfirmed(i,j,segments);
+
+                        if (nextConfirmedValue == -1){
+                            x1 = startPoint.x;
+                            y1 = startPoint.y + axisLength + nullPadding;
+                            x2 = startPoint.x + segmentSize* (segments-1);
+                            y2 = startPoint.y + axisLength + nullPadding;
+                            Point point1 = new Point(x1,y1);
+                            Point point2 = new Point(x2,y2);
+                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
+                                    dataTable.getColumn(j).findEntity(i).getLineColor(), dotDashStroke, 0, segments-1,
+                                    null, null));
+                        }
+                        if (nextConfirmedValue != -1){
+                            double secondPercentage = dataTable.getColumn(nextConfirmedValue).getValuePercentage(i, absolute);
+                            x1 = startPoint.x;
+                            y1 = startPoint.y + axisLength + nullPadding;
+                            x2 = startPoint.x + segmentSize * nextConfirmedValue;
+                            y2 = (int) (startPoint.y + axisLength * secondPercentage);
+                            Point point1 = new Point(x1,y1);
+                            Point point2 = new Point(x2,y2);
+
+                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
+                                    dataTable.getColumn(j).findEntity(i).getLineColor(), dashedLine,0,nextConfirmedValue,
+                                    null, secondPercentage));
+                        }
+
+
+                    }
+
+
+
                 }
             }
         }
-    }
-
-    private void drawData(Graphics2D g2){
-        for (FullLineData data: fullLineData) {
-            if (data.showData()){
-                for (PartialLineData line:data.getData()) {
-                    g2.setColor(line.getColour());
-                    g2.setStroke(line.getLineStroke());
-                    g2.drawLine(line.getPoint1().x, line.getPoint1().y, line.getPoint2().x,line.getPoint2().y);
-                }
-            }
-
-        }
+        dataDisplay.repaint();
     }
 
     private int findNextConfirmed(int row, int col, int segments){

@@ -27,6 +27,12 @@ public class Main extends JFrame {
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setWindow();
 
+
+        UserSettings.getInstance().getUserGraphSettings().setHeaderDisplayType("Staggered");
+        UserSettings.getInstance().getUserGraphSettings().setHeaderDisplayType("Tilted");
+        UserSettings.getInstance().getUserGraphSettings().setTiltedAngle(15);
+
+
     }
 
     public void addChart(ChartFrame chartFrame){
