@@ -71,6 +71,20 @@ public class ChartPanel extends JPanel {
         this.rePrepData();
     }
 
+    public void changeHeaderStyle(){
+        calculateInitialPositionValues();
+        for (FilterSlider slider:filterSliders) {
+            slider.removeSlider();
+        }
+
+        for (int i=0 ; i < segments; i++)
+        {
+            filterSliders.add(new FilterSlider(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize,this, i));
+        }
+        rePrepData();
+    }
+
+
     public void calculateInitialPositionValues() {
         height = (int) (screenSize.height * taskbarPadding);
         width = screenSize.width;

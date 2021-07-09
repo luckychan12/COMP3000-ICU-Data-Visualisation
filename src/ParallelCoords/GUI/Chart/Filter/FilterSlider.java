@@ -35,6 +35,12 @@ public class FilterSlider {
         setUpperBackgroundColour(Color.red);
     }
 
+    public void removeSlider(){
+        panel.remove(upperSlider);
+        panel.remove(lowerSlider);
+
+    }
+
     public int getUpperY(){
         return upperSlider.getYPos();
     }
