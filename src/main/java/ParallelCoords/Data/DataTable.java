@@ -71,7 +71,7 @@ public class DataTable {
     }
 
     public void initShowRecordList(){
-        showRecord = new ArrayList<Boolean>(Collections.nCopies(getMaxSize(), true));
+        showRecord = new ArrayList<>(Collections.nCopies(getMaxSize(), true));
     }
 
 

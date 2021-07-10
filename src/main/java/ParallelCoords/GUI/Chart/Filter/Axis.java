@@ -72,7 +72,7 @@ public class Axis extends JComponent {
         int y = (panel.getStartPoint().y + panel.getAxisLength());
         if (edge){
             g2.drawString("Text/Null value",x * currX - nullWidth/2,  y + height + 15  + panel.getNullPadding());
-            g2.drawLine(x -4, (int) (y + height -2 ), x +4, (int) (y + height -2 + panel.getNullPadding()));
+            g2.drawLine(x -4, y + height -2, x +4, y + height -2 + panel.getNullPadding());
         }
 
 
