@@ -1,4 +1,4 @@
-package ParallelCoords.GUI.MenuBar.Listeners;
+package ParallelCoords.GUI.TableMenuBar.Listeners;
 import ParallelCoords.Data.Data;
 import ParallelCoords.Data.DataTable;
 import ParallelCoords.Main;

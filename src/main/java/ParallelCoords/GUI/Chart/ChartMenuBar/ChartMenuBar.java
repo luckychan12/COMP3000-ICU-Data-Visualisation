@@ -11,6 +11,7 @@ public class ChartMenuBar extends JMenuBar {
         ActionListener buttonListener = e -> panel.toggleAbsolute();
         btnToggleAbsoluteRelative.addActionListener(buttonListener);
         btnToggleAbsoluteRelative.setText("Toggle Absolute/Relative");
+        //btnToggleAbsoluteRelative.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 20));
         this.add(btnToggleAbsoluteRelative);
 
         HeaderStyleMenu headerStyleMenu = new HeaderStyleMenu(panel);

@@ -1,4 +1,4 @@
-package ParallelCoords.GUI.MenuBar.Listeners;
+package ParallelCoords.GUI.TableMenuBar.Listeners;
 
 import ParallelCoords.Main;
 import ParallelCoords.Settings.UserSettings;
@@ -13,7 +13,7 @@ public class SettingsMenuListener {
     }
     public UserSettings userSettings =  UserSettings.getInstance();
     public void setDelimiter(ActionEvent e) {
-        String s = (String)JOptionPane.showInputDialog(
+        String s = JOptionPane.showInputDialog(
                 mainWindow,
                 "Set delimiter:\n" + "The Current delimiter is: '" + userSettings.getUserImportSettings().getDelimiter() + "'",
                 "Set Delimiter",

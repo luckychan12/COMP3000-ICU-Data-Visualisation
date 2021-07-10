@@ -1,4 +1,4 @@
-package ParallelCoords.GUI.MenuBar.Buttons;
+package ParallelCoords.GUI.TableMenuBar.Buttons;
 
 import ParallelCoords.Main;
 

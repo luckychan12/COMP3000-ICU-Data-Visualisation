@@ -1,6 +1,5 @@
 package ParallelCoords.GUI.Chart;
 
-import ParallelCoords.Data.DataColumn;
 import ParallelCoords.Data.DataTable;
 import ParallelCoords.GUI.Chart.Filter.Axis;
 import ParallelCoords.GUI.Chart.Filter.FilterSlider;
@@ -22,7 +21,7 @@ public class ChartPanel extends JPanel {
     int nullPadding = 50;
     float percentageWidth = 0.9f;
     float percentageHeight = 0.85f;
-    float percentageAxisLength = 1f;
+    float percentageAxisLength = 1.0f;
     float taskbarPadding = 0.75f;
 
     BasicStroke lineStroke = new BasicStroke(1.5f);
@@ -49,7 +48,7 @@ public class ChartPanel extends JPanel {
         this.setPreferredSize(screenSize);
         this.setAutoscrolls(true);
         this.dataTable = dataTable;
-        dataDisplay = new DataDisplay(screenSize);
+        dataDisplay = new DataDisplay(screenSize, dataTable, this);
         this.add(dataDisplay);
 
         for (int i = 0; i < dataTable.getMaxSize(); i++) {
@@ -92,7 +91,7 @@ public class ChartPanel extends JPanel {
         percentageHeight = 0.85f;
         if (UserSettings.getInstance().getUserGraphSettings().getHeaderDisplayType().equals("Tilted")){
             increment = 1;
-            percentageHeight = 0.8f;
+            percentageHeight = 1f - (UserSettings.getInstance().getUserGraphSettings().getTiltedTopPadding() * 0.01f);
         }
 
         segments = dataTable.getNumberOfColumns();
@@ -122,7 +121,7 @@ public class ChartPanel extends JPanel {
     public void rePrepData(){
         resetData();
         resetFilters();
-        prepData(startPoint, axisLength, segments, segmentSize);
+        dataDisplay.prepData(startPoint, axisLength, segments, segmentSize);
     }
 
     private void resetData(){
@@ -137,7 +136,7 @@ public class ChartPanel extends JPanel {
         Graphics2D g2 = (Graphics2D) g;
         this.setBackground(Color.white);
 
-        drawAxis(startPoint, axisLength, segments, segmentSize);
+        drawAxis();
         dataDisplay.repaint();
         drawTicks(g2, startPoint, axisLength, segments, segmentSize);
         drawHeaders(g2, startPoint, segments, segmentSize);
@@ -146,7 +145,7 @@ public class ChartPanel extends JPanel {
         setVisible(true);
     }
 
-    private void drawAxis(Point startPoint, int axisLength, int segments, int segmentSize){
+    private void drawAxis(){
 
         for (int i=0 ; i < segments; i++) {
             if (i == 0 || i == segments - 1) {
@@ -251,145 +250,26 @@ public class ChartPanel extends JPanel {
         g2.setTransform(orig);
     }
 
-
-    private void prepData(Point startPoint, int axisLength, int segments, int segmentSize){
-        int x1, y1, x2, y2;
-        for (int i = 0; i < dataTable.getMaxSize(); i++) {
-            if (!dataTable.getShowRecord().get(i)){
-                continue;
-            }
-            for (int j = 0; j < segments - 1; j++) {
-                boolean nextIsConfirmed = dataTable.getColumn(j+1).findEntity(i).isConfirmedValue();
-                // Normal value start
-                if(dataTable.getColumn(j).findEntity(i).isConfirmedValue()){
-
-                    // Normal value to normal value
-                    if(nextIsConfirmed){
-                        DataColumn firstColumn = dataTable.getColumn(j);
-                        DataColumn secondColumn = dataTable.getColumn(j + 1);
-                        double firstPercentage = firstColumn.getValuePercentage(i, absolute);
-                        double secondPercentage = secondColumn.getValuePercentage(i, absolute);
-
-                        x1 = startPoint.x + segmentSize * j;
-                        y1 = (int) (startPoint.y + axisLength * firstPercentage);
-                        x2 = startPoint.x + segmentSize * (j + 1);
-                        y2 = (int) (startPoint.y + axisLength * secondPercentage);
-                        Point point1 = new Point(x1,y1);
-                        Point point2 = new Point(x2,y2);
-
-                        dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
-                                dataTable.getColumn(j).findEntity(i).getLineColor(), lineStroke, j, j+1,
-                                firstPercentage, secondPercentage));
-                    }
-
-                    // Normal value to missing value
-                    if (!nextIsConfirmed){
-                        DataColumn firstColumn = dataTable.getColumn(j);
-                        double firstPercentage = firstColumn.getValuePercentage(i, absolute);
-                        int nextConfirmedValue = findNextConfirmed(i,j,segments);
-
-                        // Normal value to edge missing value
-                        if (nextConfirmedValue == -1){
-                            x1 = startPoint.x + segmentSize * j;
-                            y1 = (int) (startPoint.y + axisLength * firstPercentage);
-                            x2 = startPoint.x + segmentSize* (segments-1);
-                            y2 = startPoint.y + axisLength + nullPadding;
-                            Point point1 = new Point(x1,y1);
-                            Point point2 = new Point(x2,y2);
-
-                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
-                                    dataTable.getColumn(j).findEntity(i).getLineColor(), dotDashStroke, j, segments-1,
-                                    firstPercentage, null));
-                        }
-
-                        //normal value to non edge missing value
-                        if (nextConfirmedValue != -1){
-                            double secondPercentage = dataTable.getColumn(nextConfirmedValue).getValuePercentage(i, absolute);
-                            x1 = startPoint.x + segmentSize * j;
-                            y1 = (int) (startPoint.y + axisLength * firstPercentage);
-                            x2 = startPoint.x + segmentSize * nextConfirmedValue;
-                            y2 = (int) (startPoint.y + axisLength * secondPercentage);
-                            Point point1 = new Point(x1,y1);
-                            Point point2 = new Point(x2,y2);
-
-                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
-                                    dataTable.getColumn(j).findEntity(i).getLineColor(), dashedLine,j,nextConfirmedValue,
-                                    firstPercentage, secondPercentage));
-                        }
-                    }
-
-
-                }
-
-                // Missing value start
-                else if(!dataTable.getColumn(j).findEntity(i).isConfirmedValue()){
-                    // edge missing value
-                    if (j != 0 ) {
-                        continue;
-                    }
-
-                    // edge to normal
-                    if (nextIsConfirmed){
-                        double secondPercentage = dataTable.getColumn(j+1).getValuePercentage(i, absolute);
-                        x1 = startPoint.x;
-                        y1 = startPoint.y + axisLength + nullPadding;
-                        x2 = startPoint.x + segmentSize * (j+1);
-                        y2 = (int) (startPoint.y + axisLength * secondPercentage);
-                        Point point1 = new Point(x1,y1);
-                        Point point2 = new Point(x2,y2);
-
-                        dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
-                                dataTable.getColumn(j).findEntity(i).getLineColor(), dotDashStroke, 0, j+1,
-                                null, secondPercentage));
-                    }
-
-                    if (!nextIsConfirmed){
-                        int nextConfirmedValue = findNextConfirmed(i,j,segments);
-
-                        if (nextConfirmedValue == -1){
-                            x1 = startPoint.x;
-                            y1 = startPoint.y + axisLength + nullPadding;
-                            x2 = startPoint.x + segmentSize* (segments-1);
-                            y2 = startPoint.y + axisLength + nullPadding;
-                            Point point1 = new Point(x1,y1);
-                            Point point2 = new Point(x2,y2);
-                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
-                                    dataTable.getColumn(j).findEntity(i).getLineColor(), dotDashStroke, 0, segments-1,
-                                    null, null));
-                        }
-                        if (nextConfirmedValue != -1){
-                            double secondPercentage = dataTable.getColumn(nextConfirmedValue).getValuePercentage(i, absolute);
-                            x1 = startPoint.x;
-                            y1 = startPoint.y + axisLength + nullPadding;
-                            x2 = startPoint.x + segmentSize * nextConfirmedValue;
-                            y2 = (int) (startPoint.y + axisLength * secondPercentage);
-                            Point point1 = new Point(x1,y1);
-                            Point point2 = new Point(x2,y2);
-
-                            dataDisplay.getFullLineData().get(i).addData(new PartialLineData(point1,point2,
-                                    dataTable.getColumn(j).findEntity(i).getLineColor(), dashedLine,0,nextConfirmedValue,
-                                    null, secondPercentage));
-                        }
-
-
-                    }
-
-
-
-                }
-            }
-        }
-        dataDisplay.repaint();
+    public boolean isAbsolute() {
+        return absolute;
     }
 
-    private int findNextConfirmed(int row, int col, int segments){
-        for (int i = col+1; i < segments ; i++) {
-            if (dataTable.getColumn(i).findEntity(row).isConfirmedValue()){
-                return i;
-            }
-        }
-        return -1;
+    public Dimension getScreenSize() {
+        return screenSize;
     }
+
+    public BasicStroke getDotDashStroke() {
+        return dotDashStroke;
+    }
+
+    public BasicStroke getDashedLine() {
+        return dashedLine;
+    }
+
+    public BasicStroke getLineStroke() {
+        return lineStroke;
+    }
+
 
     public int getSegmentSize() {
         return segmentSize;

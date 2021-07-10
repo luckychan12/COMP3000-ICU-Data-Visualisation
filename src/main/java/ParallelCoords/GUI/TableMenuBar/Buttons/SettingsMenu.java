@@ -1,7 +1,7 @@
-package ParallelCoords.GUI.MenuBar.Buttons;
+package ParallelCoords.GUI.TableMenuBar.Buttons;
 
 
-import ParallelCoords.GUI.MenuBar.Listeners.SettingsMenuListener;
+import ParallelCoords.GUI.TableMenuBar.Listeners.SettingsMenuListener;
 import ParallelCoords.Main;
 
 import javax.swing.*;

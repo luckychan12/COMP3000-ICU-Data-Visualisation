@@ -1,4 +1,4 @@
-package ParallelCoords.GUI.MenuBar.Listeners;
+package ParallelCoords.GUI.TableMenuBar.Listeners;
 
 import ParallelCoords.Main;
 

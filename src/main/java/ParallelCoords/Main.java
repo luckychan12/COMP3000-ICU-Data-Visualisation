@@ -3,7 +3,7 @@ package ParallelCoords;
 import ParallelCoords.Data.Data;
 import ParallelCoords.GUI.DataListView.DataDisplayTable;
 import ParallelCoords.GUI.Chart.ChartFrame;
-import ParallelCoords.GUI.MenuBar.Buttons.MenuBar;
+import ParallelCoords.GUI.TableMenuBar.Buttons.MenuBar;
 import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
