@@ -3,7 +3,6 @@ package ParallelCoords.Data;
 import ParallelCoords.Main;
 import ParallelCoords.Settings.UserSettings;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,7 +15,6 @@ public class Data {
     private final ArrayList<DataTable> dataStore = new ArrayList<>();
     private String delimiter;
     private int currID = 0;
-    private final Pattern pattern = Pattern.compile("-?\\d+(\\.\\d+)?");
     private Data(){}
     public static Data getInstance(){
         return instance;
@@ -35,7 +33,7 @@ public class Data {
         if (strNum == null) {
             return false;
         }
-        return pattern.matcher(strNum).matches();
+        return Pattern.compile("-?\\d+(\\.\\d+)?").matcher(strNum).matches() || Pattern.compile("-?\\.\\d+").matcher(strNum).matches();
     }
 
     public void createData(Main mainWindow, String pathToInputData, boolean hasHeaders) throws IOException,NumberFormatException {
@@ -56,11 +54,11 @@ public class Data {
         }
         else {
             newData.setDefinedHeaders(false);
-            Color lineColour = newData.genColour();
+            //Color lineColour = newData.genColour();
             for (String token : tokens){
                 DataColumn column = new DataColumn(currColumn);
 
-                column.addEntity(addDataEntity(token, lineColour));
+                column.addEntity(addDataEntity(token));
                 newData.addColumn(column);
                 currColumn++;
             }
@@ -68,9 +66,7 @@ public class Data {
         dataStore.add(newData);
 
         try {
-
             loadData(dataID, reader);
-
         }
         catch (IOException | NumberFormatException err){
             dataStore.remove(dataID -1);
@@ -83,9 +79,9 @@ public class Data {
         dataID++;
     }
 
-    private DataEntity addDataEntity(String token, Color color) {
+    private DataEntity addDataEntity(String token) {
         DataEntity newEntity = new DataEntity();
-        newEntity.setLineColor(color);
+        //newEntity.setLineColor(color);
         if (token.equals("")){
             newEntity.setConfirmedValue(false);
             newEntity.setText(false);
@@ -113,10 +109,10 @@ public class Data {
             tokens = (line.trim()).split(delimiter, -1);
             int currColumn = 0;
             if (tokens.length > 0) {
-                Color lineColour = dataStore.get(tableID).genColour();
+               // Color lineColour = dataStore.get(tableID).genColour();
                 for (String token : tokens){
                     DataColumn col = dataStore.get(tableID).getColumn(currColumn);
-                    col.addEntity(addDataEntity(token, lineColour));
+                    col.addEntity(addDataEntity(token));
                     currColumn++;
                 }
             }

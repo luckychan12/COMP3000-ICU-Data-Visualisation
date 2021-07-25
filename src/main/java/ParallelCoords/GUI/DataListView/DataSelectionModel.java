@@ -24,6 +24,6 @@ public class DataSelectionModel extends DefaultListSelectionModel implements Lis
         for (int i : selection) {
             System.out.println(i);
         }
-        this.mainWindow.repaintCharts();
+        this.mainWindow.repaintCharts(true);
     }
 }

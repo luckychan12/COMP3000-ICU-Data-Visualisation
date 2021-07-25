@@ -166,6 +166,140 @@ public class UserGraphSettings {
         }
     }
 
+    public void setChartHeaderFontSize(int value){
+        UserSettings.getInstance().updateProperties("ChartHeaderFontSize", Integer.toString(value));
+    }
 
+    public int getChartHeaderFontSize(){
+        String defaultVal = "16";
+        try {
+            return Integer.parseInt(UserSettings.getInstance().getPropValue("ChartHeaderFontSize", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading the \nfont size from storage.", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartHeaderFontSize(Integer.parseInt(defaultVal));
+            return Integer.parseInt(defaultVal);
+        }
+    }
+
+    public void setChartTickFontSize(int value){
+        UserSettings.getInstance().updateProperties("ChartTickFontSize", Integer.toString(value));
+    }
+
+    public int getChartTickFontSize(){
+        String defaultVal = "14";
+        try {
+            return Integer.parseInt(UserSettings.getInstance().getPropValue("ChartTickFontSize", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading the \nfont size from storage.", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartTickFontSize(Integer.parseInt(defaultVal));
+            return Integer.parseInt(defaultVal);
+        }
+    }
+
+    public void setChartRedWeight(float value){
+        UserSettings.getInstance().updateProperties("ChartRedWeight", Float.toString(value));
+    }
+
+    public float getChartRedWeight(){
+        String defaultVal = "0";
+        try {
+            return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartRedWeight", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading saved colour weights from storage", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartRedWeight(Float.parseFloat(defaultVal));
+            return Float.parseFloat(defaultVal);
+        }
+    }
+    public void setChartGreenWeight(float value){
+        UserSettings.getInstance().updateProperties("ChartGreenWeight", Float.toString(value));
+    }
+
+    public float getChartGreenWeight(){
+        String defaultVal = "0";
+        try {
+            return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartGreenWeight", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading saved colour weights from storage", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartGreenWeight(Float.parseFloat(defaultVal));
+            return Float.parseFloat(defaultVal);
+        }
+    }
+
+    public void setChartBlueWeight(float value){
+        UserSettings.getInstance().updateProperties("ChartBlueWeight", Float.toString(value));
+    }
+
+    public float getChartBlueWeight(){
+        String defaultVal = "0";
+        try {
+            return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartBlueWeight", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading saved colour weights from storage", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartBlueWeight(Float.parseFloat(defaultVal));
+            return Float.parseFloat(defaultVal);
+        }
+    }
+
+    public void setChartNumTicks(int value){
+        UserSettings.getInstance().updateProperties("ChartNumTicks", Integer.toString(value));
+    }
+
+    public int getChartNumTicks(){
+        String defaultVal = "5";
+        try {
+            return Integer.parseInt(UserSettings.getInstance().getPropValue("ChartNumTicks", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading the \n number of ticks to display on graph", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartNumTicks(Integer.parseInt(defaultVal));
+            return Integer.parseInt(defaultVal);
+        }
+    }
+
+    public void setChartAxisMax(double value){
+        UserSettings.getInstance().updateProperties("ChartAxisMax", Double.toString(value));
+    }
+
+    public double getChartAxisMax(){
+        String defaultVal = "5";
+        try {
+            return Double.parseDouble(UserSettings.getInstance().getPropValue("ChartAxisMax", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading the \n chart axis settings", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartAxisMax(Double.parseDouble(defaultVal));
+            return Double.parseDouble(defaultVal);
+        }
+    }
+
+    public void setChartAxisMin(double value){
+        UserSettings.getInstance().updateProperties("ChartAxisMin", Double.toString(value));
+    }
+
+    public double getChartAxisMin(){
+        String defaultVal = "1.5";
+        try {
+            return Double.parseDouble(UserSettings.getInstance().getPropValue("ChartAxisMin", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            JOptionPane.showMessageDialog(frame, "There was an error loading the \n chart axis settings", "Error", JOptionPane.WARNING_MESSAGE);
+            setChartAxisMin(Double.parseDouble(defaultVal));
+            return Double.parseDouble(defaultVal);
+        }
+
+    }
 
 }

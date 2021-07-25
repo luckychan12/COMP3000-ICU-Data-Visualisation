@@ -32,10 +32,17 @@ public class Main extends JFrame {
         chartWindows.add(chartFrame);
     }
 
-    public void repaintCharts(){
+    public void repaintCharts(boolean showWarning){
         for (ChartFrame chart: chartWindows) {
-            chart.reprepData();
+            chart.reprepData(showWarning);
             chart.repaint();
+        }
+    }
+
+    public void reloadMenuFonts(){
+        menuBar.reloadFonts();
+        for (ChartFrame chart: chartWindows) {
+            chart.getMenu().reloadFonts();
         }
     }
 
@@ -79,32 +86,16 @@ public class Main extends JFrame {
         public void setData(){
             this.initDataPanel();
             this.repaint();
-            //this.rebuildAllChartFrames();
+
         }
-    //*/
     private void setWindow()
     {
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Dimension screenSize;
-        /*
-        try {
-            screenSize = new Dimension(1200, 800);
-            //screenSize = new Dimension(gEnv.getScreenDevices()[0].getDisplayMode().getWidth(), gEnv.getScreenDevices()[0].getDisplayMode().getHeight());
-        } catch (Exception e) {
-            try {
-                //screenSize = getToolkit().getScreenSize();
-                screenSize = new Dimension(1200, 800);
-            } catch (HeadlessException e1) {
-                screenSize = new Dimension(1200, 800);
-            }
-        }
-        */
-
         screenSize = new Dimension(1000, 500);
         setLocation(screenSize.width/2, screenSize.height/2);
         setSize(screenSize.width, screenSize.height);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //setExtendedState(JFrame.MAXIMIZED_BOTH);
         setVisible(true);
     }
     public static void main(String[] args) {

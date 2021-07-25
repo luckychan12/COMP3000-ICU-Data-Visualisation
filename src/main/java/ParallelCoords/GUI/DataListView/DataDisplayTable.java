@@ -3,6 +3,7 @@ package ParallelCoords.GUI.DataListView;
 import ParallelCoords.Data.Data;
 import ParallelCoords.Data.DataTable;
 import ParallelCoords.Main;
+import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -45,6 +46,10 @@ public class DataDisplayTable extends JPanel {
 
         DataTableModel dataSheetTableModel = new DataTableModel(dataTable);
         this.displayTable = new JTable(dataSheetTableModel, tableColumnModel);
+        this.displayTable.setFont( new Font("Calibri", Font.PLAIN, UserSettings.getInstance()
+                .getUserGeneralSettings().getTableFontSize()));
+        this.displayTable.getTableHeader().setFont(new Font("Calibri", Font.BOLD, UserSettings.getInstance()
+                .getUserGeneralSettings().getTableHeaderFontSize()));
         this.displayTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         this.displayTable.setShowGrid(true);
         this.displayTable.setColumnSelectionAllowed(false);

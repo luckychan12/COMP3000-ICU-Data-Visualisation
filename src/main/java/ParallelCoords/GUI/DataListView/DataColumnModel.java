@@ -38,7 +38,7 @@ public class DataColumnModel extends DefaultTableColumnModel {
                     //System.out.println(this.getColumn(i).getHeaderValue().toString());
                     this.getColumn(i).setModelIndex(i);
                 }
-                mainWindow.repaintCharts();
+                mainWindow.repaintCharts(false);
             }
         }
     }

@@ -41,4 +41,16 @@ public class DataMenuListener {
         }
 
     }
+
+    public void setDelimiter(ActionEvent e) {
+        String s = JOptionPane.showInputDialog(
+                main,
+                "Set delimiter:\n" + "The Current delimiter is: '" + settings.getDelimiter() + "'",
+                "Set Delimiter",
+                JOptionPane.PLAIN_MESSAGE);
+
+        if ((s != null) && (s.length() > 0)) {
+            settings.setDelimiter(s);
+        }
+    }
 }

@@ -46,7 +46,7 @@ public class Axis extends JComponent {
 
     private void drawAxis(Graphics2D g2) {
         int x = panel.getStartPoint().x + currX * panel.getSegmentSize();
-        int yStart = panel.getStartPoint().y;
+        int yStart = panel.getStartPoint().y - 30;
         int yEnd = panel.getStartPoint().y + panel.getAxisLength();
         g2.drawLine( x, yStart , x, edge ? yEnd + panel.getNullPadding() : yEnd);
     }
@@ -54,7 +54,7 @@ public class Axis extends JComponent {
     private void drawTicks(Graphics2D g2){
         double max = defaultMax;
         double min = defaultMin;
-        Font font = new Font(Font.SANS_SERIF, Font.BOLD, 14);
+        Font font = new Font("Calibri", Font.BOLD, 14);
         g2.setFont(font);
         g2.setColor(Color.BLACK);
         if (absolute){

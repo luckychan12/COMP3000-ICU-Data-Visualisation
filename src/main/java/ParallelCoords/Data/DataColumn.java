@@ -1,5 +1,8 @@
 package ParallelCoords.Data;
 
+import ParallelCoords.Settings.UserGraphSettings;
+import ParallelCoords.Settings.UserSettings;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -87,7 +90,7 @@ public class DataColumn {
             calculateMinValue();
         }
 
-        if (absolute){
+        if (!absolute){
             double range = maxValue - minValue;
             if (range == 0){
                 return 0.5;
@@ -102,10 +105,10 @@ public class DataColumn {
             }
         }
         else{
-            double range = maxValue;
+            UserGraphSettings settings = UserSettings.getInstance().getUserGraphSettings();
             if (dataColumn.get(index).isConfirmedValue()){
-                double adjusted = dataColumn.get(index).getValue();
-                return 1 - adjusted / 5;
+                double value = dataColumn.get(index).getValue() - settings.getChartAxisMin();
+                return 1 - value / (settings.getChartAxisMax() - settings.getChartAxisMin());
             }
             else{
                 return -1;

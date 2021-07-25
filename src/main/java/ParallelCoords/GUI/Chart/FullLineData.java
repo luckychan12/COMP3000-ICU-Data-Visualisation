@@ -1,13 +1,16 @@
 package ParallelCoords.GUI.Chart;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
 public class FullLineData {
-    private ArrayList<PartialLineData> lineData = new ArrayList<>();
-    private HashMap<Integer, Boolean> showData = new HashMap<>();
+    private final ArrayList<PartialLineData> lineData = new ArrayList<>();
+    private final HashMap<Integer, Boolean> filteredData = new HashMap<>();
+    private boolean showData = true;
+    private Color color;
 
     FullLineData(){}
 
@@ -16,15 +19,26 @@ public class FullLineData {
     }
 
     public void setShowData(int segment, boolean value){
-        showData.put(segment, value);
+        filteredData.put(segment, value);
     }
 
     public Boolean showDataSegment(int segment){
-        return showData.get(segment);
+        return filteredData.get(segment);
     }
 
-    public Boolean showData(){
-        Iterator<Map.Entry<Integer, Boolean>> it = showData.entrySet().iterator();
+    public void setColor(Color color) {
+        this.color = color;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public Boolean filterData(){
+        if (!showData){
+            return false;
+        }
+        Iterator<Map.Entry<Integer, Boolean>> it = filteredData.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<Integer, Boolean> pair = it.next();
             if (!pair.getValue()){
@@ -33,6 +47,15 @@ public class FullLineData {
             it.remove();
         }
         return true;
+    }
+
+
+    public void setShowData(boolean showData) {
+        this.showData = showData;
+    }
+
+    public boolean getShowData() {
+        return showData;
     }
 
     public ArrayList<PartialLineData> getData(){

@@ -12,7 +12,13 @@ public class ChartMenuListener {
 
     public void generateChart(ActionEvent e){
         Data data = Data.getInstance();
-        main.addChart(new ChartFrame(data.getDataStore().get(data.getCurrID())));
+        try {
+            main.addChart(new ChartFrame(data.getDataStore().get(data.getCurrID()), main));
+        }
+        catch (IndexOutOfBoundsException e2){
+            System.out.println("No data loaded");
+        }
+
     }
 
 

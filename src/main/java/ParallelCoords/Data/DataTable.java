@@ -1,9 +1,7 @@
 package ParallelCoords.Data;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Random;
 import java.util.regex.Pattern;
 
 public class DataTable {
@@ -15,7 +13,7 @@ public class DataTable {
     private double min;
     private double max;
     private boolean definedHeaders;
-    Random rand = new Random();
+    private boolean dismissWarning = false;
 
     public void setIndex(int index) {
         this.index = index;
@@ -40,6 +38,10 @@ public class DataTable {
     public void addColumn(DataColumn entity){
         entity.setColumnIndex(columns.size());
         columns.add(entity);
+    }
+
+    public void setDismissWarning(boolean dismissWarning) {
+        this.dismissWarning = dismissWarning;
     }
 
     public void setTableName(String tableName) {
@@ -87,7 +89,7 @@ public class DataTable {
         if (strNum == null) {
             return false;
         }
-        return Pattern.compile("-?\\d+(\\.\\d+)?").matcher(strNum).matches();
+        return Pattern.compile("-?\\d+(\\.\\d+)?").matcher(strNum).matches() || Pattern.compile("-?\\.\\d+").matcher(strNum).matches();
     }
 
     public int getNumberOfColumns(){
@@ -148,12 +150,7 @@ public class DataTable {
             }
     }
 
-    public Color genColour(){
-        float r = rand.nextFloat();
-        float g = rand.nextFloat();
-        float b = rand.nextFloat();
-        return new Color(r, g, b).darker();
-    }
+
 
     public int getMaxSize(){
         int max = 0;

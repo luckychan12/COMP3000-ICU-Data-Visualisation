@@ -6,12 +6,13 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.RoundRectangle2D;
 
 class DragBox extends JComponent {
     private volatile int screenX = 0;
     private volatile int screenY = 0;
-    private volatile int xPos;
-    private volatile int yPos;
+    private int xPos;
+    private int yPos;
     private final int width = 50;
     private final int height = 40;
     private final boolean upperSlider;
@@ -25,12 +26,22 @@ class DragBox extends JComponent {
         setBounds(0, 0, width, height);
         setOpaque(true);
 
+        this.upperSlider = isUpperSlider;
         xPos = xInit - width/2;
-        yPos = yInit - height/2 - 1;
-        outerBound = yPos;
+
+        yPos = yInit - height;
+
+        if(upperSlider){
+            outerBound = yPos;
+        }
+        else {
+            yPos = yPos + height;
+            outerBound = yPos;
+        }
+
         setLocation(xPos, yPos);
         //setSize(30,20);
-        this.upperSlider = isUpperSlider;
+
         this.color = color;
         this.thickness = thickness;
 
@@ -47,6 +58,8 @@ class DragBox extends JComponent {
             @Override
             public void mouseReleased(MouseEvent e) {
                 updateCoords(e);
+                filter.updateValues();
+
             }
 
             @Override
@@ -60,6 +73,7 @@ class DragBox extends JComponent {
 
             @Override
             public void mouseDragged(MouseEvent e) {
+                System.out.println(filter.getUpperY() + "    " + filter.getLowerY());
                 //int deltaX = e.getXOnScreen() - screenX;
                 int deltaY = e.getYOnScreen() - screenY;
                 if(isUpperSlider){
@@ -72,6 +86,7 @@ class DragBox extends JComponent {
                         setLocation(xPos, yPos + deltaY);
                     }
                 }
+                filter.updateValues();
             }
 
 
@@ -96,8 +111,10 @@ class DragBox extends JComponent {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         //g2.drawRect(0, 0, width, height);
+
         g2.setStroke(new BasicStroke(thickness));
         g2.setColor(Color.BLACK);
+        /*
         g2.drawLine(0,height/2, width, height/2);
         g2.setColor(color);
         g2.drawLine(width,0,width, height);
@@ -106,14 +123,21 @@ class DragBox extends JComponent {
         g2.drawLine(width - (width/10), height, width, height);
         g2.drawLine((width/10), 0, 0, 0);
         g2.drawLine((width/10), height, 0, height);
-
-
-        g2.setColor(this.getBackground());
+*/
+        g2.setColor(new Color(100,100,100, 150));
+        RoundRectangle2D roundRectangle2D = new RoundRectangle2D.Double(width/2f - (width/7f),1,width/3.5,height-2, 5,5);
+        g2.fill(roundRectangle2D);
+        g2.setColor(Color.black);
+        g2.draw(roundRectangle2D);
+        g2.setStroke(new BasicStroke(1.5f));
+        g2.drawLine(width/2 -3,height/2 -5, width/2 +3 , height/2 -5 );
+        g2.drawLine(width/2 -3,height/2 , width/2 +3 , height/2 );
+        g2.drawLine(width/2 -3,height/2 +5, width/2 +3 , height/2 +5 );
 
     }
 
     public void resetPos(){
-        setLocation(xPos, outerBound);
+        setYPos(outerBound);
     }
 
     public int getXPos() {
@@ -125,7 +149,13 @@ class DragBox extends JComponent {
     }
 
     public int getRealYPos() {
-        return yPos + height/2 + 1;
+        if (upperSlider){
+            return yPos + height;
+        }
+        else {
+            return yPos;
+        }
+
     }
 
     public void setXPos(int xPos) {

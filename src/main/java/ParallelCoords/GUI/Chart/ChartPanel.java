@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class ChartPanel extends JPanel {
     Dimension screenSize;
     ChartFrame frame;
-    boolean absolute = true;
+    boolean absolute = false;
     int height;
     int width;
     int nullPadding = 50;
@@ -23,6 +23,7 @@ public class ChartPanel extends JPanel {
     float percentageHeight = 0.85f;
     float percentageAxisLength = 1.0f;
     float taskbarPadding = 0.75f;
+    ArrayList<ArrayList<Integer>> filterPositionStore = new ArrayList<>();
 
     BasicStroke lineStroke = new BasicStroke(1.5f);
     BasicStroke dotDashStroke = new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL,
@@ -52,7 +53,7 @@ public class ChartPanel extends JPanel {
         this.add(dataDisplay);
 
         for (int i = 0; i < dataTable.getMaxSize(); i++) {
-            dataDisplay.addLineData(new FullLineData());
+            addFullLineData();
         }
 
         calculateInitialPositionValues();
@@ -61,13 +62,25 @@ public class ChartPanel extends JPanel {
         for (int i=0 ; i < segments; i++)
         {
             filterSliders.add(new FilterSlider(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize,this, i));
+            this.setComponentZOrder(filterSliders.get(i).getUpperSlider(), 1);
+            this.setComponentZOrder(filterSliders.get(i).getLowerSlider(), 1);
         }
-        rePrepData();
+        rePrepData(true, true);
+    }
+
+    private void addFullLineData(){
+        FullLineData lineData = new FullLineData();
+        lineData.setColor(dataDisplay.genColour());
+        dataDisplay.addLineData(lineData);
+    }
+
+    public ChartFrame getFrame() {
+        return frame;
     }
 
     public void toggleAbsolute(){
         absolute = !absolute;
-        this.rePrepData();
+        this.rePrepData(false, false);
     }
 
     public void changeHeaderStyle(){
@@ -80,7 +93,7 @@ public class ChartPanel extends JPanel {
         {
             filterSliders.add(new FilterSlider(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize,this, i));
         }
-        rePrepData();
+        rePrepData(false, false);
     }
 
 
@@ -88,7 +101,7 @@ public class ChartPanel extends JPanel {
         height = (int) (screenSize.height * taskbarPadding);
         width = screenSize.width;
         int increment = 0;
-        percentageHeight = 0.85f;
+        percentageHeight = 0.83f;
         if (UserSettings.getInstance().getUserGraphSettings().getHeaderDisplayType().equals("Tilted")){
             increment = 1;
             percentageHeight = 1f - (UserSettings.getInstance().getUserGraphSettings().getTiltedTopPadding() * 0.01f);
@@ -114,20 +127,46 @@ public class ChartPanel extends JPanel {
         }
     }
 
+    public void storeFilters(){
+        filterPositionStore.clear();
+        for (FilterSlider filter: filterSliders) {
+            filterPositionStore.add(filter.getPositions());
+        }
+    }
+    public void loadFilters(){
+        int i = 0;
+        for (FilterSlider filter: filterSliders) {
+            filter.loadPositions(filterPositionStore.get(i));
+            i++;
+        }
+    }
+
+
     public DataDisplay getDataDisplay() {
         return dataDisplay;
     }
 
-    public void rePrepData(){
+    public void rePrepData(Boolean resetFilters, boolean showWarning){
+
         resetData();
-        resetFilters();
-        dataDisplay.prepData(startPoint, axisLength, segments, segmentSize);
+        if (resetFilters) {
+            resetFilters();
+        }
+        dataDisplay.prepData(startPoint, axisLength, segments, segmentSize, showWarning);
+        updateFilters();
+
     }
 
     private void resetData(){
         dataDisplay.clearData();
         for (int i = 0; i < dataTable.getMaxSize(); i++) {
-            dataDisplay.addLineData(new FullLineData());
+            addFullLineData();
+        }
+    }
+
+    private void updateFilters(){
+        for (FilterSlider filter: filterSliders) {
+            filter.updateValues();
         }
     }
 
@@ -135,7 +174,7 @@ public class ChartPanel extends JPanel {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         this.setBackground(Color.white);
-
+        g2.clearRect(0,0, width, height);
         drawAxis();
         dataDisplay.repaint();
         drawTicks(g2, startPoint, axisLength, segments, segmentSize);
@@ -160,15 +199,17 @@ public class ChartPanel extends JPanel {
     }
 
     private void drawTicks(Graphics2D g2, Point startPoint, int axisLength, int segments, int segmentSize){
-        double max = 5;
+        double max = UserSettings.getInstance().getUserGraphSettings().getChartAxisMax();
 
-        double min = 0;
-        int numTicks = 5;
 
-        g2.setFont(new Font(Font.SANS_SERIF,Font.BOLD, 14));
+        double min = UserSettings.getInstance().getUserGraphSettings().getChartAxisMin();
+
+        int numTicks = UserSettings.getInstance().getUserGraphSettings().getChartNumTicks() + 1;
+
+
         g2.setColor(Color.BLACK);
         for (int j = 0; j < segments; j++) {
-            if (absolute){
+            if (!absolute){
                 max = dataTable.getColumn(j).calculateMaxValue();
                 min = dataTable.getColumn(j).calculateMinValue();
 
@@ -178,8 +219,10 @@ public class ChartPanel extends JPanel {
                 }
             }
 
+            Font font = new Font(Font.SANS_SERIF,Font.BOLD, UserSettings.getInstance()
+                    .getUserGraphSettings().getChartTickFontSize());
 
-            FontMetrics metrics = generateFontMetrics(g2, new Font(Font.SANS_SERIF, Font.BOLD, 14));
+            FontMetrics metrics = generateFontMetrics(g2, font);
             int height = metrics.getHeight() / 4;
             int nullWidth = metrics.stringWidth("Text/Null value");
             if (j == 0 || j == segments -1){
@@ -189,14 +232,25 @@ public class ChartPanel extends JPanel {
 
 
             double range = max - min;
+            int width = 3;
+            int width2;
+            BasicStroke tickStroke = new BasicStroke(2f);
+            g2.setStroke(tickStroke);
             for (int k = 0; k <= numTicks; k++) {
+                width2 = width;
                 float percentage = 1f/numTicks * k;
 
                 String text = round(range - ((range / (float) numTicks) * k) + min,2);
-                g2.drawString(text,startPoint.x + segmentSize  * j - 35,  (int) (startPoint.y + axisLength * percentage + height));
-                g2.drawLine(startPoint.x + segmentSize  * j -2, (int) (startPoint.y + axisLength * percentage), startPoint.x + segmentSize * j +2, (int) (startPoint.y + axisLength * percentage));
-            }
+                int strWidth = metrics.stringWidth(text);
+                g2.drawString(text,startPoint.x + segmentSize  * j - strWidth - 10,  (int) (startPoint.y + axisLength * percentage + height));
+                if (k ==0 || k == numTicks){
+                    width2 = width *5;
+                }
+                g2.drawLine(startPoint.x + segmentSize  * j -width, (int) (startPoint.y + axisLength * percentage), startPoint.x + segmentSize * j +width2, (int) (startPoint.y + axisLength * percentage));
 
+
+            }
+            g2.setStroke(lineStroke);
         }
     }
 
@@ -215,8 +269,9 @@ public class ChartPanel extends JPanel {
 
     private void drawHeaders(Graphics2D g2, Point startPoint, int segments, int segmentSize){
         String displayType = UserSettings.getInstance().getUserGraphSettings().getHeaderDisplayType();
-
-        FontMetrics metrics = generateFontMetrics(g2, new Font(Font.SANS_SERIF, Font.BOLD, 14));
+        Font font = new Font(Font.SANS_SERIF,Font.PLAIN, UserSettings.getInstance()
+                .getUserGraphSettings().getChartHeaderFontSize());
+        FontMetrics metrics = generateFontMetrics(g2, font);
         AffineTransform affineTransform = new AffineTransform();
         AffineTransform orig = g2.getTransform();
         affineTransform.rotate(Math.toRadians(0), 0, 0);
@@ -229,23 +284,62 @@ public class ChartPanel extends JPanel {
         Font rotatedFont = metrics.getFont().deriveFont(affineTransform);
         g2.setFont(rotatedFont);
         for (int j = 0; j < segments; j++) {
+
+
+            int spacing = 50;
+
+            int height;
+            int tiltedHeight = 45;
+            int height1 = spacing + metrics.getHeight();
+            int height2 = spacing + metrics.getHeight() * 3;
+
             int width = metrics.stringWidth(dataTable.getColumn(j).getColumnName());
-            int height1 = 15 + metrics.getHeight() + 10 + metrics.getHeight();
-            int height2 = 15 + metrics.getHeight();
             if (displayType.equals("Tilted")){
-                width = 0;
-                height1 = 30;
-                height2 = 30;
+                height = tiltedHeight;
+                g2.drawString(dataTable.getColumn(j).getColumnName(), startPoint.x + segmentSize * j,
+                        (startPoint.y  - height));
+            }
+            else {
+
+                height = height1;
+                if (j%2 == 0) {
+                    height = height2;
+                    g2.setStroke(new BasicStroke(1.5f));
+                    g2.setColor(Color.BLACK);
+                    g2.drawLine(startPoint.x + segmentSize  * j, startPoint.y, startPoint.x + segmentSize  * j, startPoint.y - metrics.getHeight() * 4);
+                }
+                if (dataTable.getColumn(j).getColumnName().length() > 28){
+                    String[] words = dataTable.getColumn(j).getColumnName().split("\\s+");
+                    int len = words.length;
+                    int mid = len/2;
+                    StringBuilder headerTop = new StringBuilder();
+                    StringBuilder headerBottom = new StringBuilder();
+                    int i = 0;
+                    for (String word:words) {
+                        if(i < mid){
+                            headerTop.append(word).append(" ");
+                        }
+                        else {
+                            headerBottom.append(word).append(" ");
+                        }
+                        i++;
+                    }
+                    width = metrics.stringWidth(headerTop.toString());
+                    g2.drawString(headerTop.toString(),startPoint.x + segmentSize  * j - width/2,
+                            (startPoint.y  - height));
+                    width = metrics.stringWidth(headerBottom.toString());
+                    g2.drawString(headerBottom.toString(),startPoint.x + segmentSize  * j - width/2,
+                            (startPoint.y - height + metrics.getHeight()));
+                }
+                else
+                {
+                    g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j - width/2,
+                            (startPoint.y  - height));
+                }
+
             }
 
 
-            if (j%2 != 0){
-                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j - width/2, (startPoint.y  - height1));
-            }
-            else
-            {
-                g2.drawString(dataTable.getColumn(j).getColumnName(),startPoint.x + segmentSize  * j -width/2, (startPoint.y - height2));
-            }
         }
         g2.setTransform(orig);
     }

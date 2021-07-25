@@ -2,10 +2,13 @@ package ParallelCoords.GUI.Chart;
 
 import ParallelCoords.Data.DataColumn;
 import ParallelCoords.Data.DataTable;
+import ParallelCoords.Settings.UserGraphSettings;
+import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class DataDisplay extends JComponent {
     private final ArrayList<FullLineData> fullLineData = new ArrayList<>();
@@ -30,15 +33,26 @@ public class DataDisplay extends JComponent {
         fullLineData.clear();
     }
 
+    private final Random rand = new Random();
+    public Color genColour(){
+        float rWeight = UserSettings.getInstance().getUserGraphSettings().getChartRedWeight() + 1;
+        float gWeight = UserSettings.getInstance().getUserGraphSettings().getChartGreenWeight() + 1;
+        float bWeight = UserSettings.getInstance().getUserGraphSettings().getChartBlueWeight() + 1;
 
-    public void prepData(Point startPoint, int axisLength, int segments, int segmentSize){
+        float r = rand.nextFloat();
+        float g = rand.nextFloat();
+        float b = rand.nextFloat();
+        return new Color(1 * (1-(1/rWeight)) + r* ((1/rWeight)), 1 * (1-(1/gWeight)) + g* ((1/gWeight)), 1 * (1-(1/bWeight)) + b * ((1/bWeight))).darker();
+    }
+
+    public void prepData(Point startPoint, int axisLength, int segments, int segmentSize, boolean showWarning){
         int x1, y1, x2, y2;
         boolean absolute = panel.isAbsolute();
         BasicStroke dashedLine = panel.getDashedLine();
         BasicStroke dotDashStroke = panel.getDotDashStroke();
         BasicStroke lineStroke = panel.getLineStroke();
         int nullPadding = panel.getNullPadding();
-
+        UserGraphSettings settings = UserSettings.getInstance().getUserGraphSettings();
 
         for (int i = 0; i < dataTable.getMaxSize(); i++) {
             if (!dataTable.getShowRecord().get(i)){
@@ -48,11 +62,22 @@ public class DataDisplay extends JComponent {
                 boolean nextIsConfirmed = dataTable.getColumn(j+1).findEntity(i).isConfirmedValue();
                 // Normal value start
                 if(dataTable.getColumn(j).findEntity(i).isConfirmedValue()){
-
                     // Normal value to normal value
                     if(nextIsConfirmed){
+
                         DataColumn firstColumn = dataTable.getColumn(j);
                         DataColumn secondColumn = dataTable.getColumn(j + 1);
+                        if(absolute) {
+                            if (firstColumn.getColumnData().get(i).getValue() < settings.getChartAxisMin() ||
+                                    firstColumn.getColumnData().get(i).getValue() > settings.getChartAxisMax() ||
+                                    secondColumn.getColumnData().get(i).getValue() < settings.getChartAxisMin() ||
+                                    secondColumn.getColumnData().get(i).getValue() > settings.getChartAxisMax()
+                            ) {
+                                fullLineData.get(i).setShowData(false);
+                                continue;
+                            }
+                        }
+
                         double firstPercentage = firstColumn.getValuePercentage(i, absolute);
                         double secondPercentage = secondColumn.getValuePercentage(i, absolute);
 
@@ -165,7 +190,31 @@ public class DataDisplay extends JComponent {
                 }
             }
         }
-        this.repaint();
+
+        if(showWarning) {
+
+            int count = 0;
+            for (FullLineData data : fullLineData) {
+                if (!data.getShowData()) {
+                    count++;
+                }
+            }
+            this.repaint();
+            if (count != 0) {
+
+                Object[] options = { "OK", "Dismiss for this dataset"};
+                int result = JOptionPane.showOptionDialog(null,"Some data has been omitted due to being outside of the defined axis ranges \n(" +
+                                count + " of " + fullLineData.size() + " records have been omitted)" +
+                                "\nAxis ranges are currently set to: [Max: " + settings.getChartAxisMax() + "]  [Min: " + settings.getChartAxisMax() + "]" ,
+                        "Warning! Data has been omitted", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, UIManager.getIcon("OptionPane.warningIcon"), options, null);
+
+
+                if (result == 1) {
+                    dataTable.setDismissWarning(true);
+                }
+
+            }
+        }
     }
 
 
@@ -183,14 +232,15 @@ public class DataDisplay extends JComponent {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
         for (FullLineData data: fullLineData) {
-            if (data.showData()){
+            g2.setColor(data.getColor());
+            if (data.filterData()){
                 for (PartialLineData line:data.getData()) {
-                    g2.setColor(line.getColour());
                     g2.setStroke(line.getLineStroke());
                     g2.drawLine(line.getPoint1().x, line.getPoint1().y, line.getPoint2().x,line.getPoint2().y);
                 }
             }
 
         }
+
     }
 }

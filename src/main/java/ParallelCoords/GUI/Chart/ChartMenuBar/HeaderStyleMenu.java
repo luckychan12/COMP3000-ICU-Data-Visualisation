@@ -1,36 +1,50 @@
 package ParallelCoords.GUI.Chart.ChartMenuBar;
 
 import ParallelCoords.GUI.Chart.ChartPanel;
+import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class HeaderStyleMenu  extends JMenu {
-    public HeaderStyleMenu(ChartPanel panel){
+    HeaderStyleListener listener;
+    JMenuItem setTilted;
+    JMenuItem setAngle;
+    JMenuItem setTiltedPadding;
+    JMenu tiltedSettingMenu;
+    public HeaderStyleMenu(ChartPanel panel) {
         super("Header Style");
+        int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
 
-        HeaderStyleListener listener = new HeaderStyleListener();
+        listener = new HeaderStyleListener();
         JMenuItem setStaggered = new JMenuItem();
         setStaggered.setText("Staggered View");
+        setStaggered.setFont(font);
         setStaggered.addActionListener(e -> listener.setStaggered(panel));
         this.add(setStaggered);
 
-        JMenuItem setTilted = new JMenuItem();
+        setTilted = new JMenuItem();
         setTilted.setText("Tilted View");
+        setTilted.setFont(font);
         setTilted.addActionListener(e -> listener.setTilted(panel));
         this.add(setTilted);
 
-        JMenuItem setAngle = new JMenuItem();
+        setAngle = new JMenuItem();
         setAngle.setText("Set Tilt Angle");
+        setAngle.setFont(font);
         setAngle.addActionListener(e -> listener.setAngle(panel));
 
 
-        JMenuItem setTiltedPadding = new JMenuItem();
+        setTiltedPadding = new JMenuItem();
         setTiltedPadding.setText("Set top padding percentage");
+        setTiltedPadding.setFont(font);
         setTiltedPadding.addActionListener(e -> listener.setTiltedPadding(panel));
 
 
-        JMenu tiltedSettingMenu = new JMenu();
+        tiltedSettingMenu = new JMenu();
         tiltedSettingMenu.setText("Tilted mode settings");
+        tiltedSettingMenu.setFont(font);
         tiltedSettingMenu.add(setAngle);
         tiltedSettingMenu.add(setTiltedPadding);
 
@@ -38,4 +52,14 @@ public class HeaderStyleMenu  extends JMenu {
 
     }
 
+
+    public void reloadFonts() {
+        int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
+        setTilted.setFont(font);
+        setAngle.setFont(font);
+        setTiltedPadding.setFont(font);
+        tiltedSettingMenu.setFont(font);
+
+    }
 }

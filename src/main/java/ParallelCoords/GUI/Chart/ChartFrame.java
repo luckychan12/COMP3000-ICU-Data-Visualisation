@@ -2,6 +2,7 @@ package ParallelCoords.GUI.Chart;
 
 import ParallelCoords.Data.DataTable;
 import ParallelCoords.GUI.Chart.ChartMenuBar.ChartMenuBar;
+import ParallelCoords.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,9 +10,11 @@ import java.awt.*;
 public class ChartFrame extends JFrame {
 
     private ChartPanel panel;
-
-    public ChartFrame(DataTable displayTable){
+    private Main mainWindow;
+    private ChartMenuBar menu;
+    public ChartFrame(DataTable displayTable, Main main){
         super("Chart");
+        this.mainWindow = main;
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Dimension screenSize;
         try {
@@ -27,7 +30,8 @@ public class ChartFrame extends JFrame {
 
         panel = new ChartPanel(this, screenSize, displayTable);
         panel.setLayout(null);
-        this.setJMenuBar(new ChartMenuBar(panel));
+        menu = new ChartMenuBar(panel);
+        this.setJMenuBar(menu);
         JScrollPane display = new JScrollPane(panel);
         display.getHorizontalScrollBar().setUnitIncrement(20);
         setContentPane(display);
@@ -38,12 +42,19 @@ public class ChartFrame extends JFrame {
         setVisible(true);
     }
 
-    public void reprepData(){
-        panel.rePrepData();
+    public void reprepData(boolean showWarning){
+        panel.rePrepData(false, showWarning);
     }
 
+    public ChartPanel getPanel() {
+        return panel;
+    }
 
+    public ChartMenuBar getMenu() {
+        return menu;
+    }
 
-
-
+    public Main getMainWindow() {
+        return mainWindow;
+    }
 }

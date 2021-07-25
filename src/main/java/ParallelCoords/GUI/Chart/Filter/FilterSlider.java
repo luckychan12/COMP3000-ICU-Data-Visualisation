@@ -6,6 +6,7 @@ import ParallelCoords.GUI.Chart.PartialLineData;
 
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class FilterSlider {
@@ -19,15 +20,15 @@ public class FilterSlider {
     int currX;
     Color upperColour = new Color(157,78,0);
     Color lowerColour = new Color(0,112,209);
-    int thickness = 3;
+    int thickness = 2;
     ChartPanel panel;
     int segmentNumber;
 
     public FilterSlider(int upperBound, int lowerBound, int xPos, ChartPanel panel, int segmentNumber){
         this.panel = panel;
         this.segmentNumber = segmentNumber;
-        upperSlider = new DragBox(xPos, upperBound-5, upperColour, thickness, this, true);
-        lowerSlider = new DragBox(xPos, lowerBound+5, lowerColour, thickness, this, false);
+        upperSlider = new DragBox(xPos, upperBound-8, upperColour, thickness, this, true);
+        lowerSlider = new DragBox(xPos, lowerBound+8, lowerColour, thickness, this, false);
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         panel.add(upperSlider);
@@ -100,6 +101,14 @@ public class FilterSlider {
       panel.remove(lowerSlider);
     }
 
+    public DragBox getUpperSlider() {
+        return upperSlider;
+    }
+
+    public DragBox getLowerSlider() {
+        return lowerSlider;
+    }
+
     public boolean checkValue(double value){
         int upperSliderPos = upperSlider.getRealYPos() - upperBound;
         int lowerSliderPos = lowerSlider.getRealYPos() - upperBound;
@@ -134,7 +143,24 @@ public class FilterSlider {
     public void resetPos(){
         lowerSlider.resetPos();
         upperSlider.resetPos();
+        for (FullLineData data: panel.getDataDisplay().getFullLineData()) {
+            data.setShowData(segmentNumber, true);
+        }
     }
+
+    public void loadPositions(ArrayList<Integer> list){
+        upperSlider.setYPos(list.get(0));
+        lowerSlider.setYPos(list.get(1));
+    }
+
+    public ArrayList<Integer> getPositions(){
+        ArrayList<Integer> list = new ArrayList<>();
+        list.add(upperSlider.getYPos());
+        list.add(lowerSlider.getYPos());
+        return list;
+    }
+
+
 
 }
 
