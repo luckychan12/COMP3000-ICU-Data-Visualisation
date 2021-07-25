@@ -1,5 +1,7 @@
 package ParallelCoords.GUI.Chart.Filter;
 
+import ParallelCoords.Settings.UserSettings;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -15,6 +17,7 @@ class DragBox extends JComponent {
     private int yPos;
     private final int width = 50;
     private final int height = 40;
+    float scale = 1.3f;
     private final boolean upperSlider;
     private int outerBound;
     private Color color;
@@ -27,7 +30,8 @@ class DragBox extends JComponent {
         setOpaque(true);
 
         this.upperSlider = isUpperSlider;
-        xPos = xInit - width/2;
+        int segments = UserSettings.getInstance().getUserGraphSettings().getAxesPerScreenWidth();
+        xPos = (int) (xInit - 18);
 
         yPos = yInit - height;
 
@@ -77,13 +81,29 @@ class DragBox extends JComponent {
                 //int deltaX = e.getXOnScreen() - screenX;
                 int deltaY = e.getYOnScreen() - screenY;
                 if(isUpperSlider){
-                    if((yPos + deltaY) < (filter.getLowerY()-1) && (yPos + deltaY) >= outerBound) {
+                    if((yPos + deltaY) < (filter.getLowerY()-1 - height) && (yPos + deltaY) >= outerBound) {
                         setLocation(xPos, yPos + deltaY);
+                    }
+                    else{
+                        if ((yPos + deltaY) >= (filter.getLowerY()-1- height)){
+                            setLocation(xPos, filter.getLowerY()-1- height);
+                        }
+                        if((yPos + deltaY) < outerBound){
+                            setLocation(xPos, outerBound);
+                        }
                     }
                 }
                 else{
-                    if((yPos + deltaY) > (filter.getUpperY()+1)  && (yPos + deltaY) <= outerBound) {
+                    if((yPos + deltaY - height) > (filter.getUpperY()+1)  && (yPos + deltaY) <= outerBound) {
                         setLocation(xPos, yPos + deltaY);
+                    }
+                    else{
+                        if ((yPos + deltaY - height) <= (filter.getUpperY()+1)){
+                            setLocation(xPos, filter.getUpperY()+1 + height);
+                        }
+                        if((yPos + deltaY) > outerBound){
+                            setLocation(xPos, outerBound);
+                        }
                     }
                 }
                 filter.updateValues();
@@ -124,15 +144,26 @@ class DragBox extends JComponent {
         g2.drawLine((width/10), 0, 0, 0);
         g2.drawLine((width/10), height, 0, height);
 */
-        g2.setColor(new Color(100,100,100, 150));
-        RoundRectangle2D roundRectangle2D = new RoundRectangle2D.Double(width/2f - (width/7f),1,width/3.5,height-2, 5,5);
+        g2.setColor(new Color(164,164,154));
+        RoundRectangle2D roundRectangle2D = new RoundRectangle2D.Double(width/2f - (width/7f),1,width/3.5f,height-2, 5,5);
         g2.fill(roundRectangle2D);
         g2.setColor(Color.black);
         g2.draw(roundRectangle2D);
+        g2.setStroke(new BasicStroke(7f));
+        g2.setColor(Color.black);
+        if (upperSlider){
+            g2.drawLine(width/16 * 5,height, width/16 * 11 , height );
+        }
+        else {
+            g2.drawLine(width/16 * 5,0, width/16 * 11 , 0 );
+        }
+        g2.setColor(Color.black);
         g2.setStroke(new BasicStroke(1.5f));
         g2.drawLine(width/2 -3,height/2 -5, width/2 +3 , height/2 -5 );
         g2.drawLine(width/2 -3,height/2 , width/2 +3 , height/2 );
         g2.drawLine(width/2 -3,height/2 +5, width/2 +3 , height/2 +5 );
+
+
 
     }
 
@@ -158,8 +189,8 @@ class DragBox extends JComponent {
 
     }
 
-    public void setXPos(int xPos) {
-        this.xPos = xPos;
+    public void setXPos(int xPos2) {
+        this.xPos = xPos2 - 18;
         setLocation(xPos,yPos);
     }
 

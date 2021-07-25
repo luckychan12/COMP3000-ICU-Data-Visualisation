@@ -15,14 +15,17 @@ public class DataDisplay extends JComponent {
     DataTable dataTable;
     ChartPanel panel;
 
-    DataDisplay(Dimension dimension, DataTable dataTable, ChartPanel panel){
+    DataDisplay(DataTable dataTable, ChartPanel panel){
     setVisible(true);
     this.dataTable = dataTable;
     this.panel = panel;
-    setBounds(0,0, dimension.width, dimension.height);
     }
     public void addLineData(FullLineData data){
         fullLineData.add(data);
+    }
+
+    public void setDrawSize(Dimension dimension){
+        setBounds(0,0, dimension.width, dimension.height);
     }
 
     public ArrayList<FullLineData> getFullLineData() {
@@ -71,8 +74,7 @@ public class DataDisplay extends JComponent {
                             if (firstColumn.getColumnData().get(i).getValue() < settings.getChartAxisMin() ||
                                     firstColumn.getColumnData().get(i).getValue() > settings.getChartAxisMax() ||
                                     secondColumn.getColumnData().get(i).getValue() < settings.getChartAxisMin() ||
-                                    secondColumn.getColumnData().get(i).getValue() > settings.getChartAxisMax()
-                            ) {
+                                    secondColumn.getColumnData().get(i).getValue() > settings.getChartAxisMax()) {
                                 fullLineData.get(i).setShowData(false);
                                 continue;
                             }

@@ -38,6 +38,21 @@ public class Main extends JFrame {
             chart.repaint();
         }
     }
+    public void rescaleCharts(boolean showWarning, boolean verticalScaling){
+        for (ChartFrame chart: chartWindows) {
+            chart.getPanel().calculateInitialPositionValues();
+            if(verticalScaling) {
+                chart.getPanel().createFilterSliders();
+            }
+            else {
+                chart.getPanel().repositionSliders();
+            }
+            chart.reprepData(showWarning);
+            chart.repaint();
+        }
+
+    }
+
 
     public void reloadMenuFonts(){
         menuBar.reloadFonts();

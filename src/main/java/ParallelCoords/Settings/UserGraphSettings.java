@@ -16,6 +16,8 @@ public class UserGraphSettings {
         UserSettings.getInstance().updateProperties("TiltAngle", Integer.toString(angle));
     }
 
+
+
     public int getTiltedAngle(){
         String defaultVal = "15";
         try {
@@ -300,6 +302,39 @@ public class UserGraphSettings {
             return Double.parseDouble(defaultVal);
         }
 
+    }
+
+    public void setChartZoom(boolean value){
+        UserSettings.getInstance().updateProperties("ChartZoom", Boolean.toString(value));
+    }
+
+    public boolean getChartZoom(){
+        String defaultVal = "false";
+        try {
+            return Boolean.parseBoolean(UserSettings.getInstance().getPropValue("ChartZoom", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            setChartZoom(false);
+            return false;
+        }
+
+    }
+
+    public void setAxesPerScreenWidth(int value){
+        UserSettings.getInstance().updateProperties("AxesPerScreenWidth", Integer.toString(value));
+    }
+
+    public int getAxesPerScreenWidth(){
+        String defaultVal = "14";
+        try {
+            return Integer.parseInt(UserSettings.getInstance().getPropValue("AxesPerScreenWidth", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            setAxesPerScreenWidth(Integer.parseInt(defaultVal));
+            return Integer.parseInt(defaultVal);
+        }
     }
 
 }

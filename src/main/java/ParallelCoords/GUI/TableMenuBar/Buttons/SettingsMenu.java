@@ -26,27 +26,19 @@ public class SettingsMenu extends JMenu {
 
     }
 
-    public void reloadFonts(){
-        int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        Font font = new Font("Calibri", Font.BOLD, fontSize );
-        genSettings.setFont(font);
-        tableHeader.setFont(font);
-        table.setFont(font);
-        exit.setFont(font);
-        chartSettings.setFont(font);
-        chartHeader.setFont(font);
-        chartTick.setFont(font);
-        cm.setFont(font);
-    }
+
 
     JMenu genSettings;
     JMenuItem tableHeader;
     JMenuItem table;
     JMenuItem exit;
-    JMenu chartSettings;
+    JMenu chartFontSettings;
+    JMenu chartScaleSettings;
     JMenuItem chartHeader;
     JMenuItem chartTick;
-    JMenuItem cm;
+    JMenuItem chartZoom;
+    JMenuItem chartColour;
+    JMenuItem axesPerScreen;
 
     private void setMenuItems(Main mainWindow) {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
@@ -74,9 +66,9 @@ public class SettingsMenu extends JMenu {
         genSettings.add(table);
 
 
-        chartSettings = new JMenu();
-        chartSettings.setText("Chart font size settings");
-        chartSettings.setFont(font);
+        chartFontSettings = new JMenu();
+        chartFontSettings.setText("Chart font size settings");
+        chartFontSettings.setFont(font);
 
         chartHeader = new JMenuItem("Set Chart Header font size");
         chartHeader.addActionListener(listener::setChartHeadersFontSize);
@@ -86,22 +78,39 @@ public class SettingsMenu extends JMenu {
         chartTick.addActionListener(listener::setChartTickFontSize);
         chartTick.setFont(font);
 
-        chartSettings.add(chartHeader);
-        chartSettings.add(chartTick);
+
+        chartFontSettings.add(chartHeader);
+        chartFontSettings.add(chartTick);
 
 
-        cm = new JMenuItem("Modify line colour RNG");
-        cm.setFont(font);
-        cm.addActionListener(getActionListener());
+        chartColour = new JMenuItem("Modify line colour RNG");
+        chartColour.setFont(font);
+        chartColour.addActionListener(getActionListener());
 
+        chartScaleSettings = new JMenu();
+        chartScaleSettings.setText("Chart scale settings");
+        chartScaleSettings.setFont(font);
+
+        chartZoom = new JMenuItem("Toggle chart zoom");
+        chartZoom.addActionListener(listener::toggleChartZoom);
+        chartZoom.setFont(font);
+
+
+        axesPerScreen = new JMenuItem("Set number of axes to display per screen width");
+        axesPerScreen.addActionListener(listener::setAxesPerScreenWidth);
+        axesPerScreen.setFont(font);
+
+        chartScaleSettings.add(chartZoom);
+        chartScaleSettings.add(axesPerScreen);
 
         exit = new JMenuItem("Exit Program");
         exit.setFont(font);
         exit.addActionListener(listener::exit);
 
         this.add(genSettings);
-        this.add(chartSettings);
-        this.add(cm);
+        this.add(chartFontSettings);
+        this.add(chartScaleSettings);
+        this.add(chartColour);
         this.add(exit);
     }
 
@@ -119,4 +128,18 @@ public class SettingsMenu extends JMenu {
         }
     }
 
+    public void reloadFonts(){
+        int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
+        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        genSettings.setFont(font);
+        tableHeader.setFont(font);
+        table.setFont(font);
+        exit.setFont(font);
+        chartFontSettings.setFont(font);
+        chartHeader.setFont(font);
+        chartTick.setFont(font);
+        chartColour.setFont(font);
+        axesPerScreen.setFont(font);
+        chartScaleSettings.setFont(font);
+    }
 }

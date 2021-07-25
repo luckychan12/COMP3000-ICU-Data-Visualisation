@@ -125,11 +125,39 @@ public class SettingsMenuListener {
         catch (EmptyFieldsException ignored) { }
     }
 
+    public void toggleChartZoom(ActionEvent e){
+        boolean zoom = UserSettings.getInstance().getUserGraphSettings().getChartZoom();
+        UserSettings.getInstance().getUserGraphSettings().setChartZoom(!zoom);
+        mainWindow.rescaleCharts(false,true);
+    }
+
     public void exit(ActionEvent e) {
         mainWindow.setVisible(false);
         mainWindow.dispose();
         System.exit(0);
     }
 
+    public void setAxesPerScreenWidth(ActionEvent e){
+        String input= JOptionPane.showInputDialog(messageFrame,"Set the number of axes to display per screen width (between 3, 20)",
+                Integer.toString(UserSettings.getInstance().getUserGraphSettings().getAxesPerScreenWidth()));
+        try {
+            if(input == null || ("".equals(input)))
+            {
+                throw new EmptyFieldsException();
+            }
+
+            int intInput = Integer.parseInt(input);
+            if (intInput < 3 || intInput > 20){
+                throw new NumberFormatException();
+            }
+
+            UserSettings.getInstance().getUserGraphSettings().setAxesPerScreenWidth(intInput);
+            mainWindow.rescaleCharts(false,false);
+        }
+        catch (final NumberFormatException e1) {
+            JOptionPane.showMessageDialog(messageFrame,"Invalid input value. Please select an Integer value between 3 and 20.", "Error", JOptionPane.WARNING_MESSAGE );
+        }
+        catch (EmptyFieldsException ignored) { }
+    }
 
 }
