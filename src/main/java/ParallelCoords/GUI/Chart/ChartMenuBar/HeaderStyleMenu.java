@@ -12,13 +12,14 @@ public class HeaderStyleMenu  extends JMenu {
     JMenuItem setAngle;
     JMenuItem setTiltedPadding;
     JMenu tiltedSettingMenu;
+    JMenuItem setStaggered;
     public HeaderStyleMenu(ChartPanel panel) {
         super("Header Style");
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
         Font font = new Font("Calibri", Font.BOLD, fontSize);
 
         listener = new HeaderStyleListener();
-        JMenuItem setStaggered = new JMenuItem();
+        setStaggered= new JMenuItem();
         setStaggered.setText("Staggered View");
         setStaggered.setFont(font);
         setStaggered.addActionListener(e -> listener.setStaggered(panel));
@@ -33,7 +34,7 @@ public class HeaderStyleMenu  extends JMenu {
         setAngle = new JMenuItem();
         setAngle.setText("Set Tilt Angle");
         setAngle.setFont(font);
-        setAngle.addActionListener(e -> listener.setAngle(panel));
+        setAngle.addActionListener(e -> listener.setAngle());
 
 
         setTiltedPadding = new JMenuItem();
@@ -60,6 +61,6 @@ public class HeaderStyleMenu  extends JMenu {
         setAngle.setFont(font);
         setTiltedPadding.setFont(font);
         tiltedSettingMenu.setFont(font);
-
+        setStaggered.setFont(font);
     }
 }

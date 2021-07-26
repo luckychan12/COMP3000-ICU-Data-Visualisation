@@ -3,6 +3,7 @@ package ParallelCoords.GUI.Chart.Filter;
 import ParallelCoords.GUI.Chart.ChartPanel;
 import ParallelCoords.GUI.Chart.FullLineData;
 import ParallelCoords.GUI.Chart.PartialLineData;
+import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -120,6 +121,28 @@ public class FilterSlider {
     public void updateValues(){
         for (FullLineData data: panel.getDataDisplay().getFullLineData()) {
             for (PartialLineData line:data.getData()) {
+
+                if (UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()){
+                    if (line.getGetSegmentEnd() - line.getSegmentStart() != 1) {
+                        if (segmentNumber > line.getSegmentStart() && segmentNumber < line.getGetSegmentEnd()
+                                && !Objects.isNull(line.getPercentage1()) && !Objects.isNull(line.getPercentage2())) {
+                            double deltaX = line.getPoint2().x - line.getPoint1().x;
+                            double deltaY = line.getPoint2().y - line.getPoint1().y;
+                            double m = deltaY / deltaX;
+                            double c = line.getPoint1().y - (m * line.getPoint1().x);
+                            double subSegments = (line.getGetSegmentEnd() - line.getSegmentStart());
+
+                            int pos = segmentNumber - line.getSegmentStart();
+
+                            double scaleCoefficient = deltaX / subSegments;
+                            double calculatedY = (m * (pos * scaleCoefficient + line.getPoint1().x) + c);
+
+                            double yPercentage = 1 - (((float) lowerBound - upperBound) - (calculatedY - upperBound)) / (lowerBound - upperBound);
+                            data.setShowData(segmentNumber, checkValue(yPercentage));
+                        }
+                    }
+                }
+
                 if (line.getSegmentStart() == segmentNumber){
                     if (!Objects.isNull(line.getPercentage1())) {
                         data.setShowData(segmentNumber, checkValue(line.getPercentage1()));

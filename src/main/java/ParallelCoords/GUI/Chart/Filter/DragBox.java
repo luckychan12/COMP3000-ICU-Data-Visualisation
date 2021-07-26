@@ -31,7 +31,7 @@ class DragBox extends JComponent {
 
         this.upperSlider = isUpperSlider;
         int segments = UserSettings.getInstance().getUserGraphSettings().getAxesPerScreenWidth();
-        xPos = (int) (xInit - 18);
+        xPos = xInit - 18;
 
         yPos = yInit - height;
 
@@ -77,8 +77,6 @@ class DragBox extends JComponent {
 
             @Override
             public void mouseDragged(MouseEvent e) {
-                System.out.println(filter.getUpperY() + "    " + filter.getLowerY());
-                //int deltaX = e.getXOnScreen() - screenX;
                 int deltaY = e.getYOnScreen() - screenY;
                 if(isUpperSlider){
                     if((yPos + deltaY) < (filter.getLowerY()-1 - height) && (yPos + deltaY) >= outerBound) {
@@ -130,6 +128,9 @@ class DragBox extends JComponent {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         //g2.drawRect(0, 0, width, height);
 
         g2.setStroke(new BasicStroke(thickness));

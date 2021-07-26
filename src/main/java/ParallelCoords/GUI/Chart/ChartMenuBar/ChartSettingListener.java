@@ -1,14 +1,21 @@
 package ParallelCoords.GUI.Chart.ChartMenuBar;
 
 import ParallelCoords.GUI.Chart.ChartPanel;
+import ParallelCoords.GUI.Chart.Filter.FilterSlider;
 import ParallelCoords.GUI.TableMenuBar.Listeners.EmptyFieldsException;
 import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 
 public class ChartSettingListener {
-    private JFrame messageFrame = new JFrame();
-    public void setTicks(ChartPanel panel){
+    ChartPanel panel;
+
+    ChartSettingListener(ChartPanel panel){
+        this.panel = panel;
+    }
+
+    private final JFrame messageFrame = new JFrame();
+    public void setTicks(){
         String input;
         input = JOptionPane.showInputDialog(messageFrame,"Enter number of ticks to be displayed on graph",
                 Integer.toString(UserSettings.getInstance().getUserGraphSettings().getChartNumTicks()));
@@ -30,4 +37,17 @@ public class ChartSettingListener {
         catch (EmptyFieldsException ignored) { }
 
     }
+
+    public void toggleFilter(   ){
+        boolean tog = UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData();
+        UserSettings.getInstance().getUserGraphSettings().setChartFilterTextData(!tog);
+        for (FilterSlider slider : panel.getFilterSliders()) {
+            slider.updateValues();
+        }
+    }
+
 }
+
+
+
+

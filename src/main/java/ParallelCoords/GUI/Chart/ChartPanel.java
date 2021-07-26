@@ -16,7 +16,7 @@ import java.util.ArrayList;
 public class ChartPanel extends JPanel {
     Dimension screenSize;
     ChartFrame frame;
-    boolean absolute = false;
+    boolean absolute;
     int height;
     int width;
     int nullPadding = 50;
@@ -25,14 +25,8 @@ public class ChartPanel extends JPanel {
     float percentageAxisLength = 1.0f;
 
     int shiftDown = 40;
-    ArrayList<ArrayList<Integer>> filterPositionStore = new ArrayList<>();
 
-    BasicStroke lineStroke = new BasicStroke(1.5f);
-    BasicStroke dotDashStroke = new BasicStroke(2.5f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL,
-            1f, new float[] {10f,20f, 3f, 20f},0f);
 
-    BasicStroke dashedLine = new BasicStroke(2.2f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
-            0, new float[]{9}, 0);
     DataTable dataTable;
     int segments;
     int segmentSize;
@@ -52,7 +46,7 @@ public class ChartPanel extends JPanel {
         this.setPreferredSize(screenSize);
         this.setAutoscrolls(true);
         this.dataTable = dataTable;
-
+        this.absolute = graphSettings.getChartAbsolute();
 
         dataDisplay = new DataDisplay(dataTable, this);
         calculateInitialPositionValues();
@@ -101,6 +95,7 @@ public class ChartPanel extends JPanel {
 
     public void toggleAbsolute(){
         absolute = !absolute;
+        graphSettings.setChartAbsolute(absolute);
         this.rePrepData(false, false);
     }
 
@@ -117,6 +112,9 @@ public class ChartPanel extends JPanel {
         rePrepData(false, false);
     }
 
+    public ArrayList<FilterSlider> getFilterSliders() {
+        return filterSliders;
+    }
 
     public void calculateInitialPositionValues() {
 
@@ -165,19 +163,6 @@ public class ChartPanel extends JPanel {
         }
     }
 
-    public void storeFilters(){
-        filterPositionStore.clear();
-        for (FilterSlider filter: filterSliders) {
-            filterPositionStore.add(filter.getPositions());
-        }
-    }
-    public void loadFilters(){
-        int i = 0;
-        for (FilterSlider filter: filterSliders) {
-            filter.loadPositions(filterPositionStore.get(i));
-            i++;
-        }
-    }
 
 
     public DataDisplay getDataDisplay() {
@@ -210,13 +195,15 @@ public class ChartPanel extends JPanel {
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(
+                RenderingHints.KEY_ANTIALIASING,
+                RenderingHints.VALUE_ANTIALIAS_ON);
         this.setBackground(Color.white);
         g2.clearRect(0,0, width, height);
         drawAxis();
         dataDisplay.repaint();
         drawTicks(g2, startPoint, axisLength, segments, segmentSize);
         drawHeaders(g2, startPoint, segments, segmentSize);
-        g2.setStroke(dashedLine);
 
         setVisible(true);
     }
@@ -271,10 +258,9 @@ public class ChartPanel extends JPanel {
             double range = max - min;
             int width = 3;
             int width2;
-            BasicStroke tickStroke = new BasicStroke(1.5f);
+            BasicStroke tickStroke = new BasicStroke(graphSettings.getAxesThickness());
             g2.setStroke(tickStroke);
             for (int k = 0; k <= numTicks; k++) {
-                width2 = width;
                 float percentage = 1f/numTicks * k;
 
                 String text = round(range - ((range / (float) numTicks) * k) + min,2);
@@ -287,7 +273,6 @@ public class ChartPanel extends JPanel {
 
 
             }
-            g2.setStroke(lineStroke);
         }
     }
 
@@ -321,10 +306,7 @@ public class ChartPanel extends JPanel {
         Font rotatedFont = metrics.getFont().deriveFont(affineTransform);
         g2.setFont(rotatedFont);
         for (int j = 0; j < segments; j++) {
-
-
             int spacing = 50;
-
             int height;
             int tiltedHeight = 55;
             int height1 = spacing + metrics.getHeight();
@@ -341,7 +323,7 @@ public class ChartPanel extends JPanel {
                 height = height1;
                 if (j%2 == 0) {
                     height = height2;
-                    g2.setStroke(new BasicStroke(1.5f));
+                    g2.setStroke(new BasicStroke(graphSettings.getAxesThickness()));
                     g2.setColor(Color.BLACK);
                     g2.drawLine(startPoint.x + segmentSize  * j, startPoint.y, startPoint.x + segmentSize  * j, startPoint.y - metrics.getHeight() * 3);
                 }
@@ -390,15 +372,17 @@ public class ChartPanel extends JPanel {
     }
 
     public BasicStroke getDotDashStroke() {
-        return dotDashStroke;
+        return new BasicStroke(graphSettings.getChartLineThickness(), BasicStroke.CAP_ROUND, BasicStroke.JOIN_BEVEL,
+                1f, new float[] {10f,20f, 3f, 20f},0f);
     }
 
     public BasicStroke getDashedLine() {
-        return dashedLine;
+        return new BasicStroke(graphSettings.getChartLineThickness(), BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL,
+                0, new float[]{9}, 0);
     }
 
     public BasicStroke getLineStroke() {
-        return lineStroke;
+        return new BasicStroke(graphSettings.getChartLineThickness());
     }
 
 

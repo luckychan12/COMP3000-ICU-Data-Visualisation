@@ -1,6 +1,6 @@
 package ParallelCoords.Data;
 
-import ParallelCoords.Main;
+import ParallelCoords.GUI.TableMenuBar.Listeners.EmptyFieldsException;
 import ParallelCoords.Settings.UserSettings;
 
 import java.io.BufferedReader;
@@ -24,10 +24,6 @@ public class Data {
         return currID;
     }
 
-    public void setCurrID(int currID) {
-        this.currID = currID;
-    }
-
 
     private boolean isNumeric(String strNum) {
         if (strNum == null) {
@@ -36,40 +32,41 @@ public class Data {
         return Pattern.compile("-?\\d+(\\.\\d+)?").matcher(strNum).matches() || Pattern.compile("-?\\.\\d+").matcher(strNum).matches();
     }
 
-    public void createData(Main mainWindow, String pathToInputData, boolean hasHeaders) throws IOException,NumberFormatException {
+    public void createData(String pathToInputData, boolean hasHeaders) throws IOException, NumberFormatException, EmptyFieldsException {
         UserSettings settings = UserSettings.getInstance();
         delimiter = settings.getUserImportSettings().getDelimiter();
         DataTable newData = new DataTable();
-        BufferedReader reader = new BufferedReader(new FileReader(pathToInputData));
-        String[] headers;
-        String[] tokens = ((reader.readLine()).trim()).split(delimiter, -1);
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(pathToInputData));
+            String[] tokens = ((reader.readLine()).trim()).split(delimiter, -1);
 
-        int currColumn = 0;
-        if (hasHeaders){
-            for (String token : tokens){
-                newData.addColumn(new DataColumn(currColumn, token));
-                currColumn++;
-                newData.setDefinedHeaders(true);
-           }
-        }
-        else {
-            newData.setDefinedHeaders(false);
-            //Color lineColour = newData.genColour();
-            for (String token : tokens){
-                DataColumn column = new DataColumn(currColumn);
+            int currColumn = 0;
+            if (hasHeaders) {
+                for (String token : tokens) {
+                    newData.addColumn(new DataColumn(currColumn, token));
+                    currColumn++;
+                    newData.setDefinedHeaders(true);
+                }
+            } else {
+                newData.setDefinedHeaders(false);
+                //Color lineColour = newData.genColour();
+                for (String token : tokens) {
+                    DataColumn column = new DataColumn(currColumn);
 
-                column.addEntity(addDataEntity(token));
-                newData.addColumn(column);
-                currColumn++;
+                    column.addEntity(addDataEntity(token));
+                    newData.addColumn(column);
+                    currColumn++;
+                }
             }
-        }
+
+
         dataStore.add(newData);
 
         try {
             loadData(dataID, reader);
         }
         catch (IOException | NumberFormatException err){
-            dataStore.remove(dataID -1);
+            dataStore.remove(dataID-1);
 
             throw err;
         }
@@ -77,6 +74,10 @@ public class Data {
         newData.initShowRecordList();
         currID = dataID;
         dataID++;
+        }
+        catch (Exception err){
+            throw new EmptyFieldsException();
+        }
     }
 
     private DataEntity addDataEntity(String token) {

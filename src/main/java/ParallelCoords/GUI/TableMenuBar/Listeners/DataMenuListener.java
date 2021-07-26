@@ -30,13 +30,13 @@ public class DataMenuListener {
             UserSettings.getInstance().getUserImportSettings().setLastOpenedFile(chooser.getSelectedFile().getAbsolutePath());
             Data data = Data.getInstance();
             try {
-                data.createData(main, filepath, hasHeaders);
+                data.createData(filepath, hasHeaders);
                 DataTable currData = data.getDataStore().get(data.getCurrID());
                 currData.setTableName(chooser.getSelectedFile().getName());
                 main.setData();
             }
-            catch (Exception err){
-                err.printStackTrace();
+            catch (Exception | EmptyFieldsException err){
+                JOptionPane.showMessageDialog(null, "An error occurred while loading the dataset\nPlease check that the correct delimiter has been set.","Error loading data", JOptionPane.WARNING_MESSAGE );
             }
         }
 
@@ -45,9 +45,8 @@ public class DataMenuListener {
     public void setDelimiter(ActionEvent e) {
         String s = JOptionPane.showInputDialog(
                 main,
-                "Set delimiter:\n" + "The Current delimiter is: '" + settings.getDelimiter() + "'",
-                "Set Delimiter",
-                JOptionPane.PLAIN_MESSAGE);
+                "Set delimiter:\n" + "The current delimiter is: '" + settings.getDelimiter() + "'",
+                UserSettings.getInstance().getUserImportSettings().getDelimiter() );
 
         if ((s != null) && (s.length() > 0)) {
             settings.setDelimiter(s);

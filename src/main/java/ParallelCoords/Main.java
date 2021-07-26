@@ -20,7 +20,7 @@ public class Main extends JFrame {
     private DataDisplayTable dataDisplayTable;
     private ArrayList<ChartFrame> chartWindows = new ArrayList<>();
     public Main() {
-        super("Ivan Chan (ICU) Data Visualisation");
+        super("(ICU) Data Visualisation software");
         loadSettings();
         this.menuBar = new MenuBar(this);
         this.setJMenuBar(this.menuBar);

@@ -7,7 +7,7 @@ import ParallelCoords.Settings.UserSettings;
 import javax.swing.*;
 
 public class HeaderStyleListener {
-    private JFrame messageFrame = new JFrame();
+    private final JFrame messageFrame = new JFrame();
 
     public void setStaggered(ChartPanel panel){
         UserSettings.getInstance().getUserGraphSettings().setHeaderDisplayType("Staggered");
@@ -19,7 +19,7 @@ public class HeaderStyleListener {
         panel.changeHeaderStyle();
     }
 
-    public void setAngle(ChartPanel panel){
+    public void setAngle(){
         String input= JOptionPane.showInputDialog(messageFrame,"Enter angle for tilted header display mode",
                 Integer.toString(UserSettings.getInstance().getUserGraphSettings().getTiltedAngle()));
         try {

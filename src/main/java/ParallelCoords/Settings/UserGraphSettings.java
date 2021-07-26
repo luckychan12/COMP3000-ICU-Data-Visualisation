@@ -318,7 +318,38 @@ public class UserGraphSettings {
             setChartZoom(false);
             return false;
         }
+    }
 
+    public void setChartAbsolute(boolean value){
+        UserSettings.getInstance().updateProperties("ChartAbsolute", Boolean.toString(value));
+    }
+
+    public boolean getChartAbsolute(){
+        String defaultVal = "false";
+        try {
+            return Boolean.parseBoolean(UserSettings.getInstance().getPropValue("ChartAbsolute", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            setChartAbsolute(false);
+            return false;
+        }
+    }
+
+    public void setChartFilterTextData(boolean value){
+        UserSettings.getInstance().updateProperties("ChartFilterTextData", Boolean.toString(value));
+    }
+
+    public boolean getChartFilterTextData(){
+        String defaultVal = "false";
+        try {
+            return Boolean.parseBoolean(UserSettings.getInstance().getPropValue("ChartFilterTextData", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            setChartFilterTextData(false);
+            return false;
+        }
     }
 
     public void setAxesPerScreenWidth(int value){
@@ -336,5 +367,40 @@ public class UserGraphSettings {
             return Integer.parseInt(defaultVal);
         }
     }
+
+    public void setAxesThickness(float value){
+        UserSettings.getInstance().updateProperties("AxesThickness", Float.toString(value));
+    }
+
+    public float getAxesThickness(){
+        String defaultVal = "2";
+        try {
+            return Float.parseFloat(UserSettings.getInstance().getPropValue("AxesThickness", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            setAxesThickness(Float.parseFloat(defaultVal));
+            return Float.parseFloat(defaultVal);
+        }
+    }
+
+
+    public void setChartLineThickness(float value){
+        UserSettings.getInstance().updateProperties("ChartLineThickness", Float.toString(value));
+    }
+
+    public float getChartLineThickness(){
+        String defaultVal = "1.5";
+        try {
+            return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartLineThickness", defaultVal));
+        }
+        catch (NumberFormatException e){
+            JFrame frame = new JFrame();
+            setChartLineThickness(Float.parseFloat(defaultVal));
+            return Float.parseFloat(defaultVal);
+        }
+    }
+
+
 
 }

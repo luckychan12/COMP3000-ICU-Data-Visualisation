@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 public class ChartSettingsMenu extends JMenu {
 
     JMenuItem toggleAbsoluteRelative;
+    JMenuItem toggleFilterNullAndText;
     JMenuItem setNumTicks;
     JMenuItem reloadChart;
     JMenuItem setMaxMinAxis;
@@ -24,21 +25,35 @@ public class ChartSettingsMenu extends JMenu {
         toggleAbsoluteRelative = new JMenuItem();
         ActionListener toggleAbsListener = e -> {
             panel.toggleAbsolute();
-            setMenuName();
+            setViewMenuName();
         };
         toggleAbsoluteRelative.addActionListener(toggleAbsListener);
-        setMenuName();
+        setViewMenuName();
 
         toggleAbsoluteRelative.setFont(font);
         this.add(toggleAbsoluteRelative);
 
-        ChartSettingListener listener = new ChartSettingListener();
+
+
+        ChartSettingListener listener = new ChartSettingListener(panel);
+
+        toggleFilterNullAndText = new JMenuItem();
+        ActionListener toggleFilter = e -> {
+            listener.toggleFilter();
+            setFilterMenuName();
+        };
+        toggleFilterNullAndText.addActionListener(toggleFilter);
+        setFilterMenuName();
+        toggleFilterNullAndText.setFont(font);
+        this.add(toggleFilterNullAndText);
+
+
         setNumTicks = new JMenuItem();
-        ActionListener tickAbsListener = e -> listener.setTicks(panel);
-        setNumTicks.addActionListener(tickAbsListener);
+        setNumTicks.addActionListener(e1 -> listener.setTicks());
         setNumTicks.setText("Define number of ticks (Absolute view)");
         setNumTicks.setFont(font);
         this.add(setNumTicks);
+
 
         setMaxMinAxis = new JMenuItem();
         ActionListener maxAxis = e -> new ChartAxisSettingPane(panel);
@@ -56,7 +71,7 @@ public class ChartSettingsMenu extends JMenu {
 
     }
 
-    private void setMenuName(){
+    private void setViewMenuName(){
         if(panel.isAbsolute()){
             toggleAbsoluteRelative.setText("Toggle Absolute/Relative (Current: Absolute)");
         }
@@ -65,12 +80,25 @@ public class ChartSettingsMenu extends JMenu {
         }
     }
 
+    private void setFilterMenuName(){
+        if(UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()){
+            toggleFilterNullAndText.setText("Toggle including null data when filtering (Current: True)");
+        }
+        else {
+            toggleFilterNullAndText.setText("Toggle including null data when filtering (Current: False)");
+        }
+    }
+
+
+
     public void reloadFonts() {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
         Font font = new Font("Calibri", Font.BOLD, fontSize);
         toggleAbsoluteRelative.setFont(font);
         setMaxMinAxis.setFont(font);
         reloadChart.setFont(font);
+        toggleFilterNullAndText.setFont(font);
+        setNumTicks.setFont(font);
     }
 
 }
