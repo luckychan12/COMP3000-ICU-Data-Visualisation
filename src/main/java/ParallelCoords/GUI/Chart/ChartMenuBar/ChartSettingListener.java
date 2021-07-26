@@ -8,37 +8,35 @@ import ParallelCoords.Settings.UserSettings;
 import javax.swing.*;
 
 public class ChartSettingListener {
+    private final JFrame messageFrame = new JFrame();
     ChartPanel panel;
 
-    ChartSettingListener(ChartPanel panel){
+    ChartSettingListener(ChartPanel panel) {
         this.panel = panel;
     }
 
-    private final JFrame messageFrame = new JFrame();
-    public void setTicks(){
+    public void setTicks() {
         String input;
-        input = JOptionPane.showInputDialog(messageFrame,"Enter number of ticks to be displayed on graph",
+        input = JOptionPane.showInputDialog(messageFrame, "Enter number of ticks to be displayed on graph",
                 Integer.toString(UserSettings.getInstance().getUserGraphSettings().getChartNumTicks()));
         try {
-            if(input == null || ("".equals(input)))
-            {
+            if (input == null || ("".equals(input))) {
                 throw new EmptyFieldsException();
             }
             int intInput = Integer.parseInt(input);
-            if (intInput < 0 || intInput > 50){
+            if (intInput < 0 || intInput > 50) {
                 throw new NumberFormatException();
             }
 
             UserSettings.getInstance().getUserGraphSettings().setChartNumTicks(intInput);
+        } catch (final NumberFormatException e) {
+            JOptionPane.showMessageDialog(messageFrame, "Invalid input value. Please select an Integer value between 0 and 30", "Error", JOptionPane.WARNING_MESSAGE);
+        } catch (EmptyFieldsException ignored) {
         }
-        catch (final NumberFormatException e) {
-            JOptionPane.showMessageDialog(messageFrame,"Invalid input value. Please select an Integer value between 0 and 30", "Error", JOptionPane.WARNING_MESSAGE );
-        }
-        catch (EmptyFieldsException ignored) { }
 
     }
 
-    public void toggleFilter(   ){
+    public void toggleFilter() {
         boolean tog = UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData();
         UserSettings.getInstance().getUserGraphSettings().setChartFilterTextData(!tog);
         for (FilterSlider slider : panel.getFilterSliders()) {

@@ -29,6 +29,10 @@ public class PartialLineData {
         return colour;
     }
 
+    public void setColour(Color colour) {
+        this.colour = colour;
+    }
+
     public Double getPercentage1() {
         return percentage1;
     }
@@ -43,10 +47,6 @@ public class PartialLineData {
 
     public void setPercentage2(Double percentage2) {
         this.percentage2 = percentage2;
-    }
-
-    public void setColour(Color colour) {
-        this.colour = colour;
     }
 
     public Stroke getLineStroke() {

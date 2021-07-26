@@ -15,52 +15,52 @@ public class DataEntity {
         return index;
     }
 
-    public double getValue() {
-        return value;
-    }
-
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public double getValue() {
+        return value;
     }
 
     public void setValue(double value) {
         this.value = value;
     }
 
-    public void setTextData(String textData) {
-        this.textData = textData;
+    public boolean isText() {
+        return isText;
     }
 
     public void setText(boolean text) {
         isText = text;
     }
 
-    public boolean isText() {
-        return isText;
-    }
-
     public String getTextData() {
         return textData;
     }
 
-    public void setConfirmedValue(boolean confirmedValue) {
-        this.confirmedValue = confirmedValue;
+    public void setTextData(String textData) {
+        this.textData = textData;
     }
 
     public boolean isConfirmedValue() {
         return confirmedValue;
     }
 
-
-    public void setLineColor(Color lineColor) {
-        this.lineColor = lineColor;
+    public void setConfirmedValue(boolean confirmedValue) {
+        this.confirmedValue = confirmedValue;
     }
 
     public Color getLineColor() {
         return lineColor;
     }
-    public double calculateMidValue(double left, double right){
-        return ((left+right)/2);
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
+    }
+
+    public double calculateMidValue(double left, double right) {
+        return ((left + right) / 2);
     }
 
     public int getColumnID() {

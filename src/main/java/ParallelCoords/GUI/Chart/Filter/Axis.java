@@ -13,7 +13,7 @@ public class Axis extends JComponent {
     int currX;
     DataColumn column;
 
-    public Axis(int currX, Rectangle bounds, boolean edge, ChartPanel panel){
+    public Axis(int currX, Rectangle bounds, boolean edge, ChartPanel panel) {
         this.edge = edge;
         this.setVisible(true);
         this.panel = panel;
@@ -21,10 +21,11 @@ public class Axis extends JComponent {
 
         column = panel.getDataTable().getColumn(currX);
         setBounds(bounds);
-        setLocation(0,0);
+        setLocation(0, 0);
         setBackground(Color.BLACK);
 
     }
+
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponents(g);
@@ -38,7 +39,7 @@ public class Axis extends JComponent {
         int x = panel.getStartPoint().x + currX * panel.getSegmentSize();
         int yStart = panel.getStartPoint().y - 30;
         int yEnd = panel.getStartPoint().y + panel.getAxisLength();
-        g2.drawLine( x, yStart , x, edge ? yEnd + panel.getNullPadding() : yEnd);
+        g2.drawLine(x, yStart, x, edge ? yEnd + panel.getNullPadding() : yEnd);
     }
 
 }

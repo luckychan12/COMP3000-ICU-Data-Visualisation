@@ -12,9 +12,10 @@ public class ChartMenuBar extends JMenuBar {
     SettingsMenu settingsMenu;
     ChartSettingsMenu chartSettingsMenu;
     HeaderStyleMenu headerStyleMenu;
+
     public ChartMenuBar(ChartPanel panel) {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
 
         settingsMenu = new SettingsMenu(panel.getFrame().getMainWindow(), panel);
         settingsMenu.setFont(font);

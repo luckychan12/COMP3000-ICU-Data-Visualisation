@@ -9,7 +9,7 @@ import javax.swing.table.TableColumn;
 import java.util.Collections;
 
 public class DataColumnModel extends DefaultTableColumnModel {
-    private Main mainWindow;
+    private final Main mainWindow;
 
     public DataColumnModel(Main mainWindow) {
         super();
@@ -33,7 +33,7 @@ public class DataColumnModel extends DefaultTableColumnModel {
                 //System.out.println(src + ", " + tar);
                 //System.out.println(dataTable.getColumn(0).findEntity(src -1).getValue() + ", " + dataTable.getColumn(0).findEntity(tar -1).getValue());
 
-                Collections.swap(dataTable.getAllColumns(), src -1, tar -1);
+                Collections.swap(dataTable.getAllColumns(), src - 1, tar - 1);
                 for (int i = 0; i < this.getColumnCount(); i++) {
                     //System.out.println(this.getColumn(i).getHeaderValue().toString());
                     this.getColumn(i).setModelIndex(i);

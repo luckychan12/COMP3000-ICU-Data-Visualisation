@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionListener;
 
 public class DataSelectionModel extends DefaultListSelectionModel implements ListSelectionListener {
 
-    private Main mainWindow;
+    private final Main mainWindow;
 
     public DataSelectionModel(Main mainWindow) {
         this.mainWindow = mainWindow;

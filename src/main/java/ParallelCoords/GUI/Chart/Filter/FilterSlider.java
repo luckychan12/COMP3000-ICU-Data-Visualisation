@@ -19,17 +19,17 @@ public class FilterSlider {
     int upperBound;
     int lowerBound;
     int currX;
-    Color upperColour = new Color(157,78,0);
-    Color lowerColour = new Color(0,112,209);
+    Color upperColour = new Color(157, 78, 0);
+    Color lowerColour = new Color(0, 112, 209);
     int thickness = 2;
     ChartPanel panel;
     int segmentNumber;
 
-    public FilterSlider(int upperBound, int lowerBound, int xPos, ChartPanel panel, int segmentNumber){
+    public FilterSlider(int upperBound, int lowerBound, int xPos, ChartPanel panel, int segmentNumber) {
         this.panel = panel;
         this.segmentNumber = segmentNumber;
-        upperSlider = new DragBox(xPos, upperBound-8, upperColour, thickness, this, true);
-        lowerSlider = new DragBox(xPos, lowerBound+8, lowerColour, thickness, this, false);
+        upperSlider = new DragBox(xPos, upperBound - 8, upperColour, thickness, this, true);
+        lowerSlider = new DragBox(xPos, lowerBound + 8, lowerColour, thickness, this, false);
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         panel.add(upperSlider);
@@ -37,69 +37,70 @@ public class FilterSlider {
         setUpperBackgroundColour(Color.red);
     }
 
-    public void removeSlider(){
+    public void removeSlider() {
         panel.remove(upperSlider);
         panel.remove(lowerSlider);
 
     }
 
-    public int getUpperY(){
+    public int getUpperY() {
         return upperSlider.getYPos();
     }
 
-    public int getLowerY(){
-        return lowerSlider.getYPos();
-    }
-
-    public int getUpperX(){
-        return upperSlider.getXPos();
-    }
-
-    public int getLowerX(){
-        return lowerSlider.getXPos();
-    }
-
-    public void setUpperY(int pos){
+    public void setUpperY(int pos) {
         upperSlider.setYPos(pos);
     }
 
-    public void setLowerY(int pos){
+    public int getLowerY() {
+        return lowerSlider.getYPos();
+    }
+
+    public void setLowerY(int pos) {
         lowerSlider.setYPos(pos);
     }
 
-    public void setUpperX(int pos){
+    public int getUpperX() {
+        return upperSlider.getXPos();
+    }
+
+    public void setUpperX(int pos) {
         upperSlider.setXPos(pos);
     }
 
-    public void setLowerX(int pos){
+    public int getLowerX() {
+        return lowerSlider.getXPos();
+    }
+
+    public void setLowerX(int pos) {
         lowerSlider.setXPos(pos);
     }
 
-    public void setUpperBackgroundColour(Color color){
+    public void setUpperBackgroundColour(Color color) {
         upperSlider.setBackground(color);
     }
-    public void setLowerBackgroundColour(Color color){
+
+    public void setLowerBackgroundColour(Color color) {
         lowerSlider.setBackground(color);
     }
 
-    public void setLowerBorder(Color color, int thickness){
+    public void setLowerBorder(Color color, int thickness) {
         upperSlider.setNewBorder(new LineBorder(color, thickness));
         this.thickness = thickness;
     }
 
-    public void setUpperBound(int upperBound){
+    public void setUpperBound(int upperBound) {
         this.upperBound = upperBound;
         upperSlider.setOuterBound(upperBound);
     }
 
-    public void setLowerBound(int lowerBound){
+    public void setLowerBound(int lowerBound) {
         this.lowerBound = lowerBound;
         lowerSlider.setOuterBound(lowerBound);
     }
 
-    public void remove(){
-      panel.remove(upperSlider);
-      panel.remove(lowerSlider);
+    public void remove() {
+        panel.remove(upperSlider);
+        panel.remove(lowerSlider);
     }
 
     public DragBox getUpperSlider() {
@@ -110,19 +111,19 @@ public class FilterSlider {
         return lowerSlider;
     }
 
-    public boolean checkValue(double value){
+    public boolean checkValue(double value) {
         int upperSliderPos = upperSlider.getRealYPos() - upperBound;
         int lowerSliderPos = lowerSlider.getRealYPos() - upperBound;
-        double upperPercentage = 1 - (((float)lowerBound - upperBound) - upperSliderPos) / (lowerBound - upperBound);
-        double lowerPercentage = 1 - (((float)lowerBound - upperBound) - lowerSliderPos) / (lowerBound - upperBound);
+        double upperPercentage = 1 - (((float) lowerBound - upperBound) - upperSliderPos) / (lowerBound - upperBound);
+        double lowerPercentage = 1 - (((float) lowerBound - upperBound) - lowerSliderPos) / (lowerBound - upperBound);
         return !(value <= upperPercentage) && !(value >= lowerPercentage);
     }
 
-    public void updateValues(){
-        for (FullLineData data: panel.getDataDisplay().getFullLineData()) {
-            for (PartialLineData line:data.getData()) {
+    public void updateValues() {
+        for (FullLineData data : panel.getDataDisplay().getFullLineData()) {
+            for (PartialLineData line : data.getData()) {
 
-                if (UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()){
+                if (UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()) {
                     if (line.getGetSegmentEnd() - line.getSegmentStart() != 1) {
                         if (segmentNumber > line.getSegmentStart() && segmentNumber < line.getGetSegmentEnd()
                                 && !Objects.isNull(line.getPercentage1()) && !Objects.isNull(line.getPercentage2())) {
@@ -143,12 +144,12 @@ public class FilterSlider {
                     }
                 }
 
-                if (line.getSegmentStart() == segmentNumber){
+                if (line.getSegmentStart() == segmentNumber) {
                     if (!Objects.isNull(line.getPercentage1())) {
                         data.setShowData(segmentNumber, checkValue(line.getPercentage1()));
                     }
                 }
-                if (line.getGetSegmentEnd() == segmentNumber){
+                if (line.getGetSegmentEnd() == segmentNumber) {
                     if (!Objects.isNull(line.getPercentage2())) {
                         data.setShowData(segmentNumber, checkValue(line.getPercentage2()));
                     }
@@ -159,30 +160,29 @@ public class FilterSlider {
     }
 
 
-    public void updatePanel(){
+    public void updatePanel() {
         panel.getDataDisplay().repaint();
     }
 
-    public void resetPos(){
+    public void resetPos() {
         lowerSlider.resetPos();
         upperSlider.resetPos();
-        for (FullLineData data: panel.getDataDisplay().getFullLineData()) {
+        for (FullLineData data : panel.getDataDisplay().getFullLineData()) {
             data.setShowData(segmentNumber, true);
         }
     }
 
-    public void loadPositions(ArrayList<Integer> list){
+    public void loadPositions(ArrayList<Integer> list) {
         upperSlider.setYPos(list.get(0));
         lowerSlider.setYPos(list.get(1));
     }
 
-    public ArrayList<Integer> getPositions(){
+    public ArrayList<Integer> getPositions() {
         ArrayList<Integer> list = new ArrayList<>();
         list.add(upperSlider.getYPos());
         list.add(lowerSlider.getYPos());
         return list;
     }
-
 
 
 }

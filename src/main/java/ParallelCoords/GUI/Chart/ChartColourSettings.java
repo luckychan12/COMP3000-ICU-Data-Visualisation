@@ -10,7 +10,7 @@ public class ChartColourSettings {
     public ChartColourSettings() {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
         UserGraphSettings settings = UserSettings.getInstance().getUserGraphSettings();
-        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
 
         JTextField rWeight = new JTextField(5);
         JTextField gWeight = new JTextField(5);
@@ -45,8 +45,8 @@ public class ChartColourSettings {
         panel.add(sub2);
         panel.add(subPanel);
 
-        Object[] options = { "Save", "Reset",
-                "Cancel" };
+        Object[] options = {"Save", "Reset",
+                "Cancel"};
         int result = JOptionPane.showOptionDialog(null, panel,
                 "Set Colour Weights", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
         System.out.println(result);
@@ -54,13 +54,13 @@ public class ChartColourSettings {
             checkValue(rWeight.getText(), gWeight.getText(), bWeight.getText());
         }
         if (result == 1) {
-            checkValue("0","0","0");
+            checkValue("0", "0", "0");
         }
 
     }
 
 
-    private void checkValue(String r, String g, String b){
+    private void checkValue(String r, String g, String b) {
         try {
             float checkedR = checkNumInput(r);
             float checkedG = checkNumInput(g);
@@ -69,13 +69,13 @@ public class ChartColourSettings {
             UserSettings.getInstance().getUserGraphSettings().setChartGreenWeight(checkedG);
             UserSettings.getInstance().getUserGraphSettings().setChartBlueWeight(checkedB);
         } catch (final NumberFormatException e) {
-            JOptionPane.showMessageDialog(new JFrame(),"Invalid input value. Please select an number between 0 and 5.", "Error", JOptionPane.WARNING_MESSAGE );
+            JOptionPane.showMessageDialog(new JFrame(), "Invalid input value. Please select an number between 0 and 5.", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }
 
     private float checkNumInput(String r) {
         float input = Float.parseFloat(r);
-        if (input < 0 || input > 5){
+        if (input < 0 || input > 5) {
             throw new NumberFormatException();
         }
         return input;

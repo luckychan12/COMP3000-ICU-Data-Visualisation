@@ -7,20 +7,21 @@ import ParallelCoords.Main;
 import java.awt.event.ActionEvent;
 
 public class ChartMenuListener {
-    private Main main;
-    public ChartMenuListener(Main mainWindow) {this.main = mainWindow;}
+    private final Main main;
 
-    public void generateChart(ActionEvent e){
+    public ChartMenuListener(Main mainWindow) {
+        this.main = mainWindow;
+    }
+
+    public void generateChart(ActionEvent e) {
         Data data = Data.getInstance();
         try {
             main.addChart(new ChartFrame(data.getDataStore().get(data.getCurrID()), main));
-        }
-        catch (IndexOutOfBoundsException e2){
+        } catch (IndexOutOfBoundsException e2) {
             System.out.println("No data loaded");
         }
 
     }
-
 
 
 }

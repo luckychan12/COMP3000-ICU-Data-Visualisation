@@ -12,9 +12,10 @@ public class MenuBar extends JMenuBar {
     SettingsMenu settingsMenu;
     ChartMenu generateChart;
     DataImportMenu dataImportMenu;
+
     public MenuBar(Main mainWindow) {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        font = new Font("Calibri", Font.BOLD, fontSize );
+        font = new Font("Calibri", Font.BOLD, fontSize);
 
         settingsMenu = new SettingsMenu(mainWindow);
         settingsMenu.setFont(font);
@@ -30,9 +31,9 @@ public class MenuBar extends JMenuBar {
 
     }
 
-    public void reloadFonts(){
+    public void reloadFonts() {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        font = new Font("Calibri", Font.BOLD, fontSize );
+        font = new Font("Calibri", Font.BOLD, fontSize);
         this.setFont(font);
         settingsMenu.setFont(font);
         generateChart.setFont(font);

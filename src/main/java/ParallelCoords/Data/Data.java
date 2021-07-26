@@ -11,12 +11,15 @@ import java.util.regex.Pattern;
 
 public class Data {
     private static final Data instance = new Data();
-    private int dataID = 0;
     private final ArrayList<DataTable> dataStore = new ArrayList<>();
+    private int dataID = 0;
     private String delimiter;
     private int currID = 0;
-    private Data(){}
-    public static Data getInstance(){
+
+    private Data() {
+    }
+
+    public static Data getInstance() {
         return instance;
     }
 
@@ -60,22 +63,20 @@ public class Data {
             }
 
 
-        dataStore.add(newData);
+            dataStore.add(newData);
 
-        try {
-            loadData(dataID, reader);
-        }
-        catch (IOException | NumberFormatException err){
-            dataStore.remove(dataID-1);
+            try {
+                loadData(dataID, reader);
+            } catch (IOException | NumberFormatException err) {
+                dataStore.remove(dataID - 1);
 
-            throw err;
-        }
-        newData.setIndex(dataID);
-        newData.initShowRecordList();
-        currID = dataID;
-        dataID++;
-        }
-        catch (Exception err){
+                throw err;
+            }
+            newData.setIndex(dataID);
+            newData.initShowRecordList();
+            currID = dataID;
+            dataID++;
+        } catch (Exception err) {
             throw new EmptyFieldsException();
         }
     }
@@ -83,16 +84,14 @@ public class Data {
     private DataEntity addDataEntity(String token) {
         DataEntity newEntity = new DataEntity();
         //newEntity.setLineColor(color);
-        if (token.equals("")){
+        if (token.equals("")) {
             newEntity.setConfirmedValue(false);
             newEntity.setText(false);
-        }
-        else if(!(isNumeric(token))) {
+        } else if (!(isNumeric(token))) {
             newEntity.setConfirmedValue(false);
             newEntity.setText(true);
             newEntity.setTextData(token);
-        }
-        else{
+        } else {
             newEntity.setValue(Double.parseDouble(token));
             newEntity.setText(false);
             newEntity.setConfirmedValue(true);
@@ -101,17 +100,16 @@ public class Data {
     }
 
 
-    private void loadData(int tableID, BufferedReader reader) throws IOException, NumberFormatException{
+    private void loadData(int tableID, BufferedReader reader) throws IOException, NumberFormatException {
         String line;
         String[] tokens;
         int rowCount = 0;
-        while ((line = reader.readLine()) != null)
-        {
+        while ((line = reader.readLine()) != null) {
             tokens = (line.trim()).split(delimiter, -1);
             int currColumn = 0;
             if (tokens.length > 0) {
-               // Color lineColour = dataStore.get(tableID).genColour();
-                for (String token : tokens){
+                // Color lineColour = dataStore.get(tableID).genColour();
+                for (String token : tokens) {
                     DataColumn col = dataStore.get(tableID).getColumn(currColumn);
                     col.addEntity(addDataEntity(token));
                     currColumn++;
@@ -120,7 +118,7 @@ public class Data {
             rowCount++;
         }
 
-        if(dataStore.get(tableID).hasDefinedHeaders()){
+        if (dataStore.get(tableID).hasDefinedHeaders()) {
             rowCount++;
         }
         dataStore.get(tableID).setNumRows(rowCount);

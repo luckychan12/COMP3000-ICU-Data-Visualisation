@@ -9,10 +9,11 @@ import java.awt.*;
 
 public class ChartMenu extends JMenu {
     JMenuItem mi1;
+
     public ChartMenu(Main mainWindow) {
         super("Chart");
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
 
         ChartMenuListener listener;
         listener = new ChartMenuListener(mainWindow);

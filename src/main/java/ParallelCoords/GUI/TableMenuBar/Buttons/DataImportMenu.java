@@ -8,11 +8,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DataImportMenu extends JMenu {
-    JMenuItem mi1,mi2,mi3;
-    public DataImportMenu(Main mainWindow){
+    JMenuItem mi1, mi2, mi3;
+
+    public DataImportMenu(Main mainWindow) {
         super("Load Data");
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
 
 
         DataMenuListener listener = new DataMenuListener(mainWindow);
@@ -29,7 +30,6 @@ public class DataImportMenu extends JMenu {
         this.add(mi1);
         this.add(mi2);
         this.add(mi3);
-
 
 
     }

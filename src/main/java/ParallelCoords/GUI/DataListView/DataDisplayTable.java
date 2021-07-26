@@ -12,19 +12,19 @@ import java.awt.*;
 import java.util.List;
 
 public class DataDisplayTable extends JPanel {
-    private Main mainWindow;
+    private final Main mainWindow;
     private JTable displayTable;
 
-    public DataDisplayTable(Main mainWindow){
+    public DataDisplayTable(Main mainWindow) {
         super();
         this.mainWindow = mainWindow;
         this.setLayout(new GridLayout(1, 1));
         setup();
     }
 
-    public void setup(){
+    public void setup() {
         Data data = Data.getInstance();
-        DataTable dataTable =  data.getDataStore().get(data.getCurrID());
+        DataTable dataTable = data.getDataStore().get(data.getCurrID());
         this.removeAll();
         DataColumnModel tableColumnModel = new DataColumnModel(this.mainWindow);
         DefaultTableCellRenderer cellRenderer = new DefaultTableCellRenderer();
@@ -39,14 +39,14 @@ public class DataDisplayTable extends JPanel {
         TableColumn[] cols = new TableColumn[dataTable.getNumberOfColumns() + 2];
         for (int colIndex = 1; colIndex <= dataTable.getNumberOfColumns(); colIndex++) {
             cols[colIndex] = new TableColumn(colIndex, 100, cellRenderer, cellEditor);
-            cols[colIndex].setHeaderValue(dataTable.getAllColumns().get(colIndex-1).getColumnName());
+            cols[colIndex].setHeaderValue(dataTable.getAllColumns().get(colIndex - 1).getColumnName());
             cols[colIndex].setResizable(true);
             tableColumnModel.addColumn(cols[colIndex]);
         }
 
         DataTableModel dataSheetTableModel = new DataTableModel(dataTable);
         this.displayTable = new JTable(dataSheetTableModel, tableColumnModel);
-        this.displayTable.setFont( new Font("Calibri", Font.PLAIN, UserSettings.getInstance()
+        this.displayTable.setFont(new Font("Calibri", Font.PLAIN, UserSettings.getInstance()
                 .getUserGeneralSettings().getTableFontSize()));
         this.displayTable.getTableHeader().setFont(new Font("Calibri", Font.BOLD, UserSettings.getInstance()
                 .getUserGeneralSettings().getTableHeaderFontSize()));
@@ -68,9 +68,9 @@ public class DataDisplayTable extends JPanel {
         return displayTable;
     }
 
-    void setSelectedRows(List<Integer> selection){
+    void setSelectedRows(List<Integer> selection) {
         displayTable.clearSelection();
-        for(Integer s : selection){
+        for (Integer s : selection) {
             displayTable.getSelectionModel().addSelectionInterval(s, s);
         }
     }

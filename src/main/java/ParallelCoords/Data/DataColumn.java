@@ -83,7 +83,7 @@ public class DataColumn {
         this.calculated = calculated;
     }
 
-    public double getValuePercentage(int index, boolean absolute){
+    public double getValuePercentage(int index, boolean absolute) {
 
         if (!calculated){
             calculateMaxValue();
@@ -121,12 +121,12 @@ public class DataColumn {
         //return 1 - adjusted/range;
     }
 
-    public void setColumnPosition(int columnPosition) {
-        this.columnPosition = columnPosition;
-    }
-
     public int getColumnPosition() {
         return columnPosition;
+    }
+
+    public void setColumnPosition(int columnPosition) {
+        this.columnPosition = columnPosition;
     }
 
     public String getColumnName() {
@@ -147,6 +147,10 @@ public class DataColumn {
 
     public int getColumnIndex(){
         return getColumnSize()- 1;
+    }
+
+    public void setColumnIndex(int columnIndex) {
+        this.columnID = columnIndex;
     }
 
     private boolean checkIndex(int index){
@@ -192,10 +196,6 @@ public class DataColumn {
 
     public boolean isReversed(){
         return reversed;
-    }
-
-    public void setColumnIndex(int columnIndex) {
-        this.columnID = columnIndex;
     }
 
     public int getColumnID() {

@@ -9,10 +9,11 @@ import java.awt.*;
 
 public class ChartFrame extends JFrame {
 
-    private ChartPanel panel;
-    private Main mainWindow;
-    private ChartMenuBar menu;
-    public ChartFrame(DataTable displayTable, Main main){
+    private final ChartPanel panel;
+    private final Main mainWindow;
+    private final ChartMenuBar menu;
+
+    public ChartFrame(DataTable displayTable, Main main) {
         super("Chart");
         this.mainWindow = main;
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -42,7 +43,7 @@ public class ChartFrame extends JFrame {
         setVisible(true);
     }
 
-    public void reprepData(boolean showWarning){
+    public void reprepData(boolean showWarning) {
         panel.rePrepData(false, showWarning);
     }
 

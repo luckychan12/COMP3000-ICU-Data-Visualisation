@@ -1,8 +1,8 @@
 package ParallelCoords;
 
 import ParallelCoords.Data.Data;
-import ParallelCoords.GUI.DataListView.DataDisplayTable;
 import ParallelCoords.GUI.Chart.ChartFrame;
+import ParallelCoords.GUI.DataListView.DataDisplayTable;
 import ParallelCoords.GUI.TableMenuBar.Buttons.MenuBar;
 import ParallelCoords.Settings.UserSettings;
 
@@ -16,9 +16,10 @@ import java.util.Properties;
 
 
 public class Main extends JFrame {
-    private MenuBar menuBar;
+    private final MenuBar menuBar;
     private DataDisplayTable dataDisplayTable;
-    private ArrayList<ChartFrame> chartWindows = new ArrayList<>();
+    private final ArrayList<ChartFrame> chartWindows = new ArrayList<>();
+
     public Main() {
         super("(ICU) Data Visualisation software");
         loadSettings();
@@ -28,23 +29,27 @@ public class Main extends JFrame {
         setWindow();
     }
 
-    public void addChart(ChartFrame chartFrame){
+    public static void main(String[] args) {
+        new Main();
+    }
+
+    public void addChart(ChartFrame chartFrame) {
         chartWindows.add(chartFrame);
     }
 
-    public void repaintCharts(boolean showWarning){
-        for (ChartFrame chart: chartWindows) {
+    public void repaintCharts(boolean showWarning) {
+        for (ChartFrame chart : chartWindows) {
             chart.reprepData(showWarning);
             chart.repaint();
         }
     }
-    public void rescaleCharts(boolean showWarning, boolean verticalScaling){
-        for (ChartFrame chart: chartWindows) {
+
+    public void rescaleCharts(boolean showWarning, boolean verticalScaling) {
+        for (ChartFrame chart : chartWindows) {
             chart.getPanel().calculateInitialPositionValues();
-            if(verticalScaling) {
+            if (verticalScaling) {
                 chart.getPanel().createFilterSliders();
-            }
-            else {
+            } else {
                 chart.getPanel().repositionSliders();
             }
             chart.reprepData(showWarning);
@@ -53,10 +58,9 @@ public class Main extends JFrame {
 
     }
 
-
-    public void reloadMenuFonts(){
+    public void reloadMenuFonts() {
         menuBar.reloadFonts();
-        for (ChartFrame chart: chartWindows) {
+        for (ChartFrame chart : chartWindows) {
             chart.getMenu().reloadFonts();
         }
     }
@@ -65,55 +69,49 @@ public class Main extends JFrame {
         return dataDisplayTable;
     }
 
-    private void loadSettings()
-        {
-            try (InputStream input = new FileInputStream("config.properties")) {
-                Properties prop = new Properties();
-                prop.load(input);
-                UserSettings.getInstance().setProperties(prop);
-            } catch (IOException ex) {
-                ex.printStackTrace();
+    private void loadSettings() {
+        try (InputStream input = new FileInputStream("config.properties")) {
+            Properties prop = new Properties();
+            prop.load(input);
+            UserSettings.getInstance().setProperties(prop);
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+    public void initDataPanel() {
+        SwingUtilities.invokeLater(() -> {
+            if (dataDisplayTable == null) {
+                dataDisplayTable = new DataDisplayTable(Main.this);
+                setContentPane(dataDisplayTable);
+                dataDisplayTable.revalidate();
+            } else if (!Data.getInstance().getDataStore().isEmpty()) {
+                dataDisplayTable.setup();
+                dataDisplayTable.revalidate();
+            } else {
+                setContentPane(new JPanel());
+                repaint();
             }
-        }
+        });
+    }
 
-        public void initDataPanel(){
-            SwingUtilities.invokeLater(() -> {
-                if (dataDisplayTable == null) {
-                    dataDisplayTable = new DataDisplayTable(Main.this);
-                    setContentPane(dataDisplayTable);
-                    dataDisplayTable.revalidate();
-                } else if(!Data.getInstance().getDataStore().isEmpty()) {
-                    dataDisplayTable.setup();
-                    dataDisplayTable.revalidate();
-                }
-                else{
-                    setContentPane(new JPanel());
-                    repaint();
-                }
-            });
-        }
+    public void fireRevalidate() {
+        dataDisplayTable.revalidate();
+    }
 
-        public void fireRevalidate()
-        {
-            dataDisplayTable.revalidate();
-        }
+    public void setData() {
+        this.initDataPanel();
+        this.repaint();
 
-        public void setData(){
-            this.initDataPanel();
-            this.repaint();
+    }
 
-        }
-    private void setWindow()
-    {
+    private void setWindow() {
         GraphicsEnvironment gEnv = GraphicsEnvironment.getLocalGraphicsEnvironment();
         Dimension screenSize;
         screenSize = new Dimension(1000, 500);
-        setLocation(screenSize.width/2, screenSize.height/2);
+        setLocation(screenSize.width / 2, screenSize.height / 2);
         setSize(screenSize.width, screenSize.height);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-    }
-    public static void main(String[] args) {
-        new Main();
     }
 }

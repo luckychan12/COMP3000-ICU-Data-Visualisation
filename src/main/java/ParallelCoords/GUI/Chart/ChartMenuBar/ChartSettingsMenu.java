@@ -17,10 +17,10 @@ public class ChartSettingsMenu extends JMenu {
     JMenuItem setMaxMinAxis;
     ChartPanel panel;
 
-    ChartSettingsMenu(ChartPanel panel){
+    ChartSettingsMenu(ChartPanel panel) {
         super("Chart Controls");
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
         this.panel = panel;
         toggleAbsoluteRelative = new JMenuItem();
         ActionListener toggleAbsListener = e -> {
@@ -32,7 +32,6 @@ public class ChartSettingsMenu extends JMenu {
 
         toggleAbsoluteRelative.setFont(font);
         this.add(toggleAbsoluteRelative);
-
 
 
         ChartSettingListener listener = new ChartSettingListener(panel);
@@ -71,24 +70,21 @@ public class ChartSettingsMenu extends JMenu {
 
     }
 
-    private void setViewMenuName(){
-        if(panel.isAbsolute()){
+    private void setViewMenuName() {
+        if (panel.isAbsolute()) {
             toggleAbsoluteRelative.setText("Toggle Absolute/Relative (Current: Absolute)");
-        }
-        else {
+        } else {
             toggleAbsoluteRelative.setText("Toggle Absolute/Relative (Current: Relative)");
         }
     }
 
-    private void setFilterMenuName(){
-        if(UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()){
+    private void setFilterMenuName() {
+        if (UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()) {
             toggleFilterNullAndText.setText("Toggle including null data when filtering (Current: True)");
-        }
-        else {
+        } else {
             toggleFilterNullAndText.setText("Toggle including null data when filtering (Current: False)");
         }
     }
-
 
 
     public void reloadFonts() {

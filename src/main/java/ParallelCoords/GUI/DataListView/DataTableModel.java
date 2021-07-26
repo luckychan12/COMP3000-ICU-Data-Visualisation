@@ -5,7 +5,7 @@ import ParallelCoords.Data.DataTable;
 
 import javax.swing.table.AbstractTableModel;
 
-    public class DataTableModel extends AbstractTableModel {
+public class DataTableModel extends AbstractTableModel {
     private final DataTable dataTable;
 
     public DataTableModel(DataTable dataTable) {
@@ -24,10 +24,9 @@ import javax.swing.table.AbstractTableModel;
 
     @Override
     public int getRowCount() {
-        if (dataTable.hasDefinedHeaders()){
+        if (dataTable.hasDefinedHeaders()) {
             return dataTable.getNumRows() - 1;
-        }
-        else{
+        } else {
             return dataTable.getNumRows() + 1;
         }
 
@@ -35,32 +34,28 @@ import javax.swing.table.AbstractTableModel;
 
     @Override
     public String getColumnName(int columnIndex) {
-        if (dataTable.hasDefinedHeaders()){
+        if (dataTable.hasDefinedHeaders()) {
             return dataTable.getColumn(columnIndex).getColumnName();
-        }
-        else {
+        } else {
             return "Column " + (columnIndex + 1);
         }
     }
 
     @Override
     public String getValueAt(int rowIndex, int columnIndex) {
-        if (columnIndex == 0){
+        if (columnIndex == 0) {
             return Integer.toString(rowIndex);
-        }
-        else{
-            columnIndex = columnIndex-1;
+        } else {
+            columnIndex = columnIndex - 1;
         }
 
         DataEntity entity = dataTable.getAllColumns().get(columnIndex).getColumnData().get(rowIndex);
 
-        if (entity.isText()){
+        if (entity.isText()) {
             return dataTable.getTextValueAt(rowIndex, columnIndex);
-        }
-        else if (entity.isConfirmedValue()){
+        } else if (entity.isConfirmedValue()) {
             return Double.toString(dataTable.getNumValueAt(rowIndex, columnIndex));
-        }
-        else {
+        } else {
             return "NULL";
         }
     }
@@ -68,7 +63,7 @@ import javax.swing.table.AbstractTableModel;
     @Override
     public void setValueAt(Object arg0, int rowIndex, int columnIndex) {
         System.out.println("Fired");
-        dataTable.setValueAt((String) arg0, rowIndex, columnIndex-1 );
+        dataTable.setValueAt((String) arg0, rowIndex, columnIndex - 1);
         fireTableCellUpdated(rowIndex, columnIndex);
     }
 
