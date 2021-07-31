@@ -7,9 +7,9 @@ import java.util.Properties;
 public class UserSettings {
     private static final UserSettings instance = new UserSettings();
     private Properties properties = new Properties();
-    private UserImportSettings userImportSettings = new UserImportSettings();
-    private UserGeneralSettings userGeneralSettings = new UserGeneralSettings();
-    private UserGraphSettings userGraphSettings = new UserGraphSettings();
+    private final UserImportSettings userImportSettings = new UserImportSettings();
+    private final UserGeneralSettings userGeneralSettings = new UserGeneralSettings();
+    private final UserGraphSettings userGraphSettings = new UserGraphSettings();
     private UserSettings() {
     }
 
@@ -21,28 +21,13 @@ public class UserSettings {
         return userImportSettings;
     }
 
-    public void setUserImportSettings(UserImportSettings userImportSettings) {
-        this.userImportSettings = userImportSettings;
-    }
-
     public UserGeneralSettings getUserGeneralSettings() {
         return userGeneralSettings;
     }
 
-    public void setUserGeneralSettings(UserGeneralSettings userGeneralSettings) {
-        this.userGeneralSettings = userGeneralSettings;
-    }
 
     public UserGraphSettings getUserGraphSettings() {
         return userGraphSettings;
-    }
-
-    public void setUserGraphSettings(UserGraphSettings userGraphSettings) {
-        this.userGraphSettings = userGraphSettings;
-    }
-
-    public Properties getProperties() {
-        return properties;
     }
 
     public void setProperties(Properties properties) {

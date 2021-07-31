@@ -7,15 +7,13 @@ import ParallelCoords.Settings.UserSettings;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class ChartSettingsMenu extends JMenu {
-
-    JMenuItem toggleAbsoluteRelative;
-    JMenuItem toggleFilterNullAndText;
-    JMenuItem setNumTicks;
-    JMenuItem reloadChart;
-    JMenuItem setMaxMinAxis;
-    ChartPanel panel;
+    private final ChartPanel panel;
+    private final JMenuItem toggleFilterNullAndText;
+    private final JMenuItem toggleAbsoluteRelative;
+    private final ArrayList<JComponent> components = new ArrayList<>();
 
     ChartSettingsMenu(ChartPanel panel) {
         super("Chart Controls");
@@ -23,6 +21,7 @@ public class ChartSettingsMenu extends JMenu {
         Font font = new Font("Calibri", Font.BOLD, fontSize);
         this.panel = panel;
         toggleAbsoluteRelative = new JMenuItem();
+        components.add(toggleAbsoluteRelative);
         ActionListener toggleAbsListener = e -> {
             panel.toggleAbsolute();
             setViewMenuName();
@@ -37,6 +36,7 @@ public class ChartSettingsMenu extends JMenu {
         ChartSettingListener listener = new ChartSettingListener(panel);
 
         toggleFilterNullAndText = new JMenuItem();
+        components.add(toggleFilterNullAndText);
         ActionListener toggleFilter = e -> {
             listener.toggleFilter();
             setFilterMenuName();
@@ -47,21 +47,24 @@ public class ChartSettingsMenu extends JMenu {
         this.add(toggleFilterNullAndText);
 
 
-        setNumTicks = new JMenuItem();
+        JMenuItem setNumTicks = new JMenuItem();
+        components.add(setNumTicks);
         setNumTicks.addActionListener(e1 -> listener.setTicks());
         setNumTicks.setText("Define number of ticks (Absolute view)");
         setNumTicks.setFont(font);
         this.add(setNumTicks);
 
 
-        setMaxMinAxis = new JMenuItem();
+        JMenuItem setMaxMinAxis = new JMenuItem();
+        components.add(setMaxMinAxis);
         ActionListener maxAxis = e -> new ChartAxisSettingPane(panel);
         setMaxMinAxis.addActionListener(maxAxis);
         setMaxMinAxis.setText("Set absolute max axis range");
         setMaxMinAxis.setFont(font);
         this.add(setMaxMinAxis);
 
-        reloadChart = new JMenuItem();
+        JMenuItem reloadChart = new JMenuItem();
+        components.add(reloadChart);
         ActionListener reloadListener = e -> panel.rePrepData(true, true);
         reloadChart.addActionListener(reloadListener);
         reloadChart.setText("Reload Chart");
@@ -89,12 +92,10 @@ public class ChartSettingsMenu extends JMenu {
 
     public void reloadFonts() {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        Font font = new Font("Calibri", Font.BOLD, fontSize);
-        toggleAbsoluteRelative.setFont(font);
-        setMaxMinAxis.setFont(font);
-        reloadChart.setFont(font);
-        toggleFilterNullAndText.setFont(font);
-        setNumTicks.setFont(font);
+        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        for (JComponent component: components){
+            component.setFont(font);
+        }
     }
 
 }

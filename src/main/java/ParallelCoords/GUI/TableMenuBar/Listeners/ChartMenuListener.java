@@ -18,6 +18,7 @@ public class ChartMenuListener {
         try {
             main.addChart(new ChartFrame(data.getDataStore().get(data.getCurrID()), main));
         } catch (IndexOutOfBoundsException e2) {
+            e2.printStackTrace();
             System.out.println("No data loaded");
         }
 

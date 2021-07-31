@@ -44,118 +44,6 @@ public class UserGraphSettings {
         }
     }
 
-    public int getGraphHeaderFontSize() {
-        String defaultVal = "14";
-        try {
-            return Integer.parseInt(UserSettings.getInstance().getPropValue("GraphHeaderFontSize", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading the \nheader font size from storage.", "Error", JOptionPane.WARNING_MESSAGE);
-            setGraphHeaderFontSize(Integer.parseInt(defaultVal));
-            return Integer.parseInt(defaultVal);
-        }
-    }
-
-    public void setGraphHeaderFontSize(int value) {
-        UserSettings.getInstance().updateProperties("GraphHeaderFontSize", Integer.toString(value));
-    }
-
-    public float getGraphLineThickness() {
-        String defaultVal = "1.5";
-        try {
-            return Integer.parseInt(UserSettings.getInstance().getPropValue("GraphLineThickness", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading the \ngraph line thickness from storage.", "Error", JOptionPane.WARNING_MESSAGE);
-            setGraphLineThickness(Float.parseFloat(defaultVal));
-            return Float.parseFloat(defaultVal);
-        }
-    }
-
-    public void setGraphLineThickness(float value) {
-        UserSettings.getInstance().updateProperties("GraphLineThickness", Float.toString(value));
-    }
-
-    public float getGraphDashedLineThickness() {
-        String defaultVal = "2.5";
-        try {
-            return Integer.parseInt(UserSettings.getInstance().getPropValue("GraphDashedLineThickness", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading the \ngraph line thickness from storage.", "Error", JOptionPane.WARNING_MESSAGE);
-            setGraphDashedLineThickness(Float.parseFloat(defaultVal));
-            return Float.parseFloat(defaultVal);
-        }
-    }
-
-    public void setGraphDashedLineThickness(float value) {
-        UserSettings.getInstance().updateProperties("GraphDashedLineThickness", Float.toString(value));
-    }
-
-    public float getGraphDotDashedLineThickness() {
-        String defaultVal = "2.2";
-        try {
-            return Integer.parseInt(UserSettings.getInstance().getPropValue("GraphDotDashedLineThickness", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading the \ngraph line thickness from storage.", "Error", JOptionPane.WARNING_MESSAGE);
-            setGraphDotDashedLineThickness(Float.parseFloat(defaultVal));
-            return Float.parseFloat(defaultVal);
-        }
-    }
-
-    public void setGraphDotDashedLineThickness(float value) {
-        UserSettings.getInstance().updateProperties("GraphDotDashedLineThickness", Float.toString(value));
-    }
-
-    public void setGraphRelativeValueLow(int value) {
-        UserSettings.getInstance().updateProperties("GraphRelativeValueLow", Integer.toString(value));
-    }
-
-    public int getGraphRelativeValue() {
-        String defaultVal = "0";
-        try {
-            return Integer.parseInt(UserSettings.getInstance().getPropValue("GraphRelativeValueLow", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading the \nsaved relative value from storage.", "Error", JOptionPane.WARNING_MESSAGE);
-            setGraphRelativeValueLow(Integer.parseInt(defaultVal));
-            return Integer.parseInt(defaultVal);
-        }
-    }
-
-    public int getGraphRelativeValueHigh() {
-        String defaultVal = "5";
-        try {
-            return Integer.parseInt(UserSettings.getInstance().getPropValue("GraphRelativeValueHigh", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading the \nsaved relative value from storage.", "Error", JOptionPane.WARNING_MESSAGE);
-            setGraphRelativeValueHigh(Integer.parseInt(defaultVal));
-            return Integer.parseInt(defaultVal);
-        }
-    }
-
-    public void setGraphRelativeValueHigh(int value) {
-        UserSettings.getInstance().updateProperties("GraphRelativeValueLow", Integer.toString(value));
-    }
-
-    public int getNumberOfTicks() {
-        String defaultVal = "5";
-        try {
-            return Integer.parseInt(UserSettings.getInstance().getPropValue("NumberOfTicks", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading the \ngraph settings from storage.", "Error", JOptionPane.WARNING_MESSAGE);
-            setNumberOfTicks(Integer.parseInt(defaultVal));
-            return Integer.parseInt(defaultVal);
-        }
-    }
-
-    public void setNumberOfTicks(int value) {
-        UserSettings.getInstance().updateProperties("GraphRelativeValueLow", Integer.toString(value));
-    }
-
     public int getChartHeaderFontSize() {
         String defaultVal = "16";
         try {
@@ -186,54 +74,6 @@ public class UserGraphSettings {
 
     public void setChartTickFontSize(int value) {
         UserSettings.getInstance().updateProperties("ChartTickFontSize", Integer.toString(value));
-    }
-
-    public float getChartRedWeight() {
-        String defaultVal = "0";
-        try {
-            return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartRedWeight", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading saved colour weights from storage", "Error", JOptionPane.WARNING_MESSAGE);
-            setChartRedWeight(Float.parseFloat(defaultVal));
-            return Float.parseFloat(defaultVal);
-        }
-    }
-
-    public void setChartRedWeight(float value) {
-        UserSettings.getInstance().updateProperties("ChartRedWeight", Float.toString(value));
-    }
-
-    public float getChartGreenWeight() {
-        String defaultVal = "0";
-        try {
-            return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartGreenWeight", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading saved colour weights from storage", "Error", JOptionPane.WARNING_MESSAGE);
-            setChartGreenWeight(Float.parseFloat(defaultVal));
-            return Float.parseFloat(defaultVal);
-        }
-    }
-
-    public void setChartGreenWeight(float value) {
-        UserSettings.getInstance().updateProperties("ChartGreenWeight", Float.toString(value));
-    }
-
-    public float getChartBlueWeight() {
-        String defaultVal = "0";
-        try {
-            return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartBlueWeight", defaultVal));
-        } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
-            JOptionPane.showMessageDialog(frame, "There was an error loading saved colour weights from storage", "Error", JOptionPane.WARNING_MESSAGE);
-            setChartBlueWeight(Float.parseFloat(defaultVal));
-            return Float.parseFloat(defaultVal);
-        }
-    }
-
-    public void setChartBlueWeight(float value) {
-        UserSettings.getInstance().updateProperties("ChartBlueWeight", Float.toString(value));
     }
 
     public int getChartNumTicks() {
@@ -290,7 +130,6 @@ public class UserGraphSettings {
         try {
             return Boolean.parseBoolean(UserSettings.getInstance().getPropValue("ChartZoom", defaultVal));
         } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
             setChartZoom(false);
             return false;
         }
@@ -305,7 +144,6 @@ public class UserGraphSettings {
         try {
             return Boolean.parseBoolean(UserSettings.getInstance().getPropValue("ChartAbsolute", defaultVal));
         } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
             setChartAbsolute(false);
             return false;
         }
@@ -320,7 +158,6 @@ public class UserGraphSettings {
         try {
             return Boolean.parseBoolean(UserSettings.getInstance().getPropValue("ChartFilterTextData", defaultVal));
         } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
             setChartFilterTextData(false);
             return false;
         }
@@ -335,7 +172,6 @@ public class UserGraphSettings {
         try {
             return Integer.parseInt(UserSettings.getInstance().getPropValue("AxesPerScreenWidth", defaultVal));
         } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
             setAxesPerScreenWidth(Integer.parseInt(defaultVal));
             return Integer.parseInt(defaultVal);
         }
@@ -350,7 +186,6 @@ public class UserGraphSettings {
         try {
             return Float.parseFloat(UserSettings.getInstance().getPropValue("AxesThickness", defaultVal));
         } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
             setAxesThickness(Float.parseFloat(defaultVal));
             return Float.parseFloat(defaultVal);
         }
@@ -365,7 +200,6 @@ public class UserGraphSettings {
         try {
             return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartLineThickness", defaultVal));
         } catch (NumberFormatException e) {
-            JFrame frame = new JFrame();
             setChartLineThickness(Float.parseFloat(defaultVal));
             return Float.parseFloat(defaultVal);
         }
@@ -373,6 +207,68 @@ public class UserGraphSettings {
 
     public void setChartLineThickness(float value) {
         UserSettings.getInstance().updateProperties("ChartLineThickness", Float.toString(value));
+    }
+
+    public void setFilterColour(int r, int g, int b) {
+        String str = r + "," +  g + "," + b;
+        UserSettings.getInstance().updateProperties("FilterColour", str);
+    }
+
+    public int[] getFilterColour() {
+        int[] defaultVal = {165,165,165};
+        String strDefault = defaultVal[0]  + "," +  defaultVal[1] + "," + defaultVal[2];
+        try {
+            String str = UserSettings.getInstance().getPropValue("FilterColour", strDefault);
+            str = str.replaceAll("\\s+","");
+            String[] tokens = str.split(",",-1);
+            int[] out = new int[3];
+            int i = 0;
+            for (String token:tokens) {
+                int intVal = Integer.parseInt(token);
+                if (intVal < 0 || intVal > 255){
+                    return defaultVal;
+                }
+                out[i] =intVal;
+                i++;
+            }
+            return out;
+
+        }
+        catch (Exception e) {
+            setFilterColour(defaultVal[0], defaultVal[1],defaultVal[2]);
+            e.printStackTrace();
+            return defaultVal;
+        }
+    }
+
+    public void setChartColourWeights(float r, float g, float b) {
+        String str = r + "," +  g + "," + b;
+        UserSettings.getInstance().updateProperties("ChartColourWeights", str);
+    }
+
+    public float[] getChartColourWeights() {
+        float[] defaultVal = {0,0,0};
+        String strDefault = defaultVal[0]  + "," +  defaultVal[1] + "," + defaultVal[2];
+        try {
+            String str = UserSettings.getInstance().getPropValue("ChartColourWeights", strDefault);
+            str = str.replaceAll("\\s+","");
+            String[] tokens = str.split(",",-1);
+            float[] out = new float[3];
+            int i = 0;
+            for (String token:tokens) {
+                float floatVal = Float.parseFloat(token);
+                if (floatVal < 0 || floatVal >5){
+                    return defaultVal;
+                }
+                out[i] =floatVal;
+                i++;
+            }
+            return out;
+
+        } catch (Exception e) {
+            setChartColourWeights(defaultVal[0], defaultVal[1],defaultVal[2]);
+            return defaultVal;
+        }
     }
 
 

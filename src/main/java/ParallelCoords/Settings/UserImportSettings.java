@@ -13,7 +13,6 @@ public class UserImportSettings {
 
     public String getLastOpenedFile() {
         String defaultVal = System.getProperty("user.home");
-        System.out.println(UserSettings.getInstance().getPropValue("LastOpenedFile", "none"));
         return UserSettings.getInstance().getPropValue("LastOpenedFile", defaultVal);
     }
 

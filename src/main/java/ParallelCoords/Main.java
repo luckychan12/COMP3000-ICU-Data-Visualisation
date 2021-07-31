@@ -62,6 +62,7 @@ public class Main extends JFrame {
         menuBar.reloadFonts();
         for (ChartFrame chart : chartWindows) {
             chart.getMenu().reloadFonts();
+            chart.initDataControlMenu();
         }
     }
 
@@ -102,7 +103,6 @@ public class Main extends JFrame {
     public void setData() {
         this.initDataPanel();
         this.repaint();
-
     }
 
     private void setWindow() {

@@ -10,12 +10,10 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.RoundRectangle2D;
 
-class DragBox extends JComponent {
+public class DragBox extends JComponent {
     private final int width = 50;
     private final int height = 40;
     private final boolean upperSlider;
-    float scale = 1.3f;
-    private volatile int screenX = 0;
     private volatile int screenY = 0;
     private int xPos;
     private int yPos;
@@ -23,7 +21,7 @@ class DragBox extends JComponent {
     private Color color;
     private int thickness;
 
-    public DragBox(int xInit, int yInit, Color color, int thickness, FilterSlider filter, boolean isUpperSlider) {
+    public DragBox(int xInit, int yInit, int thickness, FilterSlider filter, boolean isUpperSlider) {
         //setBorder(border);
         setBackground(Color.BLACK);
         setBounds(0, 0, width, height);
@@ -31,7 +29,7 @@ class DragBox extends JComponent {
 
         this.upperSlider = isUpperSlider;
         int segments = UserSettings.getInstance().getUserGraphSettings().getAxesPerScreenWidth();
-        xPos = xInit - 18;
+        xPos = xInit - width/2;
 
         yPos = yInit - height;
 
@@ -43,9 +41,6 @@ class DragBox extends JComponent {
         }
 
         setLocation(xPos, yPos);
-        //setSize(30,20);
-
-        this.color = color;
         this.thickness = thickness;
 
         addMouseListener(new MouseListener() {
@@ -116,7 +111,6 @@ class DragBox extends JComponent {
     }
 
     private void updateCoords(MouseEvent e) {
-        screenX = e.getXOnScreen();
         screenY = e.getYOnScreen();
 
         xPos = getX();
@@ -130,39 +124,34 @@ class DragBox extends JComponent {
         g2.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        //g2.drawRect(0, 0, width, height);
 
         g2.setStroke(new BasicStroke(thickness));
-        g2.setColor(Color.BLACK);
-        /*
-        g2.drawLine(0,height/2, width, height/2);
-        g2.setColor(color);
-        g2.drawLine(width,0,width, height);
-        g2.drawLine(0,0,0, height);
-        g2.drawLine(width - (width/10), 0, width, 0);
-        g2.drawLine(width - (width/10), height, width, height);
-        g2.drawLine((width/10), 0, 0, 0);
-        g2.drawLine((width/10), height, 0, height);
-*/
-        g2.setColor(new Color(164, 164, 154));
+        int[] colourValues = UserSettings.getInstance().getUserGraphSettings().getFilterColour();
+        g2.setColor(new Color(colourValues[0],colourValues[1],colourValues[2]));
+
         RoundRectangle2D roundRectangle2D = new RoundRectangle2D.Double(width / 2f - (width / 7f), 1, width / 3.5f, height - 2, 5, 5);
         g2.fill(roundRectangle2D);
         g2.setColor(Color.black);
         g2.draw(roundRectangle2D);
-        g2.setStroke(new BasicStroke(7f));
-        g2.setColor(Color.black);
         if (upperSlider) {
+            g2.setStroke(new BasicStroke(7f));
             g2.drawLine(width / 16 * 5, height, width / 16 * 11, height);
+            g2.setStroke(new BasicStroke(1.5f));
+            g2.drawLine(width / 2 + 3, height - 25, width / 2, height -20);
+            g2.drawLine(width / 2 - 3, height - 25, width / 2, height -20);
+            g2.drawLine(width / 2 + 3, height - 17, width / 2, height -12);
+            g2.drawLine(width / 2 - 3, height - 17, width / 2, height -12);
+
         } else {
+            g2.setStroke(new BasicStroke(7f));
             g2.drawLine(width / 16 * 5, 0, width / 16 * 11, 0);
+            g2.setStroke(new BasicStroke(1.5f));
+            g2.drawLine(width / 2 + 3, height - 20, width / 2, height -25);
+            g2.drawLine(width / 2 - 3, height - 20, width / 2, height -25);
+            g2.drawLine(width / 2 + 3, height - 12, width / 2, height -17);
+            g2.drawLine(width / 2 - 3, height - 12, width / 2, height -17);
+
         }
-        g2.setColor(Color.black);
-        g2.setStroke(new BasicStroke(1.5f));
-        g2.drawLine(width / 2 - 3, height / 2 - 5, width / 2 + 3, height / 2 - 5);
-        g2.drawLine(width / 2 - 3, height / 2, width / 2 + 3, height / 2);
-        g2.drawLine(width / 2 - 3, height / 2 + 5, width / 2 + 3, height / 2 + 5);
-
-
     }
 
     public void resetPos() {
@@ -204,14 +193,6 @@ class DragBox extends JComponent {
         this.color = color;
     }
 
-    public int getThickness() {
-        return thickness;
-    }
-
-    public void setThickness(int thickness) {
-        this.thickness = thickness;
-    }
-
     public void setOuterBound(int bound) {
         this.outerBound = bound;
         if (yPos > outerBound) {
@@ -219,6 +200,7 @@ class DragBox extends JComponent {
             setLocation(xPos, yPos);
         }
     }
+
 
     public void setColour(Color color) {
         setBackground(color);

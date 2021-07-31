@@ -45,7 +45,6 @@ public class ChartAxisSettingPane {
                 "Cancel"};
         int result = JOptionPane.showOptionDialog(null, panel,
                 "Set axis range", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, null);
-        System.out.println(result);
         if (result == 0) {
             checkNumInput(minInput.getText(), maxInput.getText());
         }

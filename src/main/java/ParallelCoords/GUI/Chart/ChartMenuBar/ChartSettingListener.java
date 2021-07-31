@@ -9,7 +9,7 @@ import javax.swing.*;
 
 public class ChartSettingListener {
     private final JFrame messageFrame = new JFrame();
-    ChartPanel panel;
+    private ChartPanel panel;
 
     ChartSettingListener(ChartPanel panel) {
         this.panel = panel;
@@ -24,7 +24,7 @@ public class ChartSettingListener {
                 throw new EmptyFieldsException();
             }
             int intInput = Integer.parseInt(input);
-            if (intInput < 0 || intInput > 50) {
+            if (intInput < 1 || intInput > 100) {
                 throw new NumberFormatException();
             }
 

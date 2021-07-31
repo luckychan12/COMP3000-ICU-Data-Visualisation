@@ -27,18 +27,14 @@ public class DataColumnModel extends DefaultTableColumnModel {
             if (src != tar) {
                 Data data = Data.getInstance();
                 DataTable dataTable = data.getDataStore().get(data.getCurrID());
-                //dataTable.sortColumnsByPosition();
 
-
-                //System.out.println(src + ", " + tar);
-                //System.out.println(dataTable.getColumn(0).findEntity(src -1).getValue() + ", " + dataTable.getColumn(0).findEntity(tar -1).getValue());
-
-                Collections.swap(dataTable.getAllColumns(), src - 1, tar - 1);
+                Collections.swap(dataTable.getData(), src - 1, tar - 1);
                 for (int i = 0; i < this.getColumnCount(); i++) {
                     //System.out.println(this.getColumn(i).getHeaderValue().toString());
                     this.getColumn(i).setModelIndex(i);
                 }
                 mainWindow.repaintCharts(false);
+                mainWindow.reloadMenuFonts();
             }
         }
     }

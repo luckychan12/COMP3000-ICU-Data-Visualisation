@@ -6,44 +6,54 @@ import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class ChartMenuBar extends JMenuBar {
 
-    SettingsMenu settingsMenu;
-    ChartSettingsMenu chartSettingsMenu;
-    HeaderStyleMenu headerStyleMenu;
 
+    private final ArrayList<JComponent> components = new ArrayList<>();
+    DataControlMenu dataControlMenu;
     public ChartMenuBar(ChartPanel panel) {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
         Font font = new Font("Calibri", Font.BOLD, fontSize);
 
-        settingsMenu = new SettingsMenu(panel.getFrame().getMainWindow(), panel);
+        SettingsMenu settingsMenu = new SettingsMenu(panel.getFrame().getMainWindow(), panel);
+        components.add(settingsMenu);
         settingsMenu.setFont(font);
         this.add(settingsMenu);
 
-        chartSettingsMenu = new ChartSettingsMenu(panel);
+        HeaderStyleMenu headerStyleMenu = new HeaderStyleMenu(panel);
+        components.add(headerStyleMenu);
+        headerStyleMenu.setFont(font);
+        this.add(headerStyleMenu);
+
+        ChartSettingsMenu chartSettingsMenu = new ChartSettingsMenu(panel);
+        components.add(chartSettingsMenu);
         chartSettingsMenu.setFont(font);
         this.add(chartSettingsMenu);
 
-        headerStyleMenu = new HeaderStyleMenu(panel);
-        headerStyleMenu.setFont(font);
-        this.add(headerStyleMenu);
+        dataControlMenu = new DataControlMenu(panel);
+        components.add(dataControlMenu);
+        dataControlMenu.setFont(font);
+        this.add(dataControlMenu);
 
 
     }
 
     public void reloadFonts() {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        Font font = new Font("Calibri", Font.BOLD, fontSize);
-        this.setFont(font);
-        settingsMenu.setFont(font);
-        chartSettingsMenu.setFont(font);
-        headerStyleMenu.setFont(font);
+        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        for (JComponent component: components){
+            component.setFont(font);
+        }
 
-        settingsMenu.reloadFonts();
-        chartSettingsMenu.reloadFonts();
-        headerStyleMenu.reloadFonts();
+        for (int i=0; i<dataControlMenu.getItemCount(); ++i) {
+            dataControlMenu.getItem(i).setFont(font);
+        }
 
+    }
 
+    public DataControlMenu getDataControlMenu() {
+        return dataControlMenu;
     }
 }

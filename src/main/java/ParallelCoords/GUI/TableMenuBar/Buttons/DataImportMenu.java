@@ -8,7 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class DataImportMenu extends JMenu {
-    JMenuItem mi1, mi2, mi3;
+    private final JMenuItem mi1;
+    private final JMenuItem mi2;
+    private final JMenuItem mi3;
 
     public DataImportMenu(Main mainWindow) {
         super("Load Data");

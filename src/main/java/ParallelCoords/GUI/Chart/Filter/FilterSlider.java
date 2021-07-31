@@ -11,25 +11,19 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class FilterSlider {
-    DragBox upperSlider;
-    DragBox lowerSlider;
-
-    int upperY;
-    int lowerY;
-    int upperBound;
-    int lowerBound;
-    int currX;
-    Color upperColour = new Color(157, 78, 0);
-    Color lowerColour = new Color(0, 112, 209);
-    int thickness = 2;
-    ChartPanel panel;
-    int segmentNumber;
+    private final DragBox upperSlider;
+    private final DragBox lowerSlider;
+    private int upperBound;
+    private int lowerBound;
+    private int thickness = 2;
+    private final ChartPanel panel;
+    private final int segmentNumber;
 
     public FilterSlider(int upperBound, int lowerBound, int xPos, ChartPanel panel, int segmentNumber) {
         this.panel = panel;
         this.segmentNumber = segmentNumber;
-        upperSlider = new DragBox(xPos, upperBound - 8, upperColour, thickness, this, true);
-        lowerSlider = new DragBox(xPos, lowerBound + 8, lowerColour, thickness, this, false);
+        upperSlider = new DragBox(xPos, upperBound - 8, thickness, this, true);
+        lowerSlider = new DragBox(xPos, lowerBound + 8, thickness, this, false);
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         panel.add(upperSlider);

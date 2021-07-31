@@ -39,7 +39,7 @@ public class DataDisplayTable extends JPanel {
         TableColumn[] cols = new TableColumn[dataTable.getNumberOfColumns() + 2];
         for (int colIndex = 1; colIndex <= dataTable.getNumberOfColumns(); colIndex++) {
             cols[colIndex] = new TableColumn(colIndex, 100, cellRenderer, cellEditor);
-            cols[colIndex].setHeaderValue(dataTable.getAllColumns().get(colIndex - 1).getColumnName());
+            cols[colIndex].setHeaderValue(dataTable.getData().get(colIndex - 1).getColumnName());
             cols[colIndex].setResizable(true);
             tableColumnModel.addColumn(cols[colIndex]);
         }

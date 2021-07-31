@@ -1,10 +1,13 @@
 package ParallelCoords.GUI.TableMenuBar.Listeners;
 
+import ParallelCoords.GUI.TableMenuBar.ChartColourSettings;
+import ParallelCoords.GUI.Chart.ChartPanel;
 import ParallelCoords.Main;
 import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SettingsMenuListener {
     private final Main mainWindow;
@@ -149,5 +152,50 @@ public class SettingsMenuListener {
         } catch (EmptyFieldsException ignored) {
         }
     }
+
+    public ActionListener getChartLineListener(ChartPanel panel){
+        String text1 = "Set weights for each colour (Values must be between 0 an 5)";
+        String text2 = "Influences the random colour generation (Default = 0) (Increase for more colour)";
+        String text3 = "Set Colour Weights";
+        int min = 0;
+        int max = 5;
+        if (panel == null) {
+            return e -> {
+                ChartColourSettings cs = new ChartColourSettings(text1,text2,text3,min,max,true);
+                UserSettings.getInstance().getUserGraphSettings().setChartColourWeights(cs.getFloatValues().get(0),cs.getFloatValues().get(1),cs.getFloatValues().get(2)) ;
+            };
+        }
+        else {
+            return e -> {
+                ChartColourSettings cs = new ChartColourSettings(text1,text2,text3,min,max,true);
+                UserSettings.getInstance().getUserGraphSettings().setChartColourWeights(cs.getFloatValues().get(0),cs.getFloatValues().get(1),cs.getFloatValues().get(2)) ;
+
+                panel.rePrepData(false, false);
+            };
+        }
+    }
+
+    public ActionListener getChartFilterListener(ChartPanel panel){
+        String text1 = "Set the colour for the filter sliders (Values must be between 0 and 255)";
+        String text2 = "Default = 165,165,165 (grey)";
+        String text3 = "Set Colour Values";
+        int min = 0;
+        int max = 255;
+        if (panel == null) {
+            return e -> {
+                ChartColourSettings cs = new ChartColourSettings(text1,text2,text3,min,max,false);
+                UserSettings.getInstance().getUserGraphSettings().setFilterColour(cs.getIntValues().get(0),cs.getIntValues().get(1),cs.getIntValues().get(2));
+
+            };
+        }
+        else {
+            return e -> {
+                ChartColourSettings cs = new ChartColourSettings(text1,text2,text3,min,max,false);
+                UserSettings.getInstance().getUserGraphSettings().setFilterColour(cs.getIntValues().get(0),cs.getIntValues().get(1),cs.getIntValues().get(2));
+                panel.reloadColours();
+            };
+        }
+    }
+
 
 }

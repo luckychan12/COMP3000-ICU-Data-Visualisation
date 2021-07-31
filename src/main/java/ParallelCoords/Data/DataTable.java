@@ -5,15 +5,20 @@ import java.util.Collections;
 import java.util.regex.Pattern;
 
 public class DataTable {
-    private final ArrayList<DataColumn> columns = new ArrayList<>();
-    private int index;
+    private ArrayList<DataColumn> columns;
     private String tableName;
     private ArrayList<Boolean> showRecord;
     private int numRows;
-    private double min;
-    private double max;
     private boolean definedHeaders;
     private boolean dismissWarning = false;
+
+    public DataTable(){}
+
+    public DataTable(int numRows, boolean definedHeaders, ArrayList<DataColumn> columns){
+        this.numRows = numRows;
+        this.definedHeaders = definedHeaders;
+        this.columns = columns;
+    }
 
     public boolean hasDefinedHeaders() {
         return definedHeaders;
@@ -23,19 +28,14 @@ public class DataTable {
         this.definedHeaders = definedHeaders;
     }
 
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
-    }
-
-    public ArrayList<DataColumn> GetData() {
+    public ArrayList<DataColumn> getData() {
         return columns;
     }
 
     public void addColumn(DataColumn entity) {
+        if (columns == null){
+            columns = new ArrayList<>();
+        }
         entity.setColumnIndex(columns.size());
         columns.add(entity);
     }
@@ -56,9 +56,6 @@ public class DataTable {
         return columns.get(index);
     }
 
-    public ArrayList<DataColumn> getAllColumns() {
-        return columns;
-    }
 
     public int getNumRows() {
         return numRows;
@@ -104,10 +101,6 @@ public class DataTable {
         return columns.get(column).getColumnData().get(row).getTextData();
     }
 
-    public void setShowRecordValue(int i, Boolean bool) {
-        showRecord.set(i, bool);
-    }
-
     public void setValueAt(String value, int row, int col) {
         DataEntity val = columns.get(col).getColumnData().get(row);
         columns.get(col).setCalculated(false);
@@ -126,25 +119,8 @@ public class DataTable {
         }
     }
 
-    public void sortColumnsByPosition() {
-        int n = columns.size();
-        for (int i = 0; i < n - 1; i++)
-            for (int j = 0; j < n - i - 1; j++) {
-                if (columns.get(j).getColumnPosition() > columns.get(j + 1).getColumnPosition()) {
-                    Collections.swap(columns, j, j + 1);
-                }
-            }
-    }
-
-
-    public void sortColumnsByIndex() {
-        int n = columns.size();
-        for (int i = 0; i < n - 1; i++)
-            for (int j = 0; j < n - i - 1; j++) {
-                if (columns.get(j).getColumnIndex() > columns.get(j + 1).getColumnIndex()) {
-                    Collections.swap(columns, j, j + 1);
-                }
-            }
+    public void setColumns(ArrayList<DataColumn> columns){
+        this.columns = columns;
     }
 
 
@@ -156,10 +132,6 @@ public class DataTable {
             }
         }
         return max;
-    }
-
-    public ArrayList<Boolean> getShowRecord() {
-        return showRecord;
     }
 
     public boolean removeColumn(int index) {

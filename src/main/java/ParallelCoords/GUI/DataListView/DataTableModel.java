@@ -49,7 +49,7 @@ public class DataTableModel extends AbstractTableModel {
             columnIndex = columnIndex - 1;
         }
 
-        DataEntity entity = dataTable.getAllColumns().get(columnIndex).getColumnData().get(rowIndex);
+        DataEntity entity = dataTable.getData().get(columnIndex).getColumnData().get(rowIndex);
 
         if (entity.isText()) {
             return dataTable.getTextValueAt(rowIndex, columnIndex);
@@ -62,7 +62,6 @@ public class DataTableModel extends AbstractTableModel {
 
     @Override
     public void setValueAt(Object arg0, int rowIndex, int columnIndex) {
-        System.out.println("Fired");
         dataTable.setValueAt((String) arg0, rowIndex, columnIndex - 1);
         fireTableCellUpdated(rowIndex, columnIndex);
     }

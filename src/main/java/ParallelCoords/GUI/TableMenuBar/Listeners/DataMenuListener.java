@@ -39,8 +39,8 @@ public class DataMenuListener {
                 DataTable currData = data.getDataStore().get(data.getCurrID());
                 currData.setTableName(chooser.getSelectedFile().getName());
                 main.setData();
-            } catch (Exception | EmptyFieldsException err) {
-                JOptionPane.showMessageDialog(null, "An error occurred while loading the dataset\nPlease check that the correct delimiter has been set.", "Error loading data", JOptionPane.WARNING_MESSAGE);
+            } catch (Exception err) {
+                JOptionPane.showMessageDialog(null, "An error occurred while loading the dataset", "Error loading data", JOptionPane.WARNING_MESSAGE);
             }
         }
 

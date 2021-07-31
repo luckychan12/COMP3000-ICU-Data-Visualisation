@@ -1,6 +1,5 @@
 package ParallelCoords.Data;
 
-import ParallelCoords.GUI.TableMenuBar.Listeners.EmptyFieldsException;
 import ParallelCoords.Settings.UserSettings;
 
 import java.io.BufferedReader;
@@ -35,11 +34,11 @@ public class Data {
         return Pattern.compile("-?\\d+(\\.\\d+)?").matcher(strNum).matches() || Pattern.compile("-?\\.\\d+").matcher(strNum).matches();
     }
 
-    public void createData(String pathToInputData, boolean hasHeaders) throws IOException, NumberFormatException, EmptyFieldsException {
+    public void createData(String pathToInputData, boolean hasHeaders) throws Exception {
         UserSettings settings = UserSettings.getInstance();
         delimiter = settings.getUserImportSettings().getDelimiter();
         DataTable newData = new DataTable();
-        try {
+
             BufferedReader reader = new BufferedReader(new FileReader(pathToInputData));
             String[] tokens = ((reader.readLine()).trim()).split(delimiter, -1);
 
@@ -64,21 +63,15 @@ public class Data {
 
 
             dataStore.add(newData);
-
             try {
                 loadData(dataID, reader);
-            } catch (IOException | NumberFormatException err) {
-                dataStore.remove(dataID - 1);
-
+            } catch (Exception err) {
+                dataStore.remove(dataStore.size()-1);
                 throw err;
             }
-            newData.setIndex(dataID);
-            newData.initShowRecordList();
-            currID = dataID;
-            dataID++;
-        } catch (Exception err) {
-            throw new EmptyFieldsException();
-        }
+        newData.initShowRecordList();
+        currID = dataID;
+        dataID++;
     }
 
     private DataEntity addDataEntity(String token) {

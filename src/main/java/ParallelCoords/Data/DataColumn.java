@@ -4,10 +4,10 @@ import ParallelCoords.Settings.UserGraphSettings;
 import ParallelCoords.Settings.UserSettings;
 
 import java.util.ArrayList;
-import java.util.Collections;
 
 public class DataColumn {
     private boolean reversed = false;
+    private boolean hidden = false;
     private int columnID;
     private int columnPosition;
     private String columnName;
@@ -83,7 +83,7 @@ public class DataColumn {
         this.calculated = calculated;
     }
 
-    public double getValuePercentage(int index, boolean absolute) {
+    public double getValuePercentage(int index, boolean absolute, boolean inverted) {
 
         if (!calculated){
             calculateMaxValue();
@@ -98,7 +98,13 @@ public class DataColumn {
 
             if (dataColumn.get(index).isConfirmedValue()){
                 double adjusted = dataColumn.get(index).getValue() - minValue;
-                return 1- adjusted / range;
+
+                if(inverted){
+                    return adjusted / range;
+                }
+                else {
+                    return 1 - adjusted / range;
+                }
             }
             else{
                 return -1;
@@ -108,7 +114,15 @@ public class DataColumn {
             UserGraphSettings settings = UserSettings.getInstance().getUserGraphSettings();
             if (dataColumn.get(index).isConfirmedValue()){
                 double value = dataColumn.get(index).getValue() - settings.getChartAxisMin();
-                return 1 - value / (settings.getChartAxisMax() - settings.getChartAxisMin());
+
+                if(inverted){
+                    return value / (settings.getChartAxisMax() - settings.getChartAxisMin());
+
+                }
+                else {
+                    return 1 - value / (settings.getChartAxisMax() - settings.getChartAxisMin());
+
+                }
             }
             else{
                 return -1;
@@ -165,6 +179,18 @@ public class DataColumn {
         return false;
     }
 
+    public void setReversed(boolean reversed) {
+        this.reversed = reversed;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public boolean isHidden() {
+        return hidden;
+    }
+
     public void addEntity(DataEntity entity){
         entity.setColumnID((columnID));
         entity.setIndex(dataColumn.size());
@@ -188,11 +214,6 @@ public class DataColumn {
         return null;
     }
 
-    public ArrayList<DataEntity> reverseColumn() {
-        Collections.reverse(dataColumn);
-        reversed = !reversed;
-        return dataColumn;
-    }
 
     public boolean isReversed(){
         return reversed;

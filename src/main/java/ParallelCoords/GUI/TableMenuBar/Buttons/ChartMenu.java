@@ -8,7 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ChartMenu extends JMenu {
-    JMenuItem mi1;
+    private final JMenuItem mi1;
 
     public ChartMenu(Main mainWindow) {
         super("Chart");

@@ -5,43 +5,38 @@ import ParallelCoords.Settings.UserSettings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class MenuBar extends JMenuBar {
 
-    Font font;
-    SettingsMenu settingsMenu;
-    ChartMenu generateChart;
-    DataImportMenu dataImportMenu;
+    private final ArrayList<JComponent> components = new ArrayList<>();
 
     public MenuBar(Main mainWindow) {
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        font = new Font("Calibri", Font.BOLD, fontSize);
+        Font font = new Font("Calibri", Font.BOLD, fontSize);
 
-        settingsMenu = new SettingsMenu(mainWindow);
+        SettingsMenu settingsMenu = new SettingsMenu(mainWindow);
+        components.add(settingsMenu);
         settingsMenu.setFont(font);
         this.add(settingsMenu);
 
-        dataImportMenu = new DataImportMenu(mainWindow);
+        DataImportMenu dataImportMenu = new DataImportMenu(mainWindow);
+        components.add(dataImportMenu);
         dataImportMenu.setFont(font);
         this.add(dataImportMenu);
 
-        generateChart = new ChartMenu(mainWindow);
+        ChartMenu generateChart = new ChartMenu(mainWindow);
+        components.add(generateChart);
         generateChart.setFont(font);
         this.add(generateChart);
 
     }
 
-    public void reloadFonts() {
+    public void reloadFonts(){
         int fontSize = UserSettings.getInstance().getUserGeneralSettings().getGeneralFontSize();
-        font = new Font("Calibri", Font.BOLD, fontSize);
-        this.setFont(font);
-        settingsMenu.setFont(font);
-        generateChart.setFont(font);
-        dataImportMenu.setFont(font);
-
-        settingsMenu.reloadFonts();
-        dataImportMenu.reloadFonts();
-        generateChart.reloadFonts();
-
+        Font font = new Font("Calibri", Font.BOLD, fontSize );
+        for (JComponent component: components){
+            component.setFont(font);
+        }
     }
 }
