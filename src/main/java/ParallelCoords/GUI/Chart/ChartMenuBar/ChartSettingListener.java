@@ -1,7 +1,7 @@
 package ParallelCoords.GUI.Chart.ChartMenuBar;
 
 import ParallelCoords.GUI.Chart.ChartPanel;
-import ParallelCoords.GUI.Chart.Filter.FilterSlider;
+import ParallelCoords.GUI.Chart.Filter.FilterPair;
 import ParallelCoords.GUI.TableMenuBar.Listeners.EmptyFieldsException;
 import ParallelCoords.Settings.UserSettings;
 
@@ -39,10 +39,16 @@ public class ChartSettingListener {
     public void toggleFilter() {
         boolean tog = UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData();
         UserSettings.getInstance().getUserGraphSettings().setChartFilterTextData(!tog);
-        for (FilterSlider slider : panel.getFilterSliders()) {
+        for (FilterPair slider : panel.getFilterSliders()) {
             slider.updateValues();
         }
     }
+
+    public void toggleExcluded(){
+        boolean tog = UserSettings.getInstance().getUserGraphSettings().getChartShowFilterTrails();
+        UserSettings.getInstance().getUserGraphSettings().setChartShowFilterTrails(!tog);
+    }
+
 
 }
 

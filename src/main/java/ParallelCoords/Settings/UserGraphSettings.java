@@ -167,6 +167,24 @@ public class UserGraphSettings {
         UserSettings.getInstance().updateProperties("ChartFilterTextData", Boolean.toString(value));
     }
 
+
+
+    public boolean getChartShowFilterTrails() {
+        String defaultVal = "false";
+        try {
+            return Boolean.parseBoolean(UserSettings.getInstance().getPropValue("ChartShowFilterTrails", defaultVal));
+        } catch (NumberFormatException e) {
+            setChartShowFilterTrails(false);
+            return false;
+        }
+    }
+
+    public void setChartShowFilterTrails(boolean value) {
+        UserSettings.getInstance().updateProperties("ChartShowFilterTrails", Boolean.toString(value));
+    }
+
+
+
     public int getAxesPerScreenWidth() {
         String defaultVal = "14";
         try {
@@ -196,7 +214,7 @@ public class UserGraphSettings {
     }
 
     public float getChartLineThickness() {
-        String defaultVal = "1.5";
+        String defaultVal = "2";
         try {
             return Float.parseFloat(UserSettings.getInstance().getPropValue("ChartLineThickness", defaultVal));
         } catch (NumberFormatException e) {

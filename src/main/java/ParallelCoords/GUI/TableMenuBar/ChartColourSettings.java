@@ -75,7 +75,7 @@ public class ChartColourSettings {
                 checkFloatValue("0","0","0", min, max);
             }
             else {
-                checkIntValue("0","0","0", min, max);
+                checkIntValue("165","165","165", min, max);
             }
         }
 
@@ -98,6 +98,9 @@ public class ChartColourSettings {
             iValue2 = checkIntInput(g,min,max);
             iValue3 = checkIntInput(b,min,max);
         } catch (final NumberFormatException e) {
+            iValue1 = checkIntInput("165",min,max);
+            iValue2 = checkIntInput("165",min,max);
+            iValue3 = checkIntInput("165",min,max);
             JOptionPane.showMessageDialog(new JFrame(), "Invalid input value. Please select an number between " + min +" and "+ max +".", "Error", JOptionPane.WARNING_MESSAGE);
         }
     }

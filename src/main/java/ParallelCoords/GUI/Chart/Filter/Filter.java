@@ -10,7 +10,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.geom.RoundRectangle2D;
 
-public class DragBox extends JComponent {
+public class Filter extends JComponent {
     private final int width = 50;
     private final int height = 40;
     private final boolean upperSlider;
@@ -21,7 +21,7 @@ public class DragBox extends JComponent {
     private Color color;
     private int thickness;
 
-    public DragBox(int xInit, int yInit, int thickness, FilterSlider filter, boolean isUpperSlider) {
+    public Filter(int xInit, int yInit, int thickness, FilterPair filter, boolean isUpperSlider) {
         //setBorder(border);
         setBackground(Color.BLACK);
         setBounds(0, 0, width, height);

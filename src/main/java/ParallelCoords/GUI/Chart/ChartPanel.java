@@ -4,7 +4,7 @@ import ParallelCoords.Data.DataColumn;
 import ParallelCoords.Data.DataTable;
 import ParallelCoords.GUI.Chart.ChartMenuBar.ColumnDataMenu;
 import ParallelCoords.GUI.Chart.Filter.Axis;
-import ParallelCoords.GUI.Chart.Filter.FilterSlider;
+import ParallelCoords.GUI.Chart.Filter.FilterPair;
 import ParallelCoords.Settings.UserGraphSettings;
 import ParallelCoords.Settings.UserSettings;
 
@@ -31,7 +31,7 @@ public class ChartPanel extends JPanel {
     private final Point startPoint = new Point();
     private int axisLength;
     private final ArrayList<ColumnDataMenu> menus = new ArrayList<>();
-    private ArrayList<FilterSlider> filterSliders = new ArrayList<>();
+    private ArrayList<FilterPair> filterSliders = new ArrayList<>();
     private final ArrayList<Axis> allAxes = new ArrayList<>();
     private DataDisplay dataDisplay;
 
@@ -72,13 +72,13 @@ public class ChartPanel extends JPanel {
 
     public void createFilterSliders() {
         checkHiddenColumns();
-        ArrayList<FilterSlider> newFilterSliders = new ArrayList<>();
+        ArrayList<FilterPair> newFilterSliders = new ArrayList<>();
         for (int i = 0; i < segments; i++) {
-            FilterSlider newSlider = new FilterSlider(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize, this, i);
+            FilterPair newSlider = new FilterPair(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize, this, i);
             newFilterSliders.add(newSlider);
         }
 
-        for (FilterSlider slider : filterSliders) {
+        for (FilterPair slider : filterSliders) {
             slider.removeSlider();
         }
         filterSliders = newFilterSliders;
@@ -114,19 +114,19 @@ public class ChartPanel extends JPanel {
 
     public void changeHeaderStyle() {
         calculateInitialPositionValues();
-        for (FilterSlider slider : filterSliders) {
+        for (FilterPair slider : filterSliders) {
             slider.removeSlider();
         }
 
         for (int i = 0; i < segments; i++) {
-            filterSliders.add(new FilterSlider(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize, this, i));
+            filterSliders.add(new FilterPair(startPoint.y, startPoint.y + axisLength, startPoint.x + i * segmentSize, this, i));
         }
 
 
         rePrepData(false, false);
     }
 
-    public ArrayList<FilterSlider> getFilterSliders() {
+    public ArrayList<FilterPair> getFilterSliders() {
         return filterSliders;
     }
 
@@ -192,7 +192,7 @@ public class ChartPanel extends JPanel {
     }
 
     public void resetFilters() {
-        for (FilterSlider filter : filterSliders) {
+        for (FilterPair filter : filterSliders) {
             filter.resetPos();
         }
     }
@@ -221,7 +221,7 @@ public class ChartPanel extends JPanel {
     }
 
     private void updateFilters() {
-        for (FilterSlider filter : filterSliders) {
+        for (FilterPair filter : filterSliders) {
             filter.updateValues();
         }
     }
@@ -381,7 +381,7 @@ public class ChartPanel extends JPanel {
     }
 
     public void reloadColours() {
-        for (FilterSlider slider : filterSliders) {
+        for (FilterPair slider : filterSliders) {
             slider.getUpperSlider().repaint();
         }
     }

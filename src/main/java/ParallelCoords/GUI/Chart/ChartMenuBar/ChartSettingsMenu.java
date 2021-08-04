@@ -12,6 +12,7 @@ import java.util.ArrayList;
 public class ChartSettingsMenu extends JMenu {
     private final ChartPanel panel;
     private final JMenuItem toggleFilterNullAndText;
+    private final JMenuItem toggleExcluded;
     private final JMenuItem toggleAbsoluteRelative;
     private final ArrayList<JComponent> components = new ArrayList<>();
 
@@ -46,6 +47,18 @@ public class ChartSettingsMenu extends JMenu {
         toggleFilterNullAndText.setFont(font);
         this.add(toggleFilterNullAndText);
 
+        toggleExcluded = new JMenuItem();
+        components.add(toggleFilterNullAndText);
+        ActionListener toggleExcludedListener = e -> {
+            listener.toggleExcluded();
+            setShowExcludedDataTrails();
+        };
+        toggleFilterNullAndText.addActionListener(toggleExcludedListener);
+        setFilterMenuName();
+        toggleFilterNullAndText.setFont(font);
+        this.add(toggleFilterNullAndText);
+
+
 
         JMenuItem setNumTicks = new JMenuItem();
         components.add(setNumTicks);
@@ -74,19 +87,18 @@ public class ChartSettingsMenu extends JMenu {
     }
 
     private void setViewMenuName() {
-        if (panel.isAbsolute()) {
-            toggleAbsoluteRelative.setText("Toggle Absolute/Relative (Current: Absolute)");
-        } else {
-            toggleAbsoluteRelative.setText("Toggle Absolute/Relative (Current: Relative)");
-        }
+        boolean val = panel.isAbsolute();
+        toggleAbsoluteRelative.setText("Toggle Absolute/Relative (Current: "+ val +")");
     }
 
     private void setFilterMenuName() {
-        if (UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()) {
-            toggleFilterNullAndText.setText("Toggle including null data when filtering (Current: True)");
-        } else {
-            toggleFilterNullAndText.setText("Toggle including null data when filtering (Current: False)");
-        }
+        boolean val = UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData();
+        toggleFilterNullAndText.setText("Toggle including null data when filtering (Current: "+ val +")");
+    }
+
+    private void setShowExcludedDataTrails() {
+        boolean val = UserSettings.getInstance().getUserGraphSettings().getChartShowFilterTrails();
+        toggleExcluded.setText("Toggle showing trails for excluded data (Current: "+ val +")");
     }
 
 
