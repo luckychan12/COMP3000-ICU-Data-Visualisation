@@ -90,10 +90,9 @@ public class SettingsMenu extends JMenu {
         components.add(chartZoom);
         chartZoom.addActionListener(listener::toggleChartZoom);
 
-
         JMenuItem axesPerScreen = new JMenuItem("Set number of axes to display per screen width");
         components.add(axesPerScreen);
-        axesPerScreen.addActionListener(listener::setAxesPerScreenWidth);
+        axesPerScreen.addActionListener(e -> listener.setAxesPerScreenWidth(e, panel));
 
         chartScaleSettings.add(chartZoom);
         chartScaleSettings.add(axesPerScreen);

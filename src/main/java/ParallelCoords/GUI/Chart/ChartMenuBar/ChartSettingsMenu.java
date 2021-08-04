@@ -48,15 +48,15 @@ public class ChartSettingsMenu extends JMenu {
         this.add(toggleFilterNullAndText);
 
         toggleExcluded = new JMenuItem();
-        components.add(toggleFilterNullAndText);
+        components.add(toggleExcluded);
         ActionListener toggleExcludedListener = e -> {
             listener.toggleExcluded();
             setShowExcludedDataTrails();
         };
-        toggleFilterNullAndText.addActionListener(toggleExcludedListener);
-        setFilterMenuName();
-        toggleFilterNullAndText.setFont(font);
-        this.add(toggleFilterNullAndText);
+        toggleExcluded.addActionListener(toggleExcludedListener);
+        setShowExcludedDataTrails();
+        toggleExcluded.setFont(font);
+        this.add(toggleExcluded);
 
 
 

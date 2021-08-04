@@ -52,6 +52,11 @@ public class ChartPanel extends JPanel {
         dataDisplay = new DataDisplay(dataTableMask, this);
         calculateInitialPositionValues();
 
+        if (dataTableMask.getNumberOfColumns() < graphSettings.getAxesPerScreenWidth()){
+            graphSettings.setAxesPerScreenWidth(dataTableMask.getNumberOfColumns());
+        }
+
+
         this.add(dataDisplay);
         for (int i = 0; i < dataTableMask.getMaxSize(); i++) {
             addFullLineData();
@@ -171,10 +176,13 @@ public class ChartPanel extends JPanel {
 
         segments = dataTableMask.getNumberOfColumns();
         int tmp = segments;
-
-        if (segments > graphSettings.getAxesPerScreenWidth()) {
-            segments = graphSettings.getAxesPerScreenWidth();
-        }
+        segments = graphSettings.getAxesPerScreenWidth();
+        //if (segments > graphSettings.getAxesPerScreenWidth()) {
+        //    segments = graphSettings.getAxesPerScreenWidth();
+        //}
+        //else if(segments < graphSettings.getAxesPerScreenWidth()){
+        //    segments = segments + 2;
+        //}
 
 
         segmentSize = (int) (width * percentageWidth) / segments;

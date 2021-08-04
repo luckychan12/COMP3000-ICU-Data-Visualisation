@@ -70,7 +70,7 @@ public class ChartColourSettings {
             }
 
         }
-        if (result == 1) {
+        else if (result == 1) {
             if (isLine){
                 checkFloatValue("0","0","0", min, max);
             }
@@ -78,6 +78,21 @@ public class ChartColourSettings {
                 checkIntValue("165","165","165", min, max);
             }
         }
+        else {
+            if (isLine){
+                float r = settings.getChartColourWeights()[0];
+                float g = settings.getChartColourWeights()[1];
+                float b = settings.getChartColourWeights()[2];
+                checkFloatValue(Float.toString(r),Float.toString(g),Float.toString(b), min, max);
+            }
+            else {
+                int r = settings.getFilterColour()[0];
+                int g = settings.getFilterColour()[1];
+                int b = settings.getFilterColour()[2];
+                checkIntValue(Integer.toString(r),Integer.toString(g),Integer.toString(b), min, max);
+            }
+        }
+
 
     }
 
