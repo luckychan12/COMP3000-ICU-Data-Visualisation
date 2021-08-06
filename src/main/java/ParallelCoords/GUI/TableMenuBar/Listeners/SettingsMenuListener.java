@@ -175,10 +175,12 @@ public class SettingsMenuListener {
             return e -> {
                 ChartColourSettings cs = new ChartColourSettings(text1,text2,text3,min,max,true);
                 UserSettings.getInstance().getUserGraphSettings().setChartColourWeights(cs.getFloatValues().get(0),cs.getFloatValues().get(1),cs.getFloatValues().get(2)) ;
-
-                panel.rePrepData(false, false);
+                panel.reloadLineColours();
+                //panel.rePrepData(false, false);
             };
+
         }
+
     }
 
     public ActionListener getChartFilterListener(ChartPanel panel){
@@ -198,7 +200,7 @@ public class SettingsMenuListener {
             return e -> {
                 ChartColourSettings cs = new ChartColourSettings(text1,text2,text3,min,max,false);
                 UserSettings.getInstance().getUserGraphSettings().setFilterColour(cs.getIntValues().get(0),cs.getIntValues().get(1),cs.getIntValues().get(2));
-                panel.reloadColours();
+                panel.reloadSliderColours();
             };
         }
     }

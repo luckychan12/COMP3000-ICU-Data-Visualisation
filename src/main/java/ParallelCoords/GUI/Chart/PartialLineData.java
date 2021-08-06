@@ -66,7 +66,7 @@ public class PartialLineData {
         this.segmentStart = segmentStart;
     }
 
-    public int getGetSegmentEnd() {
+    public int getSegmentEnd() {
         return getSegmentEnd;
     }
 

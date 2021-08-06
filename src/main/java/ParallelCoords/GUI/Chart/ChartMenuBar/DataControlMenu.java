@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 public class DataControlMenu extends JMenu {
     private ArrayList<ColumnDataMenu> menus;
+    private JMenuItem resetColours;
 
 
     private ChartPanel panel;
@@ -17,6 +18,16 @@ public class DataControlMenu extends JMenu {
         this.menus = panel.getDataMenus();
         this.panel = panel;
     }
+
+    public void addResetColours(){
+        this.remove(resetColours);
+        JMenuItem resetColours = new JMenuItem();
+        resetColours.addActionListener(e -> panel.reloadLineColours());
+        resetColours.setText("Reset Colours");
+        this.add(resetColours);
+        this.resetColours = resetColours;
+    }
+
 
 
 
@@ -27,10 +38,14 @@ public class DataControlMenu extends JMenu {
             men.setFont(font);
             men.reloadFonts();
         }
+        resetColours.setFont(font);
     }
 
     public ArrayList<ColumnDataMenu> getMenus() {
         return menus;
     }
 
+    public JMenuItem getResetColours() {
+        return resetColours;
+    }
 }

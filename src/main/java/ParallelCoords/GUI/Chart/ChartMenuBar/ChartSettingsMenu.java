@@ -78,7 +78,10 @@ public class ChartSettingsMenu extends JMenu {
 
         JMenuItem reloadChart = new JMenuItem();
         components.add(reloadChart);
-        ActionListener reloadListener = e -> panel.rePrepData(true, true);
+        ActionListener reloadListener = e -> {
+            panel.rePrepData(true, true);
+            panel.createFilterSliders();
+        };
         reloadChart.addActionListener(reloadListener);
         reloadChart.setText("Reload Chart");
         reloadChart.setFont(font);

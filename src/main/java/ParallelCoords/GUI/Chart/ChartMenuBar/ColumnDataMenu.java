@@ -10,6 +10,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.IllegalFormatWidthException;
+import java.util.Objects;
 
 public class ColumnDataMenu extends JMenu {
     private DataColumn column;
@@ -75,6 +76,19 @@ public class ColumnDataMenu extends JMenu {
     public boolean isHidden() {
         return column.isHidden();
     }
+
+    public void sortColours(){
+        int index = -1;
+        for (int i = 0; i < panel.getDataTableMask().getData().size(); i++) {
+            if (Objects.equals(panel.getDataTableMask().getData().get(i), column)) {
+                index = i;
+            }
+        }
+        if (index != -1) {
+            panel.columnColour(index);
+        }
+    }
+
 
     public boolean isInverted() {
         return inverted;

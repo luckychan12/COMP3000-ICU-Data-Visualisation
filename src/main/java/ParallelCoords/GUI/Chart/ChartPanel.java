@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Objects;
 
 public class ChartPanel extends JPanel {
     private final Dimension screenSize;
@@ -46,24 +48,22 @@ public class ChartPanel extends JPanel {
         this.setAutoscrolls(true);
         this.dataTable = dataTable;
         dataTableMask = new DataTable(dataTable.getNumRows(), dataTable.hasDefinedHeaders(), dataTable.getData());
+        graphSettings.setAxesPerScreenWidth(dataTableMask.getNumberOfColumns());
+        if (dataTableMask.getNumberOfColumns() > 18){
+            graphSettings.setAxesPerScreenWidth(18);
+        }
 
         this.absolute = graphSettings.getChartAbsolute();
         generateDataMenus();
         dataDisplay = new DataDisplay(dataTableMask, this);
         calculateInitialPositionValues();
 
-        if (dataTableMask.getNumberOfColumns() < graphSettings.getAxesPerScreenWidth()){
-            graphSettings.setAxesPerScreenWidth(dataTableMask.getNumberOfColumns());
-        }
-
-
         this.add(dataDisplay);
         for (int i = 0; i < dataTableMask.getMaxSize(); i++) {
-            addFullLineData();
+            addFullLineData(false, 0);
         }
 
         rePrepData(true, true);
-
         createFilterSliders();
     }
 
@@ -101,9 +101,15 @@ public class ChartPanel extends JPanel {
         return menus;
     }
 
-    private void addFullLineData() {
+    private FullLineData newFullLineData(Color color) {
         FullLineData lineData = new FullLineData();
-        lineData.setColor(dataDisplay.genColour());
+        lineData.setColor(color);
+        return lineData;
+    }
+
+    private void addFullLineData(boolean fullRandom, float percentage) {
+        FullLineData lineData = new FullLineData();
+        lineData.setColor(dataDisplay.genRandomColour(fullRandom,percentage));
         dataDisplay.addLineData(lineData);
     }
 
@@ -199,6 +205,53 @@ public class ChartPanel extends JPanel {
 
     }
 
+    public void columnColour(int column){
+        ArrayList<FullLineData> fullLineData = dataDisplay.getFullLineData();
+        ArrayList<Double> values = new ArrayList<>();
+
+        for (FullLineData data:fullLineData) {
+            for (PartialLineData line: data.getData()) {
+                if (column == 0) {
+                    if (line.getSegmentStart() == column && line.getPercentage1() != null) {
+                        values.add(line.getPercentage1());
+                    }
+                } else {
+                    if (line.getSegmentEnd() == column && line.getPercentage2() != null) {
+                        values.add(line.getPercentage2());
+                    }
+
+                }
+            }
+        }
+        HashSet<Double> hashSetNumbers = new HashSet<>(values);
+        int len = hashSetNumbers.size();
+        values.clear();
+        values.addAll(hashSetNumbers);
+        ArrayList<Color> colors = new ArrayList<>();
+        for (int i = 0; i < len; i++) {
+            colors.add(dataDisplay.genRandomColour(true, values.get(i)));
+        }
+
+        for (int i = 0; i < len; i++) {
+            for (FullLineData data:fullLineData) {
+                for (PartialLineData line: data.getData()) {
+                    if (column == 0) {
+                        if (line.getSegmentStart() == column && Objects.equals(line.getPercentage1(), values.get(i))) {
+                            data.setColor(colors.get(i));
+                        }
+                    } else {
+                        if (line.getSegmentEnd() == column && Objects.equals(line.getPercentage2(), values.get(i))) {
+                            data.setColor(colors.get(i));
+                        }
+
+                    }
+                }
+            }
+        }
+
+    }
+
+
     public void resetFilters() {
         for (FilterPair filter : filterSliders) {
             filter.resetPos();
@@ -222,10 +275,17 @@ public class ChartPanel extends JPanel {
     }
 
     private void resetData() {
+        ArrayList<FullLineData> oldData = dataDisplay.getFullLineData();
+        ArrayList<FullLineData> newData = new ArrayList<>();
+        for (int i = 0; i < dataTableMask.getMaxSize(); i++) {
+            newData.add(newFullLineData(oldData.get(i).getColor()));
+        }
         dataDisplay.clearData();
         for (int i = 0; i < dataTableMask.getMaxSize(); i++) {
-            addFullLineData();
+            dataDisplay.addLineData(newData.get(i));
         }
+
+
     }
 
     private void updateFilters() {
@@ -322,6 +382,9 @@ public class ChartPanel extends JPanel {
     }
 
     public void generateDataMenus() {
+
+
+
         for (DataColumn column : dataTableMask.getData()) {
             ColumnDataMenu newMenu = new ColumnDataMenu(column, this);
             getDataMenus().add(newMenu);
@@ -345,6 +408,13 @@ public class ChartPanel extends JPanel {
             newMenu.add(hideData);
             hideData.setText("Hide data column");
             newMenu.getItems().add(hideData);
+
+            JMenuItem sortColours = new JMenuItem();
+            sortColours.addActionListener(e -> newMenu.sortColours());
+            newMenu.add(sortColours);
+            sortColours.setText("Sort colours by this column");
+            newMenu.getItems().add(sortColours);
+
         }
     }
 
@@ -388,10 +458,17 @@ public class ChartPanel extends JPanel {
         return dataTable;
     }
 
-    public void reloadColours() {
+    public void reloadSliderColours() {
         for (FilterPair slider : filterSliders) {
             slider.getUpperSlider().repaint();
         }
+    }
+
+    public void reloadLineColours(){
+        for (FullLineData lineData: dataDisplay.getFullLineData()){
+            lineData.setColor(dataDisplay.genRandomColour(false, 0));
+        }
+        dataDisplay.repaint();
     }
 
     public int getSegments() {

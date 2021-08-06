@@ -22,8 +22,8 @@ public class FilterPair {
     public FilterPair(int upperBound, int lowerBound, int xPos, ChartPanel panel, int segmentNumber) {
         this.panel = panel;
         this.currentSegmentNumber = segmentNumber;
-        upperSlider = new Filter(xPos, upperBound, thickness, this, true);
-        lowerSlider = new Filter(xPos, lowerBound, thickness, this, false);
+        upperSlider = new Filter(xPos, upperBound-1, thickness, this, true);
+        lowerSlider = new Filter(xPos, lowerBound+2, thickness, this, false);
         this.lowerBound = lowerBound;
         this.upperBound = upperBound;
         panel.add(upperSlider);
@@ -118,14 +118,14 @@ public class FilterPair {
             for (PartialLineData line : data.getData()) {
 
                 if (UserSettings.getInstance().getUserGraphSettings().getChartFilterTextData()) {
-                    if (line.getGetSegmentEnd() - line.getSegmentStart() != 1) {
-                        if (currentSegmentNumber > line.getSegmentStart() && currentSegmentNumber < line.getGetSegmentEnd()
+                    if (line.getSegmentEnd() - line.getSegmentStart() != 1) {
+                        if (currentSegmentNumber > line.getSegmentStart() && currentSegmentNumber < line.getSegmentEnd()
                                 && !Objects.isNull(line.getPercentage1()) && !Objects.isNull(line.getPercentage2())) {
                             double deltaX = line.getPoint2().x - line.getPoint1().x;
                             double deltaY = line.getPoint2().y - line.getPoint1().y;
                             double m = deltaY / deltaX;
                             double c = line.getPoint1().y - (m * line.getPoint1().x);
-                            double subSegments = (line.getGetSegmentEnd() - line.getSegmentStart());
+                            double subSegments = (line.getSegmentEnd() - line.getSegmentStart());
 
                             int segmentRelativeToLine = currentSegmentNumber - line.getSegmentStart();
 
@@ -143,7 +143,7 @@ public class FilterPair {
                         data.setShowData(currentSegmentNumber, checkValue(line.getPercentage1()));
                     }
                 }
-                if (line.getGetSegmentEnd() == currentSegmentNumber) {
+                if (line.getSegmentEnd() == currentSegmentNumber) {
                     if (!Objects.isNull(line.getPercentage2())) {
                         data.setShowData(currentSegmentNumber, checkValue(line.getPercentage2()));
                     }

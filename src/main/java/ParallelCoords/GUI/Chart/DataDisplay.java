@@ -45,15 +45,39 @@ public class DataDisplay extends JComponent {
         fullLineData.clear();
     }
 
-    public Color genColour() {
-        float rWeight = UserSettings.getInstance().getUserGraphSettings().getChartColourWeights()[0] + 1;
-        float gWeight = UserSettings.getInstance().getUserGraphSettings().getChartColourWeights()[1] + 1;
-        float bWeight = UserSettings.getInstance().getUserGraphSettings().getChartColourWeights()[2] + 1;
+    public Color genRandomColour(Boolean sortedColours, double percentage) {
+        float[] weights = UserSettings.getInstance().getUserGraphSettings().getChartColourWeights();
+        float brightness = 0.5f * 255;
+        float rWeight = (((weights[0])/5) * 255 + brightness)/2;
+        float gWeight = (((weights[1])/5) * 255 + brightness)/2;
+        float bWeight = (((weights[2])/5) * 255 + brightness)/2;
 
-        float r = rand.nextFloat();
-        float g = rand.nextFloat();
-        float b = rand.nextFloat();
-        return new Color(1 * (1 - (1 / rWeight)) + r * ((1 / rWeight)), 1 * (1 - (1 / gWeight)) + g * ((1 / gWeight)), 1 * (1 - (1 / bWeight)) + b * ((1 / bWeight))).darker();
+        Color mix = new Color((int)rWeight,(int)gWeight,(int)bWeight);
+
+        if (sortedColours){
+            Color start = new Color(0,0,255);
+            Color end = new Color(255,90,0);
+            double red = start.getRed() * percentage + end.getRed() * (1 - percentage);
+            double green = start.getGreen() * percentage + end.getGreen() * (1 - percentage);
+            double blue = start.getBlue() * percentage + end.getBlue() * (1 - percentage);
+            mix = new Color((int)red, (int)green, (int)blue);
+        }
+        Random random = new Random();
+        int red = random.nextInt(256);
+        int green = random.nextInt(256);
+        int blue = random.nextInt(256);
+
+        // mix the color
+        Color color = mix;
+        if (!sortedColours) {
+            red = (red + mix.getRed()) / 2;
+            green = (green + mix.getGreen()) / 2;
+            blue = (blue + mix.getBlue()) / 2;
+            color = new Color(red, green, blue);
+        }
+
+
+        return color;
     }
 
     public void prepData(Point firstAxisStartPoint, int axisLength, int segments, int distanceBetweenAxes, boolean showWarning) {
@@ -223,6 +247,7 @@ public class DataDisplay extends JComponent {
 
             }
         }
+        //panel.columnColour(0);
     }
 
 
@@ -242,7 +267,7 @@ public class DataDisplay extends JComponent {
         g2.setRenderingHint(
                 RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        drawTicks(g2);
+
 
 
         ArrayList<FullLineData> included = new ArrayList<>();
@@ -258,8 +283,6 @@ public class DataDisplay extends JComponent {
                 }
             }
         }
-
-
 
         for (FullLineData fullLine : excluded) {
             for (PartialLineData line: fullLine.getData()){
@@ -286,7 +309,7 @@ public class DataDisplay extends JComponent {
             if (lower.getRealYPos() < (panel.getStartPoint().y + panel.getAxisLength() -lower.getHeight()))
             g2.drawLine(x, lower.getYPos() + lower.getHeight(), x, panel.getStartPoint().y + panel.getAxisLength());
         }
-
+        drawTicks(g2);
     }
 
 

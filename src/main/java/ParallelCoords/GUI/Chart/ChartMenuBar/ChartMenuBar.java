@@ -47,6 +47,8 @@ public class ChartMenuBar extends JMenuBar {
             component.setFont(font);
         }
 
+        dataControlMenu.getResetColours().setFont(font);
+
         for (int i=0; i<dataControlMenu.getItemCount(); ++i) {
             dataControlMenu.getItem(i).setFont(font);
         }

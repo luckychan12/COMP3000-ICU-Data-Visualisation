@@ -65,6 +65,7 @@ public class ChartFrame extends JFrame {
     public void initDataControlMenu(){
         DataControlMenu menu = getMenu().getDataControlMenu();
         menu.removeAll();
+        menu.addResetColours();
         ArrayList<ColumnDataMenu> subMenus = panel.getDataMenus();
         int i = 0;
         for (ColumnDataMenu dataMenu: subMenus) {
