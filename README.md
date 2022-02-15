@@ -1,6 +1,9 @@
 
 
 # COMP3000-ICU-Data-Visualisation
+
+![Poster](https://brogle.evaded.tax/i/0irstfv3.png)
+
 ##### This project is a Data Visualisation Application written in Java to contribute to a new data visualisation system for the intensive care unit at Derriford hospital. 
 ##### The primary goal of this project is to create an easy to use data visualisation tool that addresses the shortfalls of many modern data visualisation tools: to visualise and analyse data that may be unclean and contain text or missing values through the use of a fully interactive Parallel Coordinates Chart.
 ##### In my solution, missing and text data is represented as dashed lines connecting adjacent non-numerical values.
